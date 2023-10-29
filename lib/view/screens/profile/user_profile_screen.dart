@@ -1,0 +1,453 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/models/user_profile_data.dart';
+import 'package:coucou_v2/repo/user_repo.dart';
+import 'package:coucou_v2/utils/default_pic_provider.dart';
+import 'package:coucou_v2/utils/default_snackbar_util.dart';
+import 'package:coucou_v2/utils/image_utility.dart';
+import 'package:coucou_v2/utils/internet_util.dart';
+import 'package:coucou_v2/utils/s3_util.dart';
+import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/bottomsheets/select_image_source_bottomsheet.dart';
+import 'package:coucou_v2/view/dialogs/logout_dialog.dart';
+import 'package:coucou_v2/view/screens/profile/profile_page_view.dart';
+import 'package:coucou_v2/view/screens/update_address/update_address_screen.dart';
+import 'package:coucou_v2/view/screens/update_password/update_password_screen.dart';
+import 'package:coucou_v2/view/widgets/dismissible_page.dart';
+import 'package:coucou_v2/view/widgets/image_cropper_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+class UserProfileScreen extends StatefulWidget {
+  static const routeName = '/userProfile';
+
+  final String? userId;
+
+  const UserProfileScreen({super.key, this.userId});
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  UserProfile? userProfile;
+  bool loading = true;
+  final userController = Get.find<UserController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfile();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: (widget.userId == null)
+          ? SafeArea(
+              child: Drawer(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 4.w),
+                    Text(
+                      'Cou Cou!',
+                      style: TextStyle(
+                        color: Constants.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        fontFamily: "Inika",
+                      ),
+                    ),
+                    SizedBox(height: 4.w),
+                    ListTile(
+                      title: Text(
+                        'Reset Password',
+                        style: TextStyle(
+                          color: Constants.black,
+                          fontFamily: "Inika",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onTap: () {
+                        context.push(UpdatePasswordScreen.routeName);
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Update Address',
+                        style: TextStyle(
+                          color: Constants.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Inika",
+                        ),
+                      ),
+                      onTap: () {
+                        context.push(UpdateAddressScreen.routeName);
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Policy, T&C',
+                        style: TextStyle(
+                          color: Constants.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Inika",
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    // ListTile(
+                    //   title: Text(
+                    //     'Language',
+                    //     style: TextStyle(
+                    //       color: Constants.black,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w500,
+                    //       fontFamily: "Inika",
+                    //     ),
+                    //   ),
+                    //   onTap: () {},
+                    // ),
+                    ListTile(
+                      title: Text(
+                        'Support',
+                        style: TextStyle(
+                          color: Constants.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Inika",
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Constants.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Inika",
+                        ),
+                      ),
+                      onTap: () {
+                        LogoutDialog.showLogoutDialog(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Constants.white,
+        iconTheme: IconThemeData(color: Constants.black),
+        title: InkWell(
+          onTap: () {
+            final navbarController = Get.find<NavbarController>();
+            navbarController.currentIndex.value = 1;
+          },
+          child: Text(
+            "Cou Cou!",
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              fontFamily: "Inika",
+            ),
+          ),
+        ),
+        actions: (widget.userId == null)
+            ? [
+                IconButton(
+                  onPressed: () {
+                    _scaffoldKey.currentState!.openEndDrawer();
+                  },
+                  icon: Icon(
+                    Icons.menu,
+                    color: Constants.black,
+                  ),
+                ),
+              ]
+            : null,
+      ),
+      body: loading == true
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Constants.primaryColor,
+              ),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: Column(
+                  children: [
+                    _userImage(),
+                    SizedBox(height: 2.w),
+                    Text(
+                      "@${userProfile?.username}",
+                      style: TextStyle(
+                        color: Constants.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Inika",
+                      ),
+                    ),
+                    SizedBox(height: 4.w),
+                    Row(
+                      children: [
+                        Text(
+                          "Posts (${userProfile?.postCount})",
+                          style: TextStyle(
+                            color: Constants.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Inika",
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.w),
+                    GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 3.w,
+                        crossAxisSpacing: 3.w,
+                      ),
+                      itemCount: userProfile?.userPost?.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = userProfile?.userPost?[index];
+
+                        return InkWell(
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfilePageView(
+                                  postList: userProfile?.userPost ?? [],
+                                  initialIndex: index,
+                                ),
+                              ),
+                            );
+
+                            if (result == true) {
+                              getProfile();
+                            }
+                            // await PostRepo().getPostData(item!.id!).then(
+                            //       (value) => context.push(
+                            //         UploadPostDetailsScreen.routeName,
+                            //         extra: value.data,
+                            //       ),
+                            //     );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              item?.thumbnail ?? "",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget _userImage() {
+    return Center(
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: () {
+              context.push(
+                DismissPage.routeName,
+                extra: {
+                  "initialIndex": 0,
+                  "imageList": [userProfile?.imageUrl],
+                  "isVideo": false
+                },
+              );
+            },
+            child: DefaultPicProvider.getCircularUserProfilePic(
+              profilePic: userProfile?.imageUrl,
+              userName:
+                  "${userProfile?.firstname ?? "N"} ${userProfile?.lastname ?? "N"}",
+              size: 100,
+            ),
+          ),
+          if (userProfile?.id == userController.userData.value.id)
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: InkWell(
+                onTap: () {
+                  openImagePickerDialog();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Constants.white,
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: Constants.black,
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Icon(
+                      Icons.edit,
+                      size: 2.t,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void openImagePickerDialog() async {
+    final XFile? filePath = await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(18.0),
+                topRight: Radius.circular(18.0))),
+        builder: (builder) {
+          return const SelectImageSourceBottomsheet();
+        });
+
+    if (filePath != null) {
+      final Uint8List bytes = await filePath.readAsBytes();
+      final croppedImage =
+          await context.push(CropImagePage.routeName, extra: bytes);
+      // final croppedImage = await Get.to(() => CropImagePage(imageBytes: bytes));
+
+      if (croppedImage != null) {
+        final File finalImage =
+            await ImageUtil.saveImageToTempStorage(croppedImage as Uint8List);
+
+        // save image on aws
+        updateUserProfile(finalImage);
+      }
+    }
+  }
+
+  Future<String>? _uploadFile(File file) async {
+    final currentTimeMillisecond =
+        DateTime.now().millisecondsSinceEpoch.toString();
+
+    final userId = userController.userData.value.id!;
+
+    var filePath =
+        'Profile_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond';
+
+    final downloadUrl = await S3Util.uploadFileToAws(file, filePath);
+
+    debugPrint('downloadUrl: $downloadUrl');
+
+    return downloadUrl!;
+  }
+
+  void updateUserProfile(File file) async {
+    loading = true;
+    setState(() {});
+
+    final isInternet = await InternetUtil.isInternetConnected();
+
+    if (isInternet) {
+      try {
+        final String? imageUrl = await _uploadFile(file);
+
+        String id = userController.userData.value.id!;
+
+        Map payload = {
+          "id": id,
+          "imageUrl": imageUrl ?? "",
+        };
+
+        final result = await UserRepo().updateUserProfile(payload);
+
+        if (result.status == true) {
+          userProfile!.imageUrl = imageUrl;
+          userController.getUserDataById();
+          setState(() {});
+        } else {
+          SnackBarUtil.showSnackBar(result.message!, context: context);
+        }
+        loading = false;
+        setState(() {});
+      } catch (error) {
+        loading = false;
+        setState(() {});
+        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        debugPrint('error: $error');
+      }
+    } else {
+      loading = false;
+      setState(() {});
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
+    }
+  }
+
+  void getProfile() async {
+    loading = true;
+    setState(() {});
+
+    final isInternet = await InternetUtil.isInternetConnected();
+
+    if (isInternet) {
+      try {
+        String id;
+
+        if (widget.userId != null) {
+          id = widget.userId!;
+        } else {
+          id = userController.userData.value.id!;
+        }
+
+        final result = await UserRepo().getUserProfile(id);
+
+        if (result.status == true) {
+          userProfile = result.data;
+          setState(() {});
+        } else {
+          SnackBarUtil.showSnackBar(result.message!, context: context);
+        }
+        loading = false;
+        setState(() {});
+      } catch (error) {
+        loading = false;
+        setState(() {});
+        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        debugPrint('error: $error');
+      }
+    } else {
+      loading = false;
+      setState(() {});
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
+    }
+  }
+}

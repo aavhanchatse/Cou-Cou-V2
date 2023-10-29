@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-coucouv2-dev-101653-authRole",
+      "UnauthRoleArn": "arn:aws:iam::942158607141:role/amplify-coucouv2-dev-101653-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::942158607141:role/amplify-coucouv2-dev-101653-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-coucouv2-dev-101653-deployment",
+      "UnauthRoleName": "amplify-coucouv2-dev-101653-unauthRole",
+      "StackName": "amplify-coucouv2-dev-101653",
+      "StackId": "arn:aws:cloudformation:ap-south-1:942158607141:stack/amplify-coucouv2-dev-101653/af8f75f0-73ba-11ee-8a51-06807279f352",
+      "AmplifyAppId": "d7a0f4pd4f50q"
+    },
+    "categories": {
+      "auth": {
+        "coucouv20b5a518c": {}
+      },
+      "storage": {
+        "s37a6988da": {}
+      }
+    }
+  }
+}
