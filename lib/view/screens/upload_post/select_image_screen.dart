@@ -23,6 +23,7 @@ class SelectImageScreen extends StatefulWidget {
 
 class _SelectImageScreenState extends State<SelectImageScreen> {
   List<Album>? _albums;
+  // List<int>? _media;
   List<Medium>? _media;
   bool _loading = true;
 
@@ -54,6 +55,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Constants.white,
+        centerTitle: true,
         title: InkWell(
           onTap: () {},
           child: Text(
@@ -70,8 +72,8 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
           onPressed: () {
             context.pop();
           },
-          icon: Icon(
-            Icons.arrow_back,
+         icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
             color: Constants.black,
           ),
         ),
@@ -102,7 +104,12 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
                         child: FadeInImage(
                           fit: BoxFit.cover,
                           placeholder: MemoryImage(kTransparentImage),
-                          image: PhotoProvider(mediumId: _media![index].id),
+                          image: ThumbnailProvider(
+                            mediumId: _media![index].id,
+                          ),
+                          // image: PhotoProvider(
+                          //   mediumId: _media![index].id,
+                          // ),
                         ),
                       ),
                     );
@@ -152,6 +159,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
       _albums = albums;
       _loading = false;
 
+      // List<int> mediaPage = await _albums!.first.getThumbnail();
       MediaPage mediaPage = await _albums!.first.listMedia();
       _media = mediaPage.items;
     }

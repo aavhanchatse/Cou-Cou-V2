@@ -7,6 +7,7 @@ import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/dialogs/delete_post_dialog.dart';
+import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
@@ -27,6 +28,8 @@ class PageViewWidget extends StatefulWidget {
 
 class _PageViewWidgetState extends State<PageViewWidget> {
   PostData? post;
+
+  final userController = Get.find<UserController>();
 
   void getPostData() async {
     await PostRepo().getPostData(widget.id).then(
@@ -145,50 +148,51 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           //     color: Constants.black,
           //   ),
           // ),
-          PopupMenuButton<int>(
-            itemBuilder: (context) => [
-              // popupmenu item 1
-              PopupMenuItem(
-                value: 1,
-                // row has two child icon and text.
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit),
-                    SizedBox(width: 2.w),
-                    const Text("Edit"),
-                  ],
+          if (post!.userSingleData!.id == userController.userData.value.id)
+            PopupMenuButton<int>(
+              itemBuilder: (context) => [
+                // popupmenu item 1
+                PopupMenuItem(
+                  value: 1,
+                  // row has two child icon and text.
+                  child: Row(
+                    children: [
+                      const Icon(Icons.edit),
+                      SizedBox(width: 2.w),
+                      const Text("Edit"),
+                    ],
+                  ),
                 ),
-              ),
-              // popupmenu item 2
-              PopupMenuItem(
-                value: 2,
-                // row has two child icon and text
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete_outlined),
-                    SizedBox(width: 2.w),
-                    const Text("Delete"),
-                  ],
+                // popupmenu item 2
+                PopupMenuItem(
+                  value: 2,
+                  // row has two child icon and text
+                  child: Row(
+                    children: [
+                      const Icon(Icons.delete_outlined),
+                      SizedBox(width: 2.w),
+                      const Text("Delete"),
+                    ],
+                  ),
                 ),
+              ],
+              offset: const Offset(0, 100),
+              color: Colors.white,
+              icon: Icon(
+                Icons.more_vert,
+                color: Constants.black,
               ),
-            ],
-            offset: const Offset(0, 100),
-            color: Colors.white,
-            icon: Icon(
-              Icons.more_vert,
-              color: Constants.black,
-            ),
-            elevation: 2,
-            onSelected: (value) {
-              // debugPrint('selected value: $value');
+              elevation: 2,
+              onSelected: (value) {
+                // debugPrint('selected value: $value');
 
-              if (value == 1) {
-                editChallenge();
-              } else if (value == 2) {
-                deleteStory();
-              }
-            },
-          ),
+                if (value == 1) {
+                  editChallenge();
+                } else if (value == 2) {
+                  deleteStory();
+                }
+              },
+            ),
         ],
       ),
     );
@@ -266,11 +270,19 @@ class _PageViewWidgetState extends State<PageViewWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "#${post!.challengeData!.challengeName}",
-                  style: TextStyle(
-                    color: Constants.black,
-                    fontWeight: FontWeight.bold,
+                InkWell(
+                  onTap: () {
+                    context.push(
+                      ChallengeDetailsScreen.routeName,
+                      extra: {"id": post!.challengeData!.id},
+                    );
+                  },
+                  child: Text(
+                    "#${post!.challengeData!.challengeName}",
+                    style: TextStyle(
+                      color: Constants.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 // Text(

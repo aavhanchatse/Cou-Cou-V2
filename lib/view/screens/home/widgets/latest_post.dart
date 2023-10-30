@@ -49,62 +49,65 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                 SizedBox(height: 2.w),
                 SizedBox(
                   height: 22.w,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4.w),
-                      child: Row(
-                        children: controller.topPostList.map((item) {
-                          final index = controller.topPostList
-                              .indexWhere((element) => element.id == item.id);
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: Wrap(
+                      spacing: 4.w,
+                      children: controller.topPostList.map((item) {
+                        final index = controller.topPostList
+                            .indexWhere((element) => element.id == item.id);
 
-                          return Padding(
-                            padding: EdgeInsets.only(right: 3.w),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ReelsPageView(
-                                          postList: controller.topPostList,
-                                          initialIndex: index,
+                        return index > 4
+                            ? const SizedBox()
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ReelsPageView(
+                                            postList: controller.topPostList,
+                                            initialIndex: index,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    height: 15.w,
-                                    width: 15.w,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.network(
-                                        item.thumbnail ?? "",
-                                        height: 15.w,
-                                        width: 15.w,
-                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                    child: SizedBox(
+                                      height: 15.w,
+                                      width: 15.w,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          item.thumbnail ?? "",
+                                          height: 15.w,
+                                          width: 15.w,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 2.w),
-                                Text(
-                                  DateUtil.timeAgo(item.createdAt!),
-                                  // DateUtil.timeAgo3(item.createdAt!),
-                                  style: TextStyle(
-                                    color: Constants.black,
-                                    fontSize: 12,
+                                  SizedBox(height: 2.w),
+                                  SizedBox(
+                                    width: 15.w,
+                                    child: Text(
+                                      DateUtil.timeAgo2(item.createdAt!),
+                                      // DateUtil.timeAgo3(item.createdAt!),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Constants.black,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                                ],
+                              );
+                      }).toList(),
                     ),
                   ),
+
                   // child: ListView.separated(
                   //   padding: EdgeInsets.symmetric(horizontal: 4.w),
                   //   shrinkWrap: true,

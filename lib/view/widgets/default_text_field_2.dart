@@ -12,6 +12,7 @@ class DefaultTextField2 extends StatelessWidget {
   final Widget? prefixIcon;
   final String hintText;
   final bool enabled;
+  final bool readOnly;
   final String? initialValue;
   final int? maxLines;
   final TextInputType? keyboardType;
@@ -32,6 +33,7 @@ class DefaultTextField2 extends StatelessWidget {
     this.prefixIcon,
     required this.hintText,
     this.enabled = true,
+    this.readOnly = false,
     this.initialValue,
     this.maxLines = 1,
     this.keyboardType,
@@ -78,7 +80,7 @@ class DefaultTextField2 extends StatelessWidget {
           // textInputAction: TextInputAction.,
           obscureText: obscureText,
           enabled: enabled,
-
+          readOnly: readOnly,
           decoration: InputDecoration(
             fillColor: Constants.white,
             filled: true,

@@ -89,8 +89,8 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
             onPressed: () {
               context.pop();
             },
-            icon: Icon(
-              Icons.arrow_back,
+            icon: ImageIcon(
+              const AssetImage("assets/icons/back_arrow.png"),
               color: Constants.black,
             ),
           ),
@@ -214,11 +214,21 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 4.w),
-                        const Text(
-                          "Caption (max 250 words)",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                        const Row(
+                          children: [
+                            Text(
+                              "Caption",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              " (*max 250 words)",
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 2.w),
                         DefaultTextField(
@@ -279,7 +289,9 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return const PostUploadedSuccessDialog();
+          return PostUploadedSuccessDialog(
+            update: widget.postData == null ? false : true,
+          );
         });
   }
 

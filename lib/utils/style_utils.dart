@@ -91,6 +91,15 @@ class StyleUtil {
     );
   }
 
+  static BoxShadow shadow3() {
+    return BoxShadow(
+      color: Constants.black.withOpacity(0.8),
+      blurRadius: 6,
+      spreadRadius: 2,
+      offset: const Offset(0, 0),
+    );
+  }
+
   static List<BoxShadow> jobCardShadow() {
     return [
       BoxShadow(color: HexColor('C7C7DE').withOpacity(0.5), blurRadius: 8)

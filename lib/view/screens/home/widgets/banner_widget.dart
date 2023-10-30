@@ -153,7 +153,7 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   Widget _infoVideosCarousel(BuildContext context) {
     return SizedBox(
-      height: 39.h,
+      height: 42.h,
       child: CarouselSlider.builder(
         itemCount: controller.bannerList.length,
         itemBuilder: (_, index, __) {
@@ -172,7 +172,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 4.w),
                   width: 100.w,
-                  height: 20.h,
+                  height: 50.w,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
@@ -207,7 +207,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           viewportFraction: 1.0,
           disableCenter: true,
           initialPage: 0,
-          autoPlay: true,
+          autoPlay: false,
           enableInfiniteScroll: true,
         ),
       ),

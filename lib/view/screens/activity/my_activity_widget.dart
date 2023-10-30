@@ -306,14 +306,15 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
       backgroundColor: Constants.white,
       iconTheme: IconThemeData(color: Constants.black),
       leading: IconButton(
-          onPressed: () {
-            final navbarController = Get.find<NavbarController>();
-            navbarController.currentIndex.value = 1;
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Constants.black,
-          )),
+        onPressed: () {
+          final navbarController = Get.find<NavbarController>();
+          navbarController.currentIndex.value = 1;
+        },
+        icon: ImageIcon(
+          const AssetImage("assets/icons/back_arrow.png"),
+          color: Constants.black,
+        ),
+      ),
       centerTitle: true,
       title: Text(
         "Notification",

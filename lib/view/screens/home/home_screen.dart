@@ -38,6 +38,7 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(
               Icons.search,
               color: Constants.black,
+              size: 32,
             ),
           ),
         ],
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const BannerWidget(),
             const LatestPostWidget(),
-            SizedBox(height: 4.w),
+            SizedBox(height: 8.w),
             const TimeLineWidget(),
             SizedBox(height: 20.w),
           ],

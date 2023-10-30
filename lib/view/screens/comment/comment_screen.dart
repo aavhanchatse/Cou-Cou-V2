@@ -62,10 +62,10 @@ class CommentScreenState extends State<CommentScreen> {
               onPressed: () {
                 context.pop();
               },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Constants.black,
-              )),
+              icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
+            color: Constants.black,
+          ),),
           title: Text(
             "Comments",
             style: TextStyle(

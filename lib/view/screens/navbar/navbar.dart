@@ -53,7 +53,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     super.initState();
 
     getUser();
-    _checkNotification();
+    // _checkNotification();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ratingDialog();

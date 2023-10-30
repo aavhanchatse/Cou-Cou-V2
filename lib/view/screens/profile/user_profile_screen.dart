@@ -14,6 +14,7 @@ import 'package:coucou_v2/utils/s3_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/bottomsheets/select_image_source_bottomsheet.dart';
 import 'package:coucou_v2/view/dialogs/logout_dialog.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/profile/profile_page_view.dart';
 import 'package:coucou_v2/view/screens/update_address/update_address_screen.dart';
 import 'package:coucou_v2/view/screens/update_password/update_password_screen.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -56,96 +58,118 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       endDrawer: (widget.userId == null)
           ? SafeArea(
               child: Drawer(
+                width: 50.w,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(height: 4.w),
-                    Text(
-                      'Cou Cou!',
-                      style: TextStyle(
-                        color: Constants.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        fontFamily: "Inika",
-                      ),
-                    ),
-                    SizedBox(height: 4.w),
-                    ListTile(
-                      title: Text(
-                        'Reset Password',
-                        style: TextStyle(
-                          color: Constants.black,
-                          fontFamily: "Inika",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Cou Cou!',
+                          style: TextStyle(
+                            color: Constants.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            fontFamily: "Inika",
+                          ),
                         ),
-                      ),
-                      onTap: () {
-                        context.push(UpdatePasswordScreen.routeName);
-                      },
+                      ],
                     ),
-                    ListTile(
-                      title: Text(
-                        'Update Address',
-                        style: TextStyle(
-                          color: Constants.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Inika",
-                        ),
+                    SizedBox(height: 10.w),
+                    Padding(
+                      padding: EdgeInsets.all(6.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            child: Text(
+                              'Reset Password',
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontFamily: "Inika",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            onTap: () {
+                              context.push(UpdatePasswordScreen.routeName);
+                            },
+                          ),
+                          SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'Update Address',
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {
+                              context.push(UpdateAddressScreen.routeName);
+                            },
+                          ),
+                          SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'Policy, T&C',
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 2.w),
+                          // InkWell(
+                          //   child: Text(
+                          //     'Language',
+                          //     style: TextStyle(
+                          //       color: Constants.black,
+                          //       fontSize: 18,
+                          //       fontWeight: FontWeight.w500,
+                          //       fontFamily: "Inika",
+                          //     ),
+                          //   ),
+                          //   onTap: () {},
+                          // ),
+                          // SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'Support',
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'Logout',
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {
+                              LogoutDialog.showLogoutDialog(context);
+                            },
+                          ),
+                          SizedBox(height: 52.h),
+                          _getVersionNumber(),
+                        ],
                       ),
-                      onTap: () {
-                        context.push(UpdateAddressScreen.routeName);
-                      },
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Policy, T&C',
-                        style: TextStyle(
-                          color: Constants.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Inika",
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
-                    // ListTile(
-                    //   title: Text(
-                    //     'Language',
-                    //     style: TextStyle(
-                    //       color: Constants.black,
-                    //       fontSize: 18,
-                    //       fontWeight: FontWeight.w500,
-                    //       fontFamily: "Inika",
-                    //     ),
-                    //   ),
-                    //   onTap: () {},
-                    // ),
-                    ListTile(
-                      title: Text(
-                        'Support',
-                        style: TextStyle(
-                          color: Constants.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Inika",
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: Constants.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Inika",
-                        ),
-                      ),
-                      onTap: () {
-                        LogoutDialog.showLogoutDialog(context);
-                      },
                     ),
                   ],
                 ),
@@ -154,12 +178,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           : null,
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            final navbarController = Get.find<NavbarController>();
+            navbarController.currentIndex.value = 1;
+            context.go(NavBar.routeName);
+          },
+          icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
+            color: Constants.black,
+          ),
+        ),
         backgroundColor: Constants.white,
         iconTheme: IconThemeData(color: Constants.black),
         title: InkWell(
           onTap: () {
             final navbarController = Get.find<NavbarController>();
             navbarController.currentIndex.value = 1;
+            context.go(NavBar.routeName);
           },
           child: Text(
             "Cou Cou!",
@@ -177,8 +214,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   onPressed: () {
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
-                  icon: Icon(
-                    Icons.menu,
+                  icon: ImageIcon(
+                    const AssetImage("assets/icons/drawer_icon.png"),
                     color: Constants.black,
                   ),
                 ),
@@ -354,6 +391,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
     }
   }
+
+  Widget _getVersionNumber() => FutureBuilder(
+        future: PackageInfo.fromPlatform(),
+        builder: (BuildContext context, AsyncSnapshot<PackageInfo> snap) {
+          if (snap.hasData) {
+            return Text(
+              'App Version ${snap.data!.version}',
+              style: TextStyle(
+                color: Constants.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Inika",
+              ),
+            );
+          }
+          return Container();
+        },
+      );
 
   Future<String>? _uploadFile(File file) async {
     final currentTimeMillisecond =

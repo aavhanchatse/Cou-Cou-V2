@@ -6,7 +6,6 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/screens/login/registration_screen.dart';
 import 'package:coucou_v2/view/screens/login/reset_password_screen.dart';
 import 'package:coucou_v2/view/widgets/custom_outline_button.dart';
-import 'package:coucou_v2/view/widgets/primary_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -102,7 +101,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Widget _mainBody() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 7.w),
+      padding: EdgeInsets.only(left: 7.w, right: 7.w, top: 2.w),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -123,12 +122,12 @@ class _OTPScreenState extends State<OTPScreen> {
           Text(
             'Phone No\n+91 ${widget.phoneNumber}',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: "Inika",
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
+          const Text(
             'OTP',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -136,9 +135,9 @@ class _OTPScreenState extends State<OTPScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 1.h),
           _pinCodeField(),
-          SizedBox(height: 7.h),
+          SizedBox(height: 1.h),
           CustomOutlineButton(
               onTap: () {
                 if (_otp!.length == 6) {
@@ -150,7 +149,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 }
               },
               title: "Verify".tr),
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.h),
           TextButton(
             onPressed: () {
               context.pop();
@@ -198,22 +197,20 @@ class _OTPScreenState extends State<OTPScreen> {
       );
 
   Future<void> verifyPhone() async {
-    final PhoneCodeSent codeSent =
-        (String verificationId, [int? forceResendingToken]) async {
+    codeSent(String verificationId, [int? forceResendingToken]) async {
       actualCode = verificationId;
       debugPrint('Code sent to ${widget.phoneNumber}');
       SnackBarUtil.showSnackBar("Enter the code sent to ${widget.phoneNumber}",
           context: context);
-    };
+    }
 
-    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
+    codeAutoRetrievalTimeout(String verificationId) {
       // actualCode = verificationId;
 
       debugPrint("Firebase otp auto retrive time out");
-    };
+    }
 
-    final PhoneVerificationFailed verificationFailed = (authException) {
+    verificationFailed(authException) {
       debugPrint("authException.message: ${authException.message}");
 
       if (authException.message!.contains('not authorized')) {
@@ -227,10 +224,9 @@ class _OTPScreenState extends State<OTPScreen> {
         SnackBarUtil.showSnackBar('Something has gone wrong, please try later',
             context: context);
       }
-    };
+    }
 
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential auth) {
+    verificationCompleted(AuthCredential auth) {
       debugPrint('Auto retrieving verification code');
       // _authCredential = auth;
       // firebaseAuth.signInWithCredential(_authCredential!).then((value) {
@@ -242,7 +238,7 @@ class _OTPScreenState extends State<OTPScreen> {
       // }).catchError((error) {
       //   SnackBarUtil.showSnackBar('Something has gone wrong, please try later');
       // });
-    };
+    }
 
     debugPrint("OTP send start +91${widget.phoneNumber}");
 
@@ -268,15 +264,17 @@ class _OTPScreenState extends State<OTPScreen> {
     }).then((result) {
       debugPrint('result : $result');
 
-      if (result != null && result.user != null) _goToPasswordSetupPage();
+      if (result.user != null) _goToPasswordSetupPage();
     });
   }
 
   void _goToPasswordSetupPage() {
     if (widget.register == true) {
-      context.push(RegistrationScreen.routeName, extra: widget.phoneNumber);
+      context.pushReplacement(RegistrationScreen.routeName,
+          extra: widget.phoneNumber);
     } else {
-      context.push(ResetPasswordScreen.routeName, extra: widget.phoneNumber);
+      context.pushReplacement(ResetPasswordScreen.routeName,
+          extra: widget.phoneNumber);
     }
   }
 
@@ -284,8 +282,8 @@ class _OTPScreenState extends State<OTPScreen> {
     return Column(
       children: [
         Container(
-          height: 20.h,
-          width: 20.h,
+          height: 17.h,
+          width: 17.h,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
@@ -296,7 +294,7 @@ class _OTPScreenState extends State<OTPScreen> {
         ),
         SizedBox(height: 0.5.h),
         Text(
-          'Cou-Cou!',
+          'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
             fontFamily: "Inika",

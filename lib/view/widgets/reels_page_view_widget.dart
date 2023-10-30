@@ -3,8 +3,12 @@ import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
+import 'package:coucou_v2/utils/date_util.dart';
+import 'package:coucou_v2/utils/default_pic_provider.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
+import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,9 +55,66 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                 _contentImage(),
                 _buttons(context),
                 _descriptionWidget(),
+                _headerWidget(),
               ],
             ),
           );
+  }
+
+  Widget _headerWidget() {
+    return Positioned(
+      top: 3.w,
+      left: 4.w,
+      child: InkWell(
+        onTap: () {
+          context.push(
+            UserProfileScreen.routeName,
+            extra: post?.userSingleData?.id,
+          );
+        },
+        child: Row(
+          children: [
+            DefaultPicProvider.getCircularUserProfilePic(
+              profilePic: post?.userSingleData!.imageUrl,
+              userName:
+                  "${post?.userSingleData!.firstname} ${post?.userSingleData!.lastname}",
+              size: 40,
+            ),
+            SizedBox(width: 2.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post?.userSingleData!.username ?? "",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Constants.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  post?.voiceUrl ?? "",
+                  style: TextStyle(
+                    fontFamily: "Inika",
+                    color: Constants.white,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  DateUtil.timeAgo2(post!.createdAt!),
+                  // DateUtil.timeAgo(post!.createdAt!),
+                  style: TextStyle(
+                    color: Constants.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _contentImage() {
@@ -155,12 +216,20 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "#challengeName",
-              // "#${post!.challengeData!.challengeName}",
-              style: TextStyle(
-                color: Constants.white,
-                fontWeight: FontWeight.bold,
+            InkWell(
+              onTap: () {
+                context.push(
+                  ChallengeDetailsScreen.routeName,
+                  extra: {"id": post!.challengeData!.id},
+                );
+              },
+              child: Text(
+                // "#challengeName",
+                "#${post!.challengeData!.challengeName}",
+                style: TextStyle(
+                  color: Constants.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             // Text(

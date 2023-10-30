@@ -60,8 +60,8 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
           onPressed: () {
             context.pop();
           },
-          icon: Icon(
-            Icons.arrow_back,
+          icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
             color: Constants.black,
           ),
         ),
@@ -148,68 +148,83 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                   SizedBox(height: 2.w),
                   SizedBox(
                     height: 27.w,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        child: Row(
-                          children: topPost.map((item) {
-                            final index = topPost
-                                .indexWhere((element) => element.id == item.id);
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      child: Wrap(
+                        spacing: 4.w,
+                        children: topPost.map((item) {
+                          final index = topPost
+                              .indexWhere((element) => element.id == item.id);
 
-                            return Padding(
-                              padding: EdgeInsets.only(right: 3.w),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ReelsPageView(
-                                            postList: topPost,
-                                            initialIndex: index,
+                          return index > 4
+                              ? const SizedBox()
+                              : Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ReelsPageView(
+                                              postList: topPost,
+                                              initialIndex: index,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: SizedBox(
+                                        height: 15.w,
+                                        width: 15.w,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: Image.network(
+                                            item.thumbnail ?? "",
+                                            height: 15.w,
+                                            width: 15.w,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                      );
-                                    },
-                                    child: SizedBox(
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.w),
+                                    SizedBox(
                                       height: 15.w,
-                                      width: 15.w,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: Image.network(
-                                          item.thumbnail ?? "",
-                                          height: 15.w,
-                                          width: 15.w,
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: Column(
+                                        children: [
+                                          if (item.userSingleData != null)
+                                            Text(
+                                              item.userSingleData!.firstname ??
+                                                  "",
+                                              style: TextStyle(
+                                                color: Constants.black,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Image.asset(
+                                                "assets/icons/cookie_selected.png",
+                                                height: 3.w,
+                                              ),
+                                              SizedBox(width: 1.w),
+                                              Text(
+                                                item.likeCount.toString(),
+                                                style: TextStyle(
+                                                  color: Constants.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 2.w),
-                                  if (item.userSingleData != null)
-                                    Text(
-                                      item.userSingleData!.firstname ?? "",
-                                      style: TextStyle(
-                                        color: Constants.black,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  Text(
-                                    item.likeCount.toString(),
-                                    style: TextStyle(
-                                      color: Constants.black,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                                  ],
+                                );
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -304,7 +319,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
   Widget _infoVideosCarousel(BuildContext context) {
     return SizedBox(
-      height: 39.h,
+      height: 42.h,
       child: CarouselSlider.builder(
         itemCount: 1,
         itemBuilder: (_, index, __) {
@@ -321,7 +336,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 4.w),
                   width: 100.w,
-                  height: 20.h,
+                  height: 50.w,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(

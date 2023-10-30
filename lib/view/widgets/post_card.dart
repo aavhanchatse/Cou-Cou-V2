@@ -6,6 +6,7 @@ import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/date_util.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
@@ -72,18 +73,27 @@ class _PostCardState extends State<PostCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "#${item!.challengeData!.challengeName}",
-                style: TextStyle(
-                  color: Constants.black,
-                  fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  context.push(
+                    ChallengeDetailsScreen.routeName,
+                    extra: {"id": item!.challengeData!.id},
+                  );
+                },
+                child: Text(
+                  "#${item!.challengeData!.challengeName}",
+                  style: TextStyle(
+                    color: Constants.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               ReadMoreText(
                 item?.caption ?? "",
                 trimLines: 1,
+                trimLength: 25,
                 colorClickableText: Colors.black,
-                trimMode: TrimMode.Line,
+                trimMode: TrimMode.Length,
                 trimCollapsedText: 'more',
                 trimExpandedText: 'less',
                 lessStyle: TextStyle(
@@ -222,8 +232,14 @@ class _PostCardState extends State<PostCard> {
               postDataList: item!,
               isViewChanged: widget.isInView,
             )
-          : Image.network(
-              item?.challengeVideo ?? "",
+          : ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              child: Image.network(
+                item?.challengeVideo ?? "",
+              ),
             ),
     );
   }
@@ -240,7 +256,7 @@ class _PostCardState extends State<PostCard> {
             profilePic: item?.userSingleData!.imageUrl,
             userName:
                 "${item?.userSingleData!.firstname} ${item?.userSingleData!.lastname}",
-            size: 40,
+            size: 60,
           ),
           SizedBox(width: 2.w),
           Column(
@@ -264,8 +280,8 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               Text(
-                // DateUtil.timeAgo2(item!.createdAt!),
-                DateUtil.timeAgo(item!.createdAt!),
+                DateUtil.timeAgo2(item!.createdAt!),
+                // DateUtil.timeAgo(item!.createdAt!),
                 style: TextStyle(
                   color: Constants.black,
                   fontSize: 12,

@@ -35,7 +35,7 @@ class DefaultPicProvider {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: Constants.primaryColor.withOpacity(0.3)),
+          border: Border.all(color: Constants.white),
           // boxShadow: StyleUtil.cardShadow(),
         ),
         child: ClipRRect(

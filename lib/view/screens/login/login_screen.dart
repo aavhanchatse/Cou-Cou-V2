@@ -50,9 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 SizedBox(height: 10.h),
                 _logo(),
-                SizedBox(height: 3.h),
+                SizedBox(height: 1.h),
                 _mainBody(),
-                SizedBox(height: 7.h),
+                SizedBox(height: 22.h),
+                // const Spacer(),
                 _bottomLine(),
               ],
             ),
@@ -73,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _mainBody() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 7.w),
+      padding: EdgeInsets.only(left: 7.w, right: 7.w, top: 4.w, bottom: 4.w),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -85,9 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             _signUpButton(),
-            SizedBox(height: 4.w),
+            SizedBox(height: 2.w),
             _phoneNumberTextField(),
-            SizedBox(height: 4.w),
+            SizedBox(height: 2.w),
             _passwordTextField(),
             SizedBox(height: 4.w),
             CustomOutlineButton(onTap: _login, title: "Login".tr),
@@ -100,18 +101,47 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _signUpButton() {
-    return TextButton(
-      onPressed: () {
+    // return TextButton(
+    //   onPressed: () {
+    //     context.push(PhoneNumberOTPScreen.routeName, extra: true);
+    //   },
+    //   child: Text(
+    //     "New User? Sign Up",
+    //     style: TextStyle(
+    //       color: Constants.textColor,
+    //       fontWeight: FontWeight.bold,
+    //       fontFamily: "Inika",
+    //       fontSize: 16,
+    //     ),
+    //   ),
+    // );
+    return InkWell(
+      onTap: () {
         context.push(PhoneNumberOTPScreen.routeName, extra: true);
       },
-      child: Text(
-        "New User? Sign Up",
-        style: TextStyle(
-          color: Constants.textColor,
-          fontWeight: FontWeight.bold,
-          fontFamily: "Inika",
-          fontSize: 16,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "New User?",
+            style: TextStyle(
+              color: Constants.textColor,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Inika",
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            " Sign Up",
+            style: TextStyle(
+              color: Constants.textColor,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Inika",
+              decoration: TextDecoration.underline,
+              fontSize: 18,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -122,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context.push(PhoneNumberOTPScreen.routeName, extra: false);
       },
       child: Text(
-        '${"Forgot Password".tr}?',
+        '${"Forgot Password ".tr}?',
         style: TextStyle(
           color: Constants.textColor,
           fontWeight: FontWeight.bold,
@@ -140,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
           "Password",
           style: TextStyle(
             fontSize: 16,
-            fontFamily: "Inika",
+            // fontFamily: "Inika",
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -160,6 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
           //     ),
           //   ),
           // ),
+          obscureText: true,
           validator: (String? value) {
             if (value!.trim().isEmpty) {
               return 'Enter valid password'.tr;
@@ -216,19 +247,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         Container(
-          height: 20.h,
-          width: 20.h,
+          height: 17.h,
+          width: 17.h,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
             color: Constants.white,
-            boxShadow: [StyleUtil.shadow2()],
+            boxShadow: [StyleUtil.shadow3()],
           ),
           child: Image.asset(LOGO),
         ),
         SizedBox(height: 0.5.h),
         Text(
-          'Cou-Cou!',
+          'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
             fontFamily: "Inika",

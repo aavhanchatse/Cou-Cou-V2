@@ -30,9 +30,9 @@ class _CropImagePageState extends State<CropImagePage> {
             // Get.back();
             context.pop();
           },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+          icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
+            color: Constants.black,
           ),
         ),
         title: const Text(

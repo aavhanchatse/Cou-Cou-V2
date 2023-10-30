@@ -17,6 +17,7 @@ class UserController extends GetxController {
 
   void getUserDataById() async {
     final userId = StorageManager().getUserId();
+
     final SuperResponse<UserData?> result =
         await UserRepo().getUserDataById(userId);
 

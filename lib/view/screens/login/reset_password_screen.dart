@@ -7,9 +7,7 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/screens/login/login_screen.dart';
 import 'package:coucou_v2/view/widgets/custom_outline_button.dart';
-import 'package:coucou_v2/view/widgets/default_text_field.dart';
 import 'package:coucou_v2/view/widgets/default_text_field_2.dart';
-import 'package:coucou_v2/view/widgets/primary_button.dart';
 import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -91,7 +89,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   Widget _mainBody() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 5.w),
+      padding: EdgeInsets.only(left: 7.w, right: 7.w, top: 2.w),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -109,13 +107,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 fontSize: 2.2.t,
               ),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 1.h),
             _passwordTextField(),
-            SizedBox(height: 4.w),
+            SizedBox(height: 2.w),
             _confirmPasswordTextField(),
-            SizedBox(height: 4.h),
+            SizedBox(height: 1.h),
             CustomOutlineButton(onTap: _continue, title: "Submit".tr),
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.h),
             TextButton(
               onPressed: () {
                 context.pop();
@@ -238,8 +236,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Column(
       children: [
         Container(
-          height: 20.h,
-          width: 20.h,
+          height: 17.h,
+          width: 17.h,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
@@ -250,7 +248,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         ),
         SizedBox(height: 0.5.h),
         Text(
-          'Cou-Cou!',
+          'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
             fontFamily: "Inika",

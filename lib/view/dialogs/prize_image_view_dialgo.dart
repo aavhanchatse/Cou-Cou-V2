@@ -74,7 +74,7 @@ class PrizeImageViewDialog extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Prize: ${prize.name ?? ""}",
+                  "Prize: ${prize.price ?? ""}",
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

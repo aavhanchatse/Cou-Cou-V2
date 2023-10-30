@@ -39,6 +39,7 @@ class UserData {
     this.v,
     this.postCount,
     this.verifyed,
+    this.address,
   });
 
   Location? location;
@@ -60,6 +61,7 @@ class UserData {
   String? bio;
   String? imageUrl;
   String? occupation;
+  String? address;
   String? profilePrivacy;
   List<String>? accountBlock;
   int? rewardsPoint;
@@ -97,6 +99,7 @@ class UserData {
         bio: json["bio"],
         imageUrl: json["imageUrl"],
         occupation: json["occupation"],
+        address: json["address"],
         profilePrivacy: json["profilePrivacy"],
         accountBlock: json["accountBlock"] == null
             ? null
@@ -122,6 +125,7 @@ class UserData {
         "email": email,
         "firstname": firstname,
         "lastname": lastname,
+        "address": address,
         "DOB": dob == null ? null : dob!.toIso8601String(),
         "username": username,
         "password": password,

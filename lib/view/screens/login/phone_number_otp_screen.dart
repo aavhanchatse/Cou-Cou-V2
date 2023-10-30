@@ -88,7 +88,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
     return Form(
       key: formKey,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 5.w),
+        padding: EdgeInsets.only(left: 7.w, right: 7.w, top: 2.w),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -117,11 +117,11 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
                 fontSize: 18,
               ),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 1.h),
             _phoneNumberTextField(),
-            SizedBox(height: 4.h),
-            CustomOutlineButton(onTap: _continue, title: "Send OTP".tr),
             SizedBox(height: 2.h),
+            CustomOutlineButton(onTap: _continue, title: "Send OTP".tr),
+            SizedBox(height: 1.h),
             TextButton(
               onPressed: () {
                 context.pop();
@@ -181,8 +181,8 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
     return Column(
       children: [
         Container(
-          height: 20.h,
-          width: 20.h,
+          height: 17.h,
+          width: 17.h,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
@@ -193,7 +193,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
         ),
         SizedBox(height: 0.5.h),
         Text(
-          'Cou-Cou!',
+          'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
             fontFamily: "Inika",

@@ -32,8 +32,8 @@ class EditImageScreen extends StatelessWidget {
           onPressed: () {
             context.pop();
           },
-          icon: Icon(
-            Icons.arrow_back,
+          icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
             color: Constants.black,
           ),
         ),
