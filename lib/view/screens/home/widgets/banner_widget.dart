@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
@@ -28,6 +29,11 @@ class _BannerWidgetState extends State<BannerWidget> {
     // TODO: implement initState
     super.initState();
     controller.getHomeScreenBanners();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'home_screen');
   }
 
   @override
@@ -84,6 +90,8 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   void successDialog(
       BuildContext context, RewardsPrize prize, ChallengeData item) async {
+    await analytics.logEvent(name: "prize_image_clicked");
+
     showCupertinoDialog(
         barrierDismissible: true,
         context: context,

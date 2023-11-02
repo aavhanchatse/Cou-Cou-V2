@@ -1,6 +1,7 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
@@ -121,7 +122,10 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              await analytics.logEvent(
+                                  name: "self_profile_tab");
+
                               navbarController.currentIndex.value = 0;
                               setState(() {});
                             },
@@ -151,7 +155,9 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              await analytics.logEvent(name: "post_upload");
+
                               context.push(SelectImageScreen.routeName);
                             },
                             child: Container(
@@ -173,7 +179,9 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              await analytics.logEvent(name: "notifications");
+
                               navbarController.currentIndex.value = 2;
                               setState(() {});
                             },

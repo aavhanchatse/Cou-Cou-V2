@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/my_activity_model_data.dart';
 import 'package:coucou_v2/repo/user_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
@@ -56,10 +57,12 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     isMyActivityClicked = false;
                     setState(() {});
                     _getData(isMyActivityClicked);
+
+                    await analytics.logEvent(name: "other_activity");
                   },
                   child: Container(
                     width: 35.w,
@@ -96,10 +99,12 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     isMyActivityClicked = true;
                     setState(() {});
                     _getData(isMyActivityClicked);
+
+                    await analytics.logEvent(name: "my_activity");
                   },
                   child: Container(
                     width: 35.w,

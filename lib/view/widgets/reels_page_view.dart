@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view_widget.dart';
@@ -28,6 +29,12 @@ class _ReelsPageViewState extends State<ReelsPageView> {
 
     _pageController = PageController(
         initialPage: widget.initialIndex ?? 0, viewportFraction: 1);
+
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'reels_screen');
   }
 
   @override

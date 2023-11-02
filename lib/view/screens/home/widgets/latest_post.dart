@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/date_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view.dart';
@@ -63,7 +64,10 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () async {
+                                      await analytics.logEvent(
+                                          name: "latest_post_clicked");
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

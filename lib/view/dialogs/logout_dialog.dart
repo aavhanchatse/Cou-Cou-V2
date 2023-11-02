@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/user_data.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
@@ -137,6 +138,7 @@ class LogoutDialog {
         if (result.status == true) {
           StorageManager().eraseStorage();
           Get.find<UserController>().userData.value = UserData();
+          await analytics.logEvent(name: "logout_success");
 
           // Get.offAll(() => const LoginScreen());
           context.go(LoginScreen.routeName);

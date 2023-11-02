@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/user_data.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
@@ -35,6 +36,17 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _phone;
   String? _password;
   bool showPassword = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result.status == true) {
         _storeData(result.data!, result.token!);
+        await analytics.logEvent(name: "user_logged_in");
 
         context.go(NavBar.routeName);
       } else {

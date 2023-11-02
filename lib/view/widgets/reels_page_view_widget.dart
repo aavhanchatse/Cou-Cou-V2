@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
@@ -191,7 +192,9 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
           ),
           SizedBox(height: 2.w),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              await analytics.logEvent(name: "share_post");
+
               shareImageWithText(
                   post?.challengeVideo ?? "", post?.deepLinkUrl ?? "");
             },
@@ -279,6 +282,7 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
     };
 
     PostRepo().addPostLike(payLoad).then((value) async {
+      await analytics.logEvent(name: "like_clicked");
       post = value.data;
       setState(() {});
 

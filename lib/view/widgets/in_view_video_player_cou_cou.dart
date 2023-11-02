@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
@@ -167,7 +168,9 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
                     // top: 0,
                     bottom: 10,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await analytics.logEvent(name: "mute_clicked");
+
                         soundToggle();
                       },
                       child: Image.asset(

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,11 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
     // TODO: implement initState
     super.initState();
     getImages();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'image_select_screen');
   }
 
   @override
@@ -134,6 +140,8 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
       controller.videoFilePath.value = "";
       controller.musicName.value = "";
 
+      await analytics.logEvent(name: "upload_image_camera");
+
       context.push(EditImageScreen.routeName);
     }
   }
@@ -147,6 +155,8 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
     controller.fileBytes.value = bytes;
     controller.videoFilePath.value = "";
     controller.musicName.value = "";
+
+    await analytics.logEvent(name: "select_gallery_image");
 
     context.push(EditImageScreen.routeName);
   }

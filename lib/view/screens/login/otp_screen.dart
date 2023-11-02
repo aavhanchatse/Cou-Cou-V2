@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
@@ -44,6 +45,11 @@ class _OTPScreenState extends State<OTPScreen> {
     // TODO: implement initState
     super.initState();
     verifyPhone();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'otp_screen');
   }
 
   @override
@@ -268,7 +274,9 @@ class _OTPScreenState extends State<OTPScreen> {
     });
   }
 
-  void _goToPasswordSetupPage() {
+  void _goToPasswordSetupPage() async {
+    await analytics.logEvent(name: "otp_validated");
+
     if (widget.register == true) {
       context.pushReplacement(RegistrationScreen.routeName,
           extra: widget.phoneNumber);

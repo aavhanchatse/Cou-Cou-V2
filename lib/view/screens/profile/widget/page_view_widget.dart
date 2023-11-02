@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
@@ -131,7 +132,9 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           ),
           SizedBox(width: 2.w),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              await analytics.logEvent(name: "share_post");
+
               shareImageWithText(
                   post?.challengeVideo ?? "", post?.deepLinkUrl ?? "");
             },
@@ -199,6 +202,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
   }
 
   void editChallenge() async {
+    await analytics.logEvent(name: "edit_post_button");
+
     // Get.back();
     await PostRepo().getPostData(post!.id!).then(
           (value) => context.push(
@@ -213,6 +218,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
   }
 
   void deleteStory() async {
+    await analytics.logEvent(name: "delete_post_button");
+
     final result = await showCupertinoDialog(
         barrierDismissible: true,
         context: context,
@@ -241,6 +248,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         // context.pop();
 
         if (result.status == true) {
+          await analytics.logEvent(name: "delete_post_success");
+
           context.pop(true);
           SnackBarUtil.showSnackBar(result.message!, context: context);
 
@@ -335,6 +344,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
     };
 
     PostRepo().addPostLike(payLoad).then((value) async {
+      await analytics.logEvent(name: "like_clicked");
       post = value.data;
       setState(() {});
 

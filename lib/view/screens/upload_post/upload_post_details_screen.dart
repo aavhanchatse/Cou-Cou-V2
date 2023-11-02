@@ -4,6 +4,7 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_name_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/models/super_response.dart';
@@ -60,6 +61,17 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     super.initState();
 
     getChallengeNames();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    if (widget.postData == null) {
+      await analytics.setCurrentScreen(
+          screenName: 'upload_post_details_screen');
+    } else {
+      await analytics.setCurrentScreen(
+          screenName: 'update_post_details_screen');
+    }
   }
 
   void setData() {
@@ -406,6 +418,12 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
         // context.pop();
 
         if (result.status == true) {
+          if (widget.postData == null) {
+            await analytics.logEvent(name: "post_uploaded_successfully");
+          } else {
+            await analytics.logEvent(name: "post_updated_successfully");
+          }
+
           // context.go(NavBar.routeName);
           final homescreenController = Get.find<HomescreenController>();
 

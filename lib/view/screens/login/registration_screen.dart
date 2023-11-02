@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
 import 'package:coucou_v2/utils/date_picker_util.dart';
 import 'package:coucou_v2/utils/date_util.dart';
@@ -82,7 +83,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void setAnalytics() async {
-    // await analytics.setCurrentScreen(screenName: 'sign_up_page_visit');
+    await analytics.setCurrentScreen(screenName: 'sign_up_page_visit');
   }
 
   @override
@@ -736,7 +737,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         context.pop();
 
         if (result.status == true) {
-          // await analytics.logEvent(name: "registration");
+          await analytics.logEvent(name: "registration_success");
 
           context.go(LoginScreen.routeName);
           SnackBarUtil.showSnackBar(result.message!, context: context);

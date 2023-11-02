@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/comment_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
@@ -40,6 +41,11 @@ class CommentScreenState extends State<CommentScreen> {
     // TODO: implement initState
     super.initState();
     _getCommentData();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'comments_screen');
   }
 
   @override
@@ -231,6 +237,7 @@ class CommentScreenState extends State<CommentScreen> {
         final result = await PostRepo().deleteComment(item.id!);
 
         if (result.status == true) {
+          await analytics.logEvent(name: "delete_comment");
           _getCommentData();
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);
@@ -252,6 +259,8 @@ class CommentScreenState extends State<CommentScreen> {
         final result = await PostRepo().deleteSubComment(id);
 
         if (result.status == true) {
+          await analytics.logEvent(name: "delete_sub_comment");
+
           _getCommentData();
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);
@@ -324,7 +333,7 @@ class CommentScreenState extends State<CommentScreen> {
 
         if (result.status == true) {
           commentTextController.text = "";
-          // await analytics.logEvent(name: "post_comment");
+          await analytics.logEvent(name: "post_comment");
           _getCommentData();
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);
@@ -366,7 +375,7 @@ class CommentScreenState extends State<CommentScreen> {
         final result = await PostRepo().addSubComment(payload);
 
         if (result.status == true) {
-          // await analytics.logEvent(name: "post_comment");
+          await analytics.logEvent(name: "user_sub_comment");
           _getCommentData();
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);

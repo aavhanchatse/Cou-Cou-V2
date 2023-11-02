@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/user_profile_data.dart';
 import 'package:coucou_v2/repo/user_repo.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
@@ -50,6 +51,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     // TODO: implement initState
     super.initState();
     getProfile();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    if (widget.userId == null) {
+      await analytics.setCurrentScreen(screenName: 'self_profile_screen');
+    } else {
+      await analytics.setCurrentScreen(screenName: 'other_profile_screen');
+    }
   }
 
   @override
@@ -124,7 +134,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 fontFamily: "Inika",
                               ),
                             ),
-                            onTap: () {},
+                            onTap: () async {
+                              await analytics.logEvent(name: "privacy_policy");
+                            },
                           ),
                           SizedBox(height: 2.w),
                           InkWell(
@@ -156,7 +168,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 fontFamily: "Inika",
                               ),
                             ),
-                            onTap: () {},
+                            onTap: () async {
+                              await analytics.logEvent(name: "support");
+                            },
                           ),
                           SizedBox(height: 2.w),
                           InkWell(
@@ -169,7 +183,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 fontFamily: "Inika",
                               ),
                             ),
-                            onTap: () {
+                            onTap: () async {
+                              await analytics.logEvent(name: "logout");
+
                               LogoutDialog.showLogoutDialog(context);
                             },
                           ),
@@ -280,6 +296,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
                         return InkWell(
                           onTap: () async {
+                            await analytics.logEvent(name: "view_profile_post");
+
                             final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -322,7 +340,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       child: Stack(
         children: [
           InkWell(
-            onTap: () {
+            onTap: () async {
+              await analytics.logEvent(name: "view_profile_image");
+
               context.push(
                 DismissPage.routeName,
                 extra: {
@@ -372,6 +392,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void openImagePickerDialog() async {
+    await analytics.logEvent(name: "edit_profile_image");
+
     final XFile? filePath = await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -453,6 +475,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         final result = await UserRepo().updateUserProfile(payload);
 
         if (result.status == true) {
+          await analytics.logEvent(name: "profile_image_update_success");
+
           userProfile!.imageUrl = imageUrl;
           userController.getUserDataById();
           setState(() {});

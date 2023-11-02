@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
@@ -49,6 +50,11 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
     getChallengeBanner();
     getTopPost();
     getMainPost();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'challenge_details');
   }
 
   @override
@@ -163,7 +169,10 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     InkWell(
-                                      onTap: () {
+                                      onTap: () async {
+                                        await analytics.logEvent(
+                                            name: "top_5_post_clicked");
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -257,6 +266,8 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
   void successDialog(
       BuildContext context, RewardsPrize prize, ChallengeData item) async {
+    await analytics.logEvent(name: "prize_image_clicked");
+
     showCupertinoDialog(
         barrierDismissible: true,
         context: context,

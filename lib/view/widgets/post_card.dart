@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
@@ -158,7 +159,9 @@ class _PostCardState extends State<PostCard> {
           ),
         ),
         InkWell(
-          onTap: () {
+          onTap: () async {
+            await analytics.logEvent(name: "share_post");
+
             shareImageWithText(
                 item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
           },
@@ -202,6 +205,8 @@ class _PostCardState extends State<PostCard> {
     };
 
     PostRepo().addPostLike(payLoad).then((value) async {
+      await analytics.logEvent(name: "like_clicked");
+
       item = value.data;
       setState(() {});
 

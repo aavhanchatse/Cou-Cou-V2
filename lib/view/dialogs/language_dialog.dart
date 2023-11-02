@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/storage_manager.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,10 @@ class _LanguageDialogState extends State<LanguageDialog> {
         _selectedLanguage = 2;
       }
     }
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'change_language_dialog');
   }
 
   @override
@@ -60,6 +65,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                     setState(() {
                       _selectedLanguage = 0;
                     });
+                    await analytics.logEvent(name: "language_change_english");
+
                     await Future.delayed(const Duration(seconds: 1));
                     context.pop();
                   }, _selectedLanguage == 0),
@@ -69,6 +76,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                     setState(() {
                       _selectedLanguage = 1;
                     });
+                    await analytics.logEvent(name: "language_change_hindi");
+
                     await Future.delayed(const Duration(seconds: 1));
                     context.pop();
                   }, _selectedLanguage == 1),
@@ -78,6 +87,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
                     setState(() {
                       _selectedLanguage = 2;
                     });
+                    await analytics.logEvent(name: "language_change_marathi");
+
                     await Future.delayed(const Duration(seconds: 1));
                     context.pop();
                   }, _selectedLanguage == 2),

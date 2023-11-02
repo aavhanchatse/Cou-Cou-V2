@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
@@ -29,6 +30,18 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   String? _password;
   String? _confirmPassword;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'password_update_screen');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +237,8 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
         context.pop();
 
         if (result.status == true) {
+          await analytics.logEvent(name: "password_update");
+
           context.pop();
           SnackBarUtil.showSnackBar(result.message!, context: context);
         } else {

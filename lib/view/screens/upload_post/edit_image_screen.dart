@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/helpers/ffmpeg_helper.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
@@ -110,6 +111,8 @@ class EditImageScreen extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () async {
+                    await analytics.logEvent(name: "image_cropper_icon");
+
                     final Uint8List? editedImage = await Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -135,6 +138,8 @@ class EditImageScreen extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () async {
+                    await analytics.logEvent(name: "image_filter_icon");
+
                     final Uint8List? editedImage =
                         await Navigator.of(context).push(
                       MaterialPageRoute(
@@ -167,6 +172,8 @@ class EditImageScreen extends StatelessWidget {
   }
 
   void recordAudio(BuildContext context) async {
+    await analytics.logEvent(name: "record_audio");
+
     final String? result = await showCupertinoDialog(
         barrierDismissible: true,
         context: context,
@@ -191,6 +198,8 @@ class EditImageScreen extends StatelessWidget {
         if (output != null) {
           controller.videoFilePath.value = output;
           controller.musicName.value = "Custom Audio";
+
+          await analytics.logEvent(name: "image_audio_combined_successfully");
         }
       } else {
         SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
@@ -200,6 +209,8 @@ class EditImageScreen extends StatelessWidget {
   }
 
   void selectAudioFromDevice(BuildContext context) async {
+    await analytics.logEvent(name: "upload_audio_from_device");
+
     FilePickerResult? pickedAudio = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['wav', 'mp3'],
@@ -221,6 +232,8 @@ class EditImageScreen extends StatelessWidget {
         if (output != null) {
           controller.videoFilePath.value = output;
           controller.musicName.value = pickedAudio.files.first.name;
+
+          await analytics.logEvent(name: "image_audio_combined_successfully");
         }
       } else {
         SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,

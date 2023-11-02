@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
@@ -30,6 +31,17 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
   final LOGO = 'assets/images/login_screen_images/logo.png';
 
   String? _phone;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setAnalytics();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'phone_otp');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,6 +248,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           );
         } else if (widget.register == true && result.status == false) {
           debugPrint('inside second');
+          await analytics.logEvent(name: "otp_sent");
 
           context.push(
             OTPScreen.routeName,
