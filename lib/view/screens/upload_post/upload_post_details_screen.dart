@@ -133,9 +133,9 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           ],
                         ),
                         SizedBox(height: 6.w),
-                        const Text(
-                          "Location",
-                          style: TextStyle(
+                        Text(
+                          "location".tr,
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -154,9 +154,9 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 4.w),
-                        const Text(
-                          "Recipe Location",
-                          style: TextStyle(
+                        Text(
+                          "recipe_location".tr,
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -175,9 +175,9 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 4.w),
-                        const Text(
-                          "Choose your challenge *",
-                          style: TextStyle(
+                        Text(
+                          "${"choose_challenge".tr} *",
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -204,7 +204,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                             }).toList(),
                             validator: (ChallengeNameData? value) {
                               if (value == null) {
-                                return "Select Challenge".tr;
+                                return "select_challenge".tr;
                               }
                               return null;
                             },
@@ -214,17 +214,17 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           ),
                         ),
                         SizedBox(height: 4.w),
-                        const Row(
+                        Row(
                           children: [
                             Text(
-                              "Caption",
-                              style: TextStyle(
+                              "caption".tr,
+                              style: const TextStyle(
                                 fontSize: 16,
                               ),
                             ),
                             Text(
-                              " (*max 250 words)",
-                              style: TextStyle(
+                              " (*${"max_250_words".tr})",
+                              style: const TextStyle(
                                 fontSize: 12,
                               ),
                             ),
@@ -246,7 +246,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SecondaryButton(
-                                title: "Submit",
+                                title: "submit".tr,
                                 onTap: () {
                                   uploadPost();
                                 }),
@@ -419,7 +419,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
         }
       } catch (error) {
         context.pop();
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error: $error');
       }
     } else {

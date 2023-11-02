@@ -13,6 +13,7 @@ import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class ChallengeDetailsScreen extends StatefulWidget {
@@ -88,7 +89,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                       context.push(AllChallengesScreen.routeName);
                     },
                     child: Text(
-                      "View All",
+                      "view_all".tr,
                       style: TextStyle(
                         color: Constants.black,
                         decoration: TextDecoration.underline,
@@ -135,7 +136,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Top 5 Post",
+                          "top_5_post".tr,
                           style: TextStyle(
                             color: Constants.black,
                             fontSize: 20,
@@ -239,11 +240,14 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
         Row(
           children: [
             SizedBox(width: 2.w),
-            _priceContainer(challengeData!.rewardsPrize!.first, challengeData!),
+            _priceContainer(challengeData!.rewardsPrize!.first, challengeData!,
+                "1st_prize".tr),
             SizedBox(width: 2.w),
-            _priceContainer(challengeData!.rewardsPrize![1], challengeData!),
+            _priceContainer(challengeData!.rewardsPrize![1], challengeData!,
+                "2nd_prize".tr),
             SizedBox(width: 2.w),
-            _priceContainer(challengeData!.rewardsPrize![2], challengeData!),
+            _priceContainer(challengeData!.rewardsPrize![2], challengeData!,
+                "3rd_prize".tr),
             SizedBox(width: 2.w),
           ],
         ),
@@ -261,7 +265,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
         });
   }
 
-  Widget _priceContainer(RewardsPrize prize, ChallengeData item) {
+  Widget _priceContainer(RewardsPrize prize, ChallengeData item, String text) {
     return Expanded(
       child: Container(
         height: 16.h,
@@ -295,7 +299,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
             ),
             SizedBox(height: 2.w),
             Text(
-              "1st Prize",
+              text,
               style: TextStyle(
                 color: Constants.black,
               ),

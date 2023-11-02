@@ -55,6 +55,38 @@ Future<File> saveUint8ListToTempStorage(Uint8List filePath) async {
   return file;
 }
 
+Future<File> saveUint8ListToTempStorageGif(Uint8List filePath) async {
+  String dir;
+  if (Platform.isIOS) {
+    dir = (await getApplicationDocumentsDirectory()).path;
+  } else {
+    dir = (await getExternalStorageDirectories())![0].path;
+  }
+
+  final currentTimeMillisecond =
+      DateTime.now().millisecondsSinceEpoch.toString();
+  File file = File(
+      '$dir/${currentTimeMillisecond.substring(currentTimeMillisecond.length - 6)}_cou_cou.gif');
+  await file.writeAsBytes(filePath);
+  return file;
+}
+
+Future<File> saveUint8ListToTempStorageVideo(Uint8List filePath) async {
+  String dir;
+  if (Platform.isIOS) {
+    dir = (await getApplicationDocumentsDirectory()).path;
+  } else {
+    dir = (await getExternalStorageDirectories())![0].path;
+  }
+
+  final currentTimeMillisecond =
+      DateTime.now().millisecondsSinceEpoch.toString();
+  File file = File(
+      '$dir/${currentTimeMillisecond.substring(currentTimeMillisecond.length - 6)}_cou_cou.mp4');
+  await file.writeAsBytes(filePath);
+  return file;
+}
+
 showSnackBar(String text,
     {Widget? actionButton, Color? color, int time = 2000}) {
   var snackBar = SnackBar(

@@ -159,7 +159,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
                     children: [
                       const Icon(Icons.edit),
                       SizedBox(width: 2.w),
-                      const Text("Edit"),
+                      Text("edit".tr),
                     ],
                   ),
                 ),
@@ -171,7 +171,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
                     children: [
                       const Icon(Icons.delete_outlined),
                       SizedBox(width: 2.w),
-                      const Text("Delete"),
+                      Text("delete".tr),
                     ],
                   ),
                 ),
@@ -252,12 +252,12 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         }
       } catch (error) {
         // Get.back();
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error: $error');
       }
     } else {
       // Get.back();
-      SnackBarUtil.showSnackBar('No Internet Connected', context: context);
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
     }
   }
 
@@ -296,8 +296,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
                   trimLines: 1,
                   colorClickableText: Colors.black,
                   trimMode: TrimMode.Line,
-                  trimCollapsedText: 'more',
-                  trimExpandedText: 'less',
+                  trimCollapsedText: 'more'.tr,
+                  trimExpandedText: 'less'.tr,
                   lessStyle: TextStyle(
                     color: Constants.primaryGrey,
                     fontSize: 10,

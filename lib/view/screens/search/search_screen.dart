@@ -8,6 +8,7 @@ import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:rxdart/rxdart.dart';
@@ -128,9 +129,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Clear",
-                            style: TextStyle(
+                          Text(
+                            "clear".tr,
+                            style: const TextStyle(
                               fontFamily: "Inika",
                               fontSize: 18,
                               fontWeight: FontWeight.w500,

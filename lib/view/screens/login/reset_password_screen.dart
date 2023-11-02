@@ -101,7 +101,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         child: Column(
           children: [
             Text(
-              'Reset Password'.tr,
+              'reset_password'.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 2.2.t,
@@ -135,19 +135,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   String? _validatePassword(String value) {
     // Check if password length is at least 6 characters
     if (value.length < 6) {
-      return 'Password must be at least 6 characters'.tr;
+      return '6_letter_password'.tr;
     }
 
     // Check if password contains at least one special character
     const pattern = r'^(?=.*?[!@#\$&*~]).{6,}$';
     final regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
-      return 'Password must contain at least\none special character'.tr;
+      return 'password_must_contain_special_character'.tr;
     }
 
     // Check if password contains any spaces
     if (value.contains(' ')) {
-      return 'Password cannot contain spaces'.tr;
+      return 'password_cannot_have_space'.tr;
     }
 
     return null; // Return null to indicate no validation errors
@@ -157,9 +157,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Password",
-          style: TextStyle(
+        Text(
+          "password".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Inika",
           ),
@@ -196,9 +196,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Confirm Password",
-          style: TextStyle(
+        Text(
+          "confirm_password".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Inika",
           ),
@@ -220,9 +220,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           ),
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter valid password'.tr;
+              return 'enter_valid_password'.tr;
             } else if (value.trim() != _password!.trim()) {
-              return 'Password and confirm password\nshould be same'.tr;
+              return 'password_and_confirm_password_error'.tr;
             }
             return null;
           },
@@ -290,13 +290,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       } catch (error) {
         // Get.back();
         context.pop();
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error: $error');
       }
     } else {
       // Get.back();
       context.pop();
-      SnackBarUtil.showSnackBar('No Internet Connected', context: context);
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
     }
   }
 }

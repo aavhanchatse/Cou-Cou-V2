@@ -111,7 +111,7 @@ class _OTPScreenState extends State<OTPScreen> {
       child: Column(
         children: [
           Text(
-            'Mobile Verification'.tr,
+            'mobile_verification'.tr,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 2.2.t,
@@ -120,17 +120,17 @@ class _OTPScreenState extends State<OTPScreen> {
           ),
           SizedBox(height: 1.h),
           Text(
-            'Phone No\n+91 ${widget.phoneNumber}',
+            '${"phone_no".tr}\n+91 ${widget.phoneNumber}',
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: "Inika",
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Text(
-            'OTP',
+          Text(
+            'otp'.tr,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: "Inika",
               fontWeight: FontWeight.bold,
             ),
@@ -148,14 +148,14 @@ class _OTPScreenState extends State<OTPScreen> {
                       context: context);
                 }
               },
-              title: "Verify".tr),
+              title: "verify".tr),
           SizedBox(height: 1.h),
           TextButton(
             onPressed: () {
               context.pop();
             },
             child: Text(
-              "Back",
+              "back".tr,
               style: TextStyle(
                 color: Constants.black,
                 fontSize: 16,
@@ -260,7 +260,7 @@ class _OTPScreenState extends State<OTPScreen> {
     firebaseAuth.signInWithCredential(_authCredential!).catchError((error) {
       debugPrint('error in signing with creds: $error');
 
-      SnackBarUtil.showSnackBar('Please enter correct OTP', context: context);
+      SnackBarUtil.showSnackBar('enter_correct_otp'.tr, context: context);
     }).then((result) {
       debugPrint('result : $result');
 

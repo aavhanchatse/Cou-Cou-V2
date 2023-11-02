@@ -172,7 +172,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         child: Column(
           children: [
             Text(
-              'New User'.tr,
+              'new_user'.tr,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -195,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             SizedBox(height: 3.w),
             _confirmPasswordTextField(),
             SizedBox(height: 2.h),
-            CustomOutlineButton(onTap: _continue, title: "Sign In".tr),
+            CustomOutlineButton(onTap: _continue, title: "sign_in".tr),
             SizedBox(height: 1.h),
           ],
         ),
@@ -217,9 +217,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "First Name",
-          style: TextStyle(
+        Text(
+          "firstName".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Inika",
             fontWeight: FontWeight.bold,
@@ -236,7 +236,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ],
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter Valid Name'.tr;
+              return 'enter_valid_name'.tr;
             }
             return null;
           },
@@ -251,9 +251,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Last Name",
-          style: TextStyle(
+        Text(
+          "lastName".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -270,7 +270,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           },
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter valid last name'.tr;
+              return 'enter_valid_last_name'.tr;
             }
             return null;
           },
@@ -285,9 +285,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Email",
-          style: TextStyle(
+        Text(
+          "email".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -301,7 +301,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             setState(() {});
           },
           validator: (value) =>
-              EmailValidator.validate(value) ? null : "Enter valid email".tr,
+              EmailValidator.validate(value) ? null : "enter_valid_email".tr,
           keyboardType: TextInputType.emailAddress,
           hintText: ''.tr,
         ),
@@ -313,9 +313,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Username",
-          style: TextStyle(
+        Text(
+          "user_name".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -329,7 +329,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           },
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter valid username'.tr;
+              return 'enter_valid_username'.tr;
             }
             return null;
           },
@@ -353,9 +353,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Gender",
-          style: TextStyle(
+        Text(
+          "gender".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -398,9 +398,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Date of Birth",
-          style: TextStyle(
+        Text(
+          "dob".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -464,9 +464,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Password",
-          style: TextStyle(
+        Text(
+          "password".tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             fontFamily: "Inika",
@@ -511,9 +511,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Confirm Password",
-          style: TextStyle(
+        Text(
+          "confirm_password".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             fontFamily: "Inika",
@@ -543,7 +543,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter valid password'.tr;
+              return 'enter_valid_password'.tr;
             } else if (value.trim() != _password!.trim()) {
               return 'password_and_confirm_password_error'.tr;
             }
@@ -608,9 +608,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Phone number",
-          style: TextStyle(
+        Text(
+          "phone_number".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             fontFamily: "Inika",
@@ -629,9 +629,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           keyboardType: TextInputType.phone,
           suffixIcon: Padding(
             padding: EdgeInsets.only(right: 4.w),
-            child: const Text(
-              'Verified',
-              style: TextStyle(
+            child: Text(
+              'verified'.tr,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -746,13 +746,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       } catch (error) {
         // Get.back();
         context.pop();
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error: $error');
       }
     } else {
       // Get.back();
       context.pop();
-      SnackBarUtil.showSnackBar('No Internet Connected', context: context);
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
     }
   }
 }

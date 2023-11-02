@@ -190,5 +190,12 @@ class AppRouter {
         },
       ),
     ],
+    errorBuilder: (context, state) {
+      return Scaffold(
+        body: Center(
+          child: Text("${state.error}"),
+        ),
+      );
+    },
   );
 }

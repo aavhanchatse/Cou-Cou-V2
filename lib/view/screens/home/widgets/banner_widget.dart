@@ -48,7 +48,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                             context.push(AllChallengesScreen.routeName);
                           },
                           child: Text(
-                            "View All",
+                            "view_all".tr,
                             style: TextStyle(
                               color: Constants.black,
                               decoration: TextDecoration.underline,
@@ -70,11 +70,11 @@ class _BannerWidgetState extends State<BannerWidget> {
         Row(
           children: [
             SizedBox(width: 2.w),
-            _priceContainer(item.rewardsPrize!.first, item),
+            _priceContainer(item.rewardsPrize!.first, item, "1st_prize".tr),
             SizedBox(width: 2.w),
-            _priceContainer(item.rewardsPrize![1], item),
+            _priceContainer(item.rewardsPrize![1], item, "2nd_prize".tr),
             SizedBox(width: 2.w),
-            _priceContainer(item.rewardsPrize![2], item),
+            _priceContainer(item.rewardsPrize![2], item, "3rd_prize".tr),
             SizedBox(width: 2.w),
           ],
         ),
@@ -92,10 +92,10 @@ class _BannerWidgetState extends State<BannerWidget> {
         });
   }
 
-  Widget _priceContainer(RewardsPrize prize, ChallengeData item) {
+  Widget _priceContainer(RewardsPrize prize, ChallengeData item, String text) {
     return Expanded(
       child: Container(
-        height: 16.h,
+        height: 32.w,
         padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -129,7 +129,7 @@ class _BannerWidgetState extends State<BannerWidget> {
             ),
             SizedBox(height: 2.w),
             Text(
-              "1st Prize",
+              text,
               style: TextStyle(
                 color: Constants.black,
               ),
@@ -153,7 +153,7 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   Widget _infoVideosCarousel(BuildContext context) {
     return SizedBox(
-      height: 42.h,
+      height: 88.w,
       child: CarouselSlider.builder(
         itemCount: controller.bannerList.length,
         itemBuilder: (_, index, __) {

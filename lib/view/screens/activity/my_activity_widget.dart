@@ -73,7 +73,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                       child: Column(
                         children: [
                           Text(
-                            "Other Activity".tr,
+                            "other_activity".tr,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -113,7 +113,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                       child: Column(
                         children: [
                           Text(
-                            "My Activity".tr,
+                            "my_activity".tr,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -194,7 +194,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                   children: [
                     Text(
                       isMyActivityClicked
-                          ? "${"You have liked on".tr} "
+                          ? "${"you_have_liked_on".tr} "
                           : "${e.userData!.firstname}",
                       style: TextStyle(
                         fontSize: 1.9.t,
@@ -203,7 +203,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                     Text(
                       isMyActivityClicked
                           ? "${e.postOwnerData!.firstname} Post"
-                          : " ${"liked your post".tr}",
+                          : " ${"liked_your_post".tr}",
                       style: const TextStyle(
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w600),
@@ -266,7 +266,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                     children: [
                       Text(
                         isMyActivityClicked
-                            ? "${"You have commented on".tr}  "
+                            ? "${"you_have_commented_on".tr}  "
                             : "${e.userData!.firstname} ${e.userData!.lastname}",
                         style: TextStyle(
                           fontSize: 1.9.t,
@@ -275,7 +275,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                       Text(
                         isMyActivityClicked
                             ? "${e.userData!.firstname} Post"
-                            : " ${"commented on your post".tr}",
+                            : " ${"comment_on_your_post".tr}",
                         style: const TextStyle(
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.w600),
@@ -317,7 +317,7 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
       ),
       centerTitle: true,
       title: Text(
-        "Notification",
+        "notifications".tr,
         style: TextStyle(
           color: Constants.black,
           fontWeight: FontWeight.bold,

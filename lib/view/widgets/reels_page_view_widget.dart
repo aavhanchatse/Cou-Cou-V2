@@ -34,7 +34,6 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getPostData();
   }
@@ -243,8 +242,8 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
               trimLines: 1,
               colorClickableText: Colors.black,
               trimMode: TrimMode.Line,
-              trimCollapsedText: 'more',
-              trimExpandedText: 'less',
+              trimCollapsedText: 'more'.tr,
+              trimExpandedText: 'less'.tr,
               lessStyle: TextStyle(
                 color: Constants.primaryGrey,
                 fontSize: 10,

@@ -13,6 +13,7 @@ import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/s3_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/bottomsheets/select_image_source_bottomsheet.dart';
+import 'package:coucou_v2/view/dialogs/language_dialog.dart';
 import 'package:coucou_v2/view/dialogs/logout_dialog.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/profile/profile_page_view.dart';
@@ -85,7 +86,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         children: [
                           InkWell(
                             child: Text(
-                              'Reset Password',
+                              'reset_password'.tr,
                               style: TextStyle(
                                 color: Constants.black,
                                 fontFamily: "Inika",
@@ -100,7 +101,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           SizedBox(height: 2.w),
                           InkWell(
                             child: Text(
-                              'Update Address',
+                              'update_address'.tr,
                               style: TextStyle(
                                 color: Constants.black,
                                 fontSize: 18,
@@ -115,33 +116,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           SizedBox(height: 2.w),
                           InkWell(
                             child: Text(
-                              'Policy, T&C',
-                              style: TextStyle(
-                                color: Constants.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          SizedBox(height: 2.w),
-                          // InkWell(
-                          //   child: Text(
-                          //     'Language',
-                          //     style: TextStyle(
-                          //       color: Constants.black,
-                          //       fontSize: 18,
-                          //       fontWeight: FontWeight.w500,
-                          //       fontFamily: "Inika",
-                          //     ),
-                          //   ),
-                          //   onTap: () {},
-                          // ),
-                          // SizedBox(height: 2.w),
-                          InkWell(
-                            child: Text(
-                              'Support',
+                              'policy_tc'.tr,
                               style: TextStyle(
                                 color: Constants.black,
                                 fontSize: 18,
@@ -154,7 +129,39 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           SizedBox(height: 2.w),
                           InkWell(
                             child: Text(
-                              'Logout',
+                              'language'.tr,
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const LanguageDialog();
+                                  });
+                            },
+                          ),
+                          SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'support'.tr,
+                              style: TextStyle(
+                                color: Constants.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Inika",
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 2.w),
+                          InkWell(
+                            child: Text(
+                              'logout'.tr,
                               style: TextStyle(
                                 color: Constants.black,
                                 fontSize: 18,
@@ -248,7 +255,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     Row(
                       children: [
                         Text(
-                          "Posts (${userProfile?.postCount})",
+                          "${"posts".tr} (${userProfile?.postCount})",
                           style: TextStyle(
                             color: Constants.black,
                             fontSize: 18,
@@ -397,7 +404,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         builder: (BuildContext context, AsyncSnapshot<PackageInfo> snap) {
           if (snap.hasData) {
             return Text(
-              'App Version ${snap.data!.version}',
+              '${"app_version".tr} ${snap.data!.version}',
               style: TextStyle(
                 color: Constants.black,
                 fontSize: 18,
@@ -457,7 +464,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       } catch (error) {
         loading = false;
         setState(() {});
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error: $error');
       }
     } else {

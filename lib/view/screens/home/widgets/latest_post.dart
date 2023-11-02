@@ -36,7 +36,7 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Latest Posts",
+                        "latest_post".tr,
                         style: TextStyle(
                           color: Constants.black,
                           fontSize: 20,

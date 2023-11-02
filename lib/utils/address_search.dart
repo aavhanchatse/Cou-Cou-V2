@@ -56,7 +56,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
               ''
           ? Container(
               padding: const EdgeInsets.all(16.0),
-              child: Text('Enter your address'.tr),
+              child: Text('enter_your_addr'.tr),
             )
           : snapshot.hasData
               ? ListView.builder(

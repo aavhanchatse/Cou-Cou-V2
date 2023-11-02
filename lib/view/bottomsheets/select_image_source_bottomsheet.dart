@@ -19,15 +19,15 @@ class SelectImageSourceBottomsheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select Image'.tr,
+            'select_img'.tr,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Text(
-            "Select from where you want to pickup file",
-            style: TextStyle(
+          Text(
+            "select_img_where_you_want_to_pickup".tr,
+            style: const TextStyle(
               fontSize: 14,
             ),
           ),
@@ -55,7 +55,7 @@ class SelectImageSourceBottomsheet extends StatelessWidget {
                   height: 50,
                 ),
                 Text(
-                  'Camera'.tr,
+                  'camera'.tr,
                   style: const TextStyle(fontSize: 14),
                 ),
               ],
@@ -76,7 +76,7 @@ class SelectImageSourceBottomsheet extends StatelessWidget {
                   height: 50,
                 ),
                 Text(
-                  'Gallery'.tr,
+                  'gallery'.tr,
                   style: const TextStyle(fontSize: 14),
                 ),
               ],

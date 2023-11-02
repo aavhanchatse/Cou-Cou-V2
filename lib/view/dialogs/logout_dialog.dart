@@ -21,18 +21,17 @@ class LogoutDialog {
             barrierDismissible: false,
             context: context,
             builder: (BuildContext context) => CupertinoAlertDialog(
-                  title: Text('Logout from Cou Cou?'.tr),
-                  content: Text(
-                      "You won't receive any new exiting deals and offers.".tr),
+                  title: Text('logout_from_cou_cou'.tr),
+                  content: Text("you_wont_receive_existing".tr),
                   actions: [
                     CupertinoDialogAction(
-                        child: Text('Cancel'.tr),
+                        child: Text('cancel'.tr),
                         onPressed: () {
                           context.pop();
                         }),
                     CupertinoDialogAction(
                       isDefaultAction: true,
-                      child: Text('Logout'.tr),
+                      child: Text('logout'.tr),
                       onPressed: () {
                         LogoutDialog().logout(context);
                       },
@@ -60,7 +59,7 @@ class LogoutDialog {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Logout from Cou Cou?'.tr,
+                                Text('logout_from_cou_cou'.tr,
                                     style: TextStyle(
                                         fontSize: 17,
                                         color: Constants.textColor,
@@ -79,9 +78,7 @@ class LogoutDialog {
                           Expanded(
                               child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(
-                                "You won't receive any new exiting deals and offers."
-                                    .tr),
+                            child: Text("you_wont_receive_existing".tr),
                           )),
                         ]),
                         const SizedBox(height: 16),
@@ -101,7 +98,7 @@ class LogoutDialog {
                                   context.pop();
                                 },
                                 child: Text(
-                                  'Cancel'.tr,
+                                  'cancel'.tr,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Constants.textColor,
@@ -118,7 +115,7 @@ class LogoutDialog {
                                     LogoutDialog().logout(context);
                                   },
                                   child: Text(
-                                    'Logout'.tr,
+                                    'logout'.tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Constants.textColor,
@@ -151,13 +148,13 @@ class LogoutDialog {
       } catch (error) {
         // Get.back();
         context.pop();
-        SnackBarUtil.showSnackBar('Something went wrong', context: context);
+        SnackBarUtil.showSnackBar('something_went_wrong'.tr, context: context);
         debugPrint('error[logout-user]: $error');
       }
     } else {
       // Get.back();
       context.pop();
-      SnackBarUtil.showSnackBar('No Internet Connected', context: context);
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
     }
   }
 }

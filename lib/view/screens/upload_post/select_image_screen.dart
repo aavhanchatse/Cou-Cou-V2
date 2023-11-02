@@ -72,7 +72,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
           onPressed: () {
             context.pop();
           },
-         icon: ImageIcon(
+          icon: ImageIcon(
             const AssetImage("assets/icons/back_arrow.png"),
             color: Constants.black,
           ),

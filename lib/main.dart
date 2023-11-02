@@ -9,7 +9,9 @@ import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/firebase_options.dart';
+import 'package:coucou_v2/localization/localization_service.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/utils/storage_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -68,18 +70,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // String localeLan = "en";
+  String localeLan = "en";
 
   @override
   void initState() {
     super.initState();
     _configureAmplify();
 
-    // var result = StorageManager().getData("language");
-    // if (result != null) {
-    //   localeLan = result;
-    //   Get.updateLocale(Locale(result));
-    // }
+    var result = StorageManager().getData("language");
+    if (result != null) {
+      localeLan = result;
+      Get.updateLocale(Locale(result));
+    }
   }
 
   Future<void> _configureAmplify() async {
@@ -108,15 +110,34 @@ class _MyAppState extends State<MyApp> {
           builder: (BuildContext context2, Orientation orientation) {
         SizeConfig.init(constraints, orientation);
 
-        return MaterialApp.router(
+        return GetMaterialApp.router(
           title: 'Cou Cou',
-          routerConfig: AppRouter.router,
+          routeInformationParser: AppRouter.router.routeInformationParser,
+          routerDelegate: AppRouter.router.routerDelegate,
+          routeInformationProvider: AppRouter.router.routeInformationProvider,
           theme: Themes.light,
-          // locale: Locale(localeLan),
-          // fallbackLocale: LocalizationService.fallbackLocale,
-          // translations: LocalizationService(),
           debugShowCheckedModeBanner: false,
+          locale: Locale(localeLan),
+          fallbackLocale: LocalizationService.fallbackLocale,
+          translations: LocalizationService(),
         );
+
+        // return MaterialApp.router(
+        //   title: 'Cou Cou',
+        //   routerConfig: AppRouter.router,
+        //   theme: Themes.light,
+        //   localizationsDelegates: [
+        //     S.delegate,
+        //     GlobalMaterialLocalizations.delegate,
+        //     GlobalWidgetsLocalizations.delegate,
+        //     GlobalCupertinoLocalizations.delegate,
+        //   ],
+
+        //   // locale: Locale(localeLan),
+        //   // fallbackLocale: LocalizationService.fallbackLocale,
+        //   // translations: LocalizationService(),
+        //   debugShowCheckedModeBanner: false,
+        // );
       });
     });
   }

@@ -59,15 +59,16 @@ class CommentScreenState extends State<CommentScreen> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: IconButton(
-              onPressed: () {
-                context.pop();
-              },
-              icon: ImageIcon(
-            const AssetImage("assets/icons/back_arrow.png"),
-            color: Constants.black,
-          ),),
+            onPressed: () {
+              context.pop();
+            },
+            icon: ImageIcon(
+              const AssetImage("assets/icons/back_arrow.png"),
+              color: Constants.black,
+            ),
+          ),
           title: Text(
-            "Comments",
+            "comments".tr,
             style: TextStyle(
               color: Constants.black,
               fontWeight: FontWeight.w600,
@@ -434,7 +435,7 @@ class CommentScreenState extends State<CommentScreen> {
                 maxLines: 6,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  hintText: "Your Comment...",
+                  hintText: "your_comment".tr,
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Constants.black),
                   ),

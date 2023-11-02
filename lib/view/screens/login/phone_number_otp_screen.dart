@@ -99,8 +99,8 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           children: [
             Text(
               widget.register == true
-                  ? "Mobile Verification".tr
-                  : 'Mobile Verification'.tr,
+                  ? "mobile_verification".tr
+                  : 'mobile_verification'.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: "Inika",
@@ -110,8 +110,8 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
             SizedBox(height: 1.h),
             Text(
               widget.register == true
-                  ? "Enter Phone Number".tr
-                  : "Enter Phone Number".tr,
+                  ? "enter_phone_number".tr
+                  : "enter_phone_number".tr,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 18,
@@ -120,14 +120,14 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
             SizedBox(height: 1.h),
             _phoneNumberTextField(),
             SizedBox(height: 2.h),
-            CustomOutlineButton(onTap: _continue, title: "Send OTP".tr),
+            CustomOutlineButton(onTap: _continue, title: "send_otp".tr),
             SizedBox(height: 1.h),
             TextButton(
               onPressed: () {
                 context.pop();
               },
               child: Text(
-                "Back",
+                "back".tr,
                 style: TextStyle(
                   color: Constants.black,
                   fontSize: 16,
@@ -144,9 +144,9 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Phone number",
-          style: TextStyle(
+        Text(
+          "phone_number".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Inika",
           ),
@@ -159,9 +159,9 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           },
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter Valid Number'.tr;
+              return 'enter_valid_mobile'.tr;
             } else if (value.trim().length < 10) {
-              return 'Enter Valid Number'.tr;
+              return '10_digit_phone_number'.tr;
             }
             return null;
           },

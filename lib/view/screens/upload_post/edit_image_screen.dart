@@ -4,12 +4,15 @@ import 'dart:typed_data';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/helpers/ffmpeg_helper.dart';
+import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/bottomsheets/local_audio_bottomsheet.dart';
+import 'package:coucou_v2/view/dialogs/audio_recorder_dialog.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
 import 'package:coucou_v2/view/widgets/edit_image_video_player.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -75,29 +78,36 @@ class EditImageScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // IconButton(
-                //   onPressed: () {},
+                //   onPressed: () async {
+                //     final String? path =
+                //         await context.push(CameraScreen.routeName);
+
+                //     debugPrint("path: $path");
+                //   },
                 //   icon: const ImageIcon(
                 //     AssetImage("assets/icons/Infinity.png"),
                 //   ),
                 // ),
-                // IconButton(
-                //   onPressed: () {
-                //     // checkAndRequestPermissions();
-                //     // showAudioBottomsheet(context);
-                //     selectAudioFromDevice();
-                //     // FfmpegHelper.combineAudioWithImage(
-                //     //     imagePath, audioFilePath);
-                //   },
-                //   icon: const ImageIcon(
-                //     AssetImage("assets/icons/music.png"),
-                //   ),
-                // ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const ImageIcon(
-                //     AssetImage("assets/icons/mic.png"),
-                //   ),
-                // ),
+                IconButton(
+                  onPressed: () {
+                    // checkAndRequestPermissions();
+                    // showAudioBottomsheet(context);
+                    selectAudioFromDevice(context);
+                    // FfmpegHelper.combineAudioWithImage(
+                    //     imagePath, audioFilePath);
+                  },
+                  icon: const ImageIcon(
+                    AssetImage("assets/icons/music.png"),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    recordAudio(context);
+                  },
+                  icon: const ImageIcon(
+                    AssetImage("assets/icons/mic.png"),
+                  ),
+                ),
                 IconButton(
                   onPressed: () async {
                     final Uint8List? editedImage = await Navigator.push(
@@ -156,51 +166,65 @@ class EditImageScreen extends StatelessWidget {
     );
   }
 
-  // checkAndRequestPermissions({bool retry = false}) async {
-  //   final OnAudioQuery audioQuery = OnAudioQuery();
+  void recordAudio(BuildContext context) async {
+    final String? result = await showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return const AudioRecorderDialog();
+        });
 
-  //   // The param 'retryRequest' is false, by default.
-  //   bool hasPermission = await audioQuery.checkAndRequest(
-  //     retryRequest: retry,
-  //   );
+    if (result != null) {
+      File audioFile = File(result);
+      final size = await audioFile.length();
 
-  //   if (hasPermission == true) {
-  //     List<SongModel> audios = await audioQuery.querySongs();
-  //     debugPrint("list audios: $audios");
-  //   }
-  // }
+      debugPrint('audio file length: ${await audioFile.length()}');
 
-  void selectAudioFromDevice() async {
+      if (size < 5000000) {
+        final controller = Get.find<PostController>();
+
+        final output =
+            await FfmpegHelper.combineAudioWithImage(result, context);
+
+        debugPrint("output: $output");
+
+        if (output != null) {
+          controller.videoFilePath.value = output;
+          controller.musicName.value = "Custom Audio";
+        }
+      } else {
+        SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
+            context: context);
+      }
+    }
+  }
+
+  void selectAudioFromDevice(BuildContext context) async {
     FilePickerResult? pickedAudio = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['wav', 'mp3'],
     );
 
     if (pickedAudio != null) {
-      final controller = Get.find<PostController>();
+      final size = pickedAudio.files.first.size;
 
-      final output = await FfmpegHelper.combineAudioWithImage(
-          controller.filePath.value, pickedAudio.paths.first!);
+      debugPrint('size: $size');
 
-      debugPrint("output: $output");
+      if (size < 5000000) {
+        final controller = Get.find<PostController>();
 
-      if (output != null) {
-        controller.videoFilePath.value = output;
-        controller.musicName.value = pickedAudio.files.first.name;
+        final output = await FfmpegHelper.combineAudioWithImage(
+            pickedAudio.paths.first!, context);
 
-        // final uint8list = await VideoThumbnail.thumbnailData(
-        //   video: output,
-        //   imageFormat: ImageFormat.PNG,
-        //   maxWidth:
-        //       720, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-        //   quality: 80,
-        // );
-        // if (uint8list != null) {
-        //   final thumbnailFile = await saveUint8ListToTempStorage(uint8list);
-        //   debugPrint('thumbnailFile: $thumbnailFile');
-        //   controller.videoFilePath.value = output;
-        //   controller.videoThumbnailFilePath.value = thumbnailFile.path;
-        // }
+        debugPrint("output: $output");
+
+        if (output != null) {
+          controller.videoFilePath.value = output;
+          controller.musicName.value = pickedAudio.files.first.name;
+        }
+      } else {
+        SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
+            context: context);
       }
     }
   }

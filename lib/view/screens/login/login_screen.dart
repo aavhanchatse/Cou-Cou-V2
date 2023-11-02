@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 2.w),
             _passwordTextField(),
             SizedBox(height: 4.w),
-            CustomOutlineButton(onTap: _login, title: "Login".tr),
+            CustomOutlineButton(onTap: _login, title: "login".tr),
             _forgotPasswordButton(),
             // _googleFacebookLogin(),
           ],
@@ -101,20 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _signUpButton() {
-    // return TextButton(
-    //   onPressed: () {
-    //     context.push(PhoneNumberOTPScreen.routeName, extra: true);
-    //   },
-    //   child: Text(
-    //     "New User? Sign Up",
-    //     style: TextStyle(
-    //       color: Constants.textColor,
-    //       fontWeight: FontWeight.bold,
-    //       fontFamily: "Inika",
-    //       fontSize: 16,
-    //     ),
-    //   ),
-    // );
     return InkWell(
       onTap: () {
         context.push(PhoneNumberOTPScreen.routeName, extra: true);
@@ -123,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "New User?",
+            "${"new_user".tr}?",
             style: TextStyle(
               color: Constants.textColor,
               fontWeight: FontWeight.bold,
@@ -132,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Text(
-            " Sign Up",
+            " ${"sign_up".tr}",
             style: TextStyle(
               color: Constants.textColor,
               fontWeight: FontWeight.bold,
@@ -152,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context.push(PhoneNumberOTPScreen.routeName, extra: false);
       },
       child: Text(
-        '${"Forgot Password ".tr}?',
+        '${"forgot_password".tr} ?',
         style: TextStyle(
           color: Constants.textColor,
           fontWeight: FontWeight.bold,
@@ -166,9 +152,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Password",
-          style: TextStyle(
+        Text(
+          "password".tr,
+          style: const TextStyle(
             fontSize: 16,
             // fontFamily: "Inika",
             fontWeight: FontWeight.w600,
@@ -193,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter valid password'.tr;
+              return 'enter_valid_password'.tr;
             }
             return null;
           },
@@ -211,9 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Phone number",
-          style: TextStyle(
+        Text(
+          "phone_number".tr,
+          style: const TextStyle(
             fontSize: 16,
             fontFamily: "Inika",
             fontWeight: FontWeight.bold,
@@ -227,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           validator: (String? value) {
             if (value!.trim().isEmpty) {
-              return 'Enter Valid Number'.tr;
+              return 'enter_valid_mobile'.tr;
             }
             return null;
           },

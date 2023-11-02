@@ -5,6 +5,7 @@ import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class AllChallengesScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
         elevation: 0,
         backgroundColor: Constants.white,
         title: Text(
-          "All Challenges",
+          "all_challenges".tr,
           style: TextStyle(
             color: Constants.black,
             fontWeight: FontWeight.bold,
@@ -46,7 +47,7 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
           onPressed: () {
             context.pop();
           },
-           icon: ImageIcon(
+          icon: ImageIcon(
             const AssetImage("assets/icons/back_arrow.png"),
             color: Constants.black,
           ),
@@ -57,8 +58,8 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
               child: CircularProgressIndicator(color: Constants.primaryColor),
             )
           : challengeList.isEmpty
-              ? const Center(
-                  child: Text("No Data Available"),
+              ? Center(
+                  child: Text("no_data_available".tr),
                 )
               : GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

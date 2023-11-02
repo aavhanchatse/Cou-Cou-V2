@@ -47,7 +47,8 @@ class Constants {
   static const ENVIRONMENT = 'devo';
 
   static const String GOOGLE_PLACES_API_KEY =
-      'AIzaSyBaa9VNnbHi5HR6EBubEIFW465BLoo42rA';
+      'AIzaSyDSk_RAiKiRmiLbIgu6bHXKw0C-2UVCvq4';
+  // 'AIzaSyBaa9VNnbHi5HR6EBubEIFW465BLoo42rA';
 
   static const String ATTACHMENT_IMAGE = "Image";
   static const String ATTACHMENT_VIDEO = "Video";

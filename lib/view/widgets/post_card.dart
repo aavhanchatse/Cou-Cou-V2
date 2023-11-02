@@ -30,7 +30,6 @@ class _PostCardState extends State<PostCard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     item = widget.postData;
@@ -94,8 +93,8 @@ class _PostCardState extends State<PostCard> {
                 trimLength: 25,
                 colorClickableText: Colors.black,
                 trimMode: TrimMode.Length,
-                trimCollapsedText: 'more',
-                trimExpandedText: 'less',
+                trimCollapsedText: 'more'.tr,
+                trimExpandedText: 'less'.tr,
                 lessStyle: TextStyle(
                   color: Constants.primaryGrey,
                   fontSize: 10,
@@ -171,7 +170,7 @@ class _PostCardState extends State<PostCard> {
               ),
               SizedBox(width: 1.w),
               Text(
-                "Share",
+                "share".tr,
                 style: TextStyle(
                   color: Constants.black,
                 ),

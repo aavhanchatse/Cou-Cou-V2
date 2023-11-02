@@ -35,7 +35,7 @@ class PostUploadedSuccessDialog extends StatelessWidget {
                   size: 42,
                 ),
                 Text(
-                  "Your Post\nSuccessfully ${update == false ? "Uploaded" : "Updated"}",
+                  "${"your_post".tr}\n${"successfully".tr} ${update == false ? "uploaded".tr : "updated".tr}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -59,7 +59,7 @@ class PostUploadedSuccessDialog extends StatelessWidget {
                       boxShadow: [StyleUtil.shadow2()],
                     ),
                     child: const Text(
-                      "Okay",
+                      "okay",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
