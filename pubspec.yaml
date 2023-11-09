@@ -70,7 +70,7 @@ dependencies:
   sms_autofill: ^2.2.0
   get: ^4.6.6
   image_editor_plus: ^1.0.3
-  flutter_ffmpeg: null
+  # flutter_ffmpeg: null
   on_audio_query: ^2.9.0
   file_picker: ^6.0.0
   flutter_rating_bar: ^4.0.1
@@ -78,10 +78,8 @@ dependencies:
   package_info_plus: ^4.0.2
   # flutter_sound: ^9.2.13
   # audio_session: ^0.1.16
-  record: ^5.0.1
-  audioplayers: ^5.2.0
-  flutter_sequence_animation: ^4.0.0
-  flutter_cache_manager: ^3.3.1
+  # record: ^5.0.1
+  # audioplayers: ^5.2.0
   intl: ^0.18.1
   flutter_localizations: 
     sdk: flutter

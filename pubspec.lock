@@ -145,62 +145,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  audioplayers:
-    dependency: "direct main"
-    description:
-      name: audioplayers
-      sha256: d9f6ca8e9b3e5af5e73d4c814404566f72698ee7ba35487bdf2baa6749e7503f
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.0"
-  audioplayers_android:
-    dependency: transitive
-    description:
-      name: audioplayers_android
-      sha256: fb01b9481f431fe04ac60f1f97ce8158383f2dc754558820592f795d81ca9d53
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
-  audioplayers_darwin:
-    dependency: transitive
-    description:
-      name: audioplayers_darwin
-      sha256: "3034e99a6df8d101da0f5082dcca0a2a99db62ab1d4ddb3277bed3f6f81afe08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.2"
-  audioplayers_linux:
-    dependency: transitive
-    description:
-      name: audioplayers_linux
-      sha256: "60787e73fefc4d2e0b9c02c69885402177e818e4e27ef087074cf27c02246c9e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
-  audioplayers_platform_interface:
-    dependency: transitive
-    description:
-      name: audioplayers_platform_interface
-      sha256: "365c547f1bb9e77d94dd1687903a668d8f7ac3409e48e6e6a3668a1ac2982adb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.0"
-  audioplayers_web:
-    dependency: transitive
-    description:
-      name: audioplayers_web
-      sha256: "22cd0173e54d92bd9b2c80b1204eb1eb159ece87475ab58c9788a70ec43c2a62"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.0"
-  audioplayers_windows:
-    dependency: transitive
-    description:
-      name: audioplayers_windows
-      sha256: "9536812c9103563644ada2ef45ae523806b0745f7a78e89d1b5fb1951de90e1a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   aws_common:
     dependency: transitive
     description:
@@ -735,7 +679,7 @@ packages:
     source: hosted
     version: "6.8.0"
   flutter_cache_manager:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_cache_manager
       sha256: "8207f27539deb83732fdda03e259349046a39a4c767269285f449ade355d54ba"
@@ -750,14 +694,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
-  flutter_ffmpeg:
-    dependency: "direct main"
-    description:
-      name: flutter_ffmpeg
-      sha256: "8d8bb4551cf76384748ba6948739c1e56a9164794e48f06cbfb0ff1bfb058b5f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.2"
   flutter_image_compress:
     dependency: "direct overridden"
     description:
@@ -803,14 +739,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
-  flutter_sequence_animation:
-    dependency: "direct main"
-    description:
-      name: flutter_sequence_animation
-      sha256: "48f28a8395e410f5b4a47a86fe77974ee8fbab3db935d22933dbb3af27447d01"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -1469,62 +1397,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  record:
-    dependency: "direct main"
-    description:
-      name: record
-      sha256: be9b710f42edf94f939dda1a1688e82a68dcd391be0a836c01e639a249f133d3
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.1"
-  record_android:
-    dependency: transitive
-    description:
-      name: record_android
-      sha256: "5a96286f051cf46dffd1ae7cd5f1baa82cf6a983d26389c2f8d03d03dddc711b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  record_darwin:
-    dependency: transitive
-    description:
-      name: record_darwin
-      sha256: "78dba641ae271e555035ee68b637f7605ba9f8c60ccfd5c03b835e0b77ea201f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  record_linux:
-    dependency: transitive
-    description:
-      name: record_linux
-      sha256: "7d0e70cd51635128fe9d37d89bafd6011d7cbba9af8dc323079ae60f23546aef"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.1"
-  record_platform_interface:
-    dependency: transitive
-    description:
-      name: record_platform_interface
-      sha256: "3a4b56e94ecd2a0b2b43eb1fa6f94c5b8484334f5d38ef43959c4bf97fb374cf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  record_web:
-    dependency: transitive
-    description:
-      name: record_web
-      sha256: d4b3b2ccdc34a82b6d747a70a525ee5fce126bcd5cc0c1ef56d4771b43aab5f2
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  record_windows:
-    dependency: transitive
-    description:
-      name: record_windows
-      sha256: "326bfbe6f5232dd773ad6b848cd94f78148f02557abff1dd4627d056b688dbdb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   reorderables:
     dependency: transitive
     description:

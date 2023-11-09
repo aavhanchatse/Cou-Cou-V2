@@ -8,12 +8,9 @@ import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
-import 'package:coucou_v2/view/bottomsheets/local_audio_bottomsheet.dart';
-import 'package:coucou_v2/view/dialogs/audio_recorder_dialog.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
 import 'package:coucou_v2/view/widgets/edit_image_video_player.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -89,26 +86,26 @@ class EditImageScreen extends StatelessWidget {
                 //     AssetImage("assets/icons/Infinity.png"),
                 //   ),
                 // ),
-                IconButton(
-                  onPressed: () {
-                    // checkAndRequestPermissions();
-                    // showAudioBottomsheet(context);
-                    selectAudioFromDevice(context);
-                    // FfmpegHelper.combineAudioWithImage(
-                    //     imagePath, audioFilePath);
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/music.png"),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    recordAudio(context);
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/mic.png"),
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     // checkAndRequestPermissions();
+                //     // showAudioBottomsheet(context);
+                //     selectAudioFromDevice(context);
+                //     // FfmpegHelper.combineAudioWithImage(
+                //     //     imagePath, audioFilePath);
+                //   },
+                //   icon: const ImageIcon(
+                //     AssetImage("assets/icons/music.png"),
+                //   ),
+                // ),
+                // IconButton(
+                //   onPressed: () {
+                //     recordAudio(context);
+                //   },
+                //   icon: const ImageIcon(
+                //     AssetImage("assets/icons/mic.png"),
+                //   ),
+                // ),
                 IconButton(
                   onPressed: () async {
                     await analytics.logEvent(name: "image_cropper_icon");
@@ -172,40 +169,40 @@ class EditImageScreen extends StatelessWidget {
   }
 
   void recordAudio(BuildContext context) async {
-    await analytics.logEvent(name: "record_audio");
+    // await analytics.logEvent(name: "record_audio");
 
-    final String? result = await showCupertinoDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return const AudioRecorderDialog();
-        });
+    // final String? result = await showCupertinoDialog(
+    //     barrierDismissible: true,
+    //     context: context,
+    //     builder: (context) {
+    //       return const AudioRecorderDialog();
+    //     });
 
-    if (result != null) {
-      File audioFile = File(result);
-      final size = await audioFile.length();
+    // if (result != null) {
+    //   File audioFile = File(result);
+    //   final size = await audioFile.length();
 
-      debugPrint('audio file length: ${await audioFile.length()}');
+    //   debugPrint('audio file length: ${await audioFile.length()}');
 
-      if (size < 5000000) {
-        final controller = Get.find<PostController>();
+    //   if (size < 5000000) {
+    //     final controller = Get.find<PostController>();
 
-        final output =
-            await FfmpegHelper.combineAudioWithImage(result, context);
+    //     final output =
+    //         await FfmpegHelper.combineAudioWithImage(result, context);
 
-        debugPrint("output: $output");
+    //     debugPrint("output: $output");
 
-        if (output != null) {
-          controller.videoFilePath.value = output;
-          controller.musicName.value = "Custom Audio";
+    //     if (output != null) {
+    //       controller.videoFilePath.value = output;
+    //       controller.musicName.value = "Custom Audio";
 
-          await analytics.logEvent(name: "image_audio_combined_successfully");
-        }
-      } else {
-        SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
-            context: context);
-      }
-    }
+    //       await analytics.logEvent(name: "image_audio_combined_successfully");
+    //     }
+    //   } else {
+    //     SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
+    //         context: context);
+    //   }
+    // }
   }
 
   void selectAudioFromDevice(BuildContext context) async {
@@ -239,29 +236,6 @@ class EditImageScreen extends StatelessWidget {
         SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
             context: context);
       }
-    }
-  }
-
-  void showAudioBottomsheet(BuildContext context) async {
-    final file = await showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0))),
-        builder: (builder) {
-          return const LocalAudioBottomsheet();
-        });
-
-    if (file != null) {
-      debugPrint("file: $file");
-      // final controller = Get.find<PostController>();
-
-      // final output = await FfmpegHelper.combineAudioWithImage(
-      //     controller.filePath.value, file);
-
-      // debugPrint("output: $output");
     }
   }
 }
