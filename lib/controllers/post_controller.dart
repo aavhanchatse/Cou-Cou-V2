@@ -9,4 +9,6 @@ class PostController extends GetxController {
   var videoThumbnailFilePath = "".obs;
 
   var musicName = "".obs;
+
+  var audioUrl = "".obs;
 }

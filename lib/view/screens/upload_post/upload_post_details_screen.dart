@@ -377,8 +377,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
           imageUrl = await _uploadFile(controller.filePath.value, ".png");
 
           if (controller.videoFilePath.value.isNotEmpty) {
-            videoUrl =
-                await _uploadFile(controller.videoFilePath.value, ".mp4");
+            videoUrl = controller.videoFilePath.value;
           }
         }
 

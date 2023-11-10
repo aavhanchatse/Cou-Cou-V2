@@ -5,6 +5,7 @@ class SuperResponse<T> {
   String? token;
   T? data;
   bool? auth;
+  String? fileUrl;
 
   SuperResponse({
     this.status,
@@ -13,6 +14,7 @@ class SuperResponse<T> {
     this.token,
     this.data,
     this.auth,
+    this.fileUrl,
   });
 
   factory SuperResponse.fromJson(Map<String, dynamic> json, [T? t]) {
@@ -23,6 +25,7 @@ class SuperResponse<T> {
       token: json['token'],
       data: t,
       auth: json['auth'],
+      fileUrl: json['fileUrl'],
     );
   }
 }

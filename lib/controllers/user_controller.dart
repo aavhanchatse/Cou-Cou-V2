@@ -13,7 +13,7 @@ class UserController extends GetxController {
   var newNotification = false.obs;
   var orderNotification = false.obs;
   var chatNotification = false.obs;
-  var videoMute = false.obs;
+  var videoMute = true.obs;
 
   void getUserDataById() async {
     final userId = StorageManager().getUserId();

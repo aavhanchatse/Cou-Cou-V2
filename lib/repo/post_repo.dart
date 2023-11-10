@@ -385,6 +385,20 @@ class PostRepo {
     return SuperResponse.fromJson(map);
   }
 
+  Future<SuperResponse> getVideoFromUrl(Map payLoad) async {
+    final token = StorageManager().getToken();
+    debugPrint('token: $token');
+
+    final headers = {'Authorization': token!};
+
+    final response =
+        await _api.postMethod(Constants.getVideoFromImage, payLoad, headers);
+
+    Map<String, dynamic> map = jsonDecode(response.body);
+
+    return SuperResponse.fromJson(map);
+  }
+
   // Future<SuperResponse<List<UserData>>> getUserTagSearch(
   //     String userName, int pageNo) async {
   //   final token = StorageManager().getToken();
