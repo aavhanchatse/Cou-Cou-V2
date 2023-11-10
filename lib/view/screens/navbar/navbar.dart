@@ -9,7 +9,7 @@ import 'package:coucou_v2/view/dialogs/rating_dialog.dart';
 import 'package:coucou_v2/view/screens/activity/my_activity_widget.dart';
 import 'package:coucou_v2/view/screens/home/home_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
-import 'package:coucou_v2/view/screens/upload_post/select_image_screen.dart';
+import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class NavBar extends StatefulWidget {
   static const routeName = '/';
@@ -158,7 +159,13 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                             onTap: () async {
                               await analytics.logEvent(name: "post_upload");
 
-                              context.push(SelectImageScreen.routeName);
+                              final ps =
+                                  await PhotoManager.requestPermissionExtend();
+                              if (ps.isAuth || ps.hasAccess) {
+                                context.push(SelectImageScreen2.routeName);
+                              } else {
+                                return;
+                              }
                             },
                             child: Container(
                               decoration: navbarController.currentIndex.value ==

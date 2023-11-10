@@ -77,7 +77,9 @@ class HomescreenController extends GetxController {
         final result =
             await PostRepo().getHomeScreenMainPostList(mainPostListPage.value);
 
-        if (result.status == true && result.data != null) {
+        if (result.status == true &&
+            result.data != null &&
+            result.data!.isNotEmpty) {
           if (mainPostListPage.value == 1) {
             mainPostList.clear();
           }

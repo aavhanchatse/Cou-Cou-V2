@@ -49,6 +49,7 @@ dependencies:
   timeago: ^3.3.0
   inview_notifier_list: ^3.0.0
   liquid_pull_to_refresh: ^3.0.1
+  pull_to_refresh_flutter3: ^2.0.1
   photo_gallery: ^2.1.1
   in_app_update: ^4.0.1
   camera: ^0.10.5+5
@@ -76,10 +77,12 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   readmore: ^2.2.0
   package_info_plus: ^4.0.2
+  photo_manager: ^2.8.0
   # flutter_sound: ^9.2.13
   # audio_session: ^0.1.16
   # record: ^5.0.1
   # audioplayers: ^5.2.0
+  
   intl: ^0.18.1
   flutter_localizations: 
     sdk: flutter

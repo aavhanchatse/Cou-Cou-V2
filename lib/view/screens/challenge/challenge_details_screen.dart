@@ -10,12 +10,15 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
+import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class ChallengeDetailsScreen extends StatefulWidget {
   static const routeName = '/challengeDetails';
@@ -42,6 +45,13 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
   ChallengeData? challengeData;
 
+  int page = 1;
+
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -51,10 +61,34 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
     getTopPost();
     getMainPost();
     setAnalytics();
+
+    _scrollController.addListener(() {
+      if (_scrollController.offset >=
+          _scrollController.position.maxScrollExtent) {
+        if (mainPost.isNotEmpty) {
+          // if (controller.mainPostList.length >=
+          //     (15 * controller.mainPostListPage.value)) {
+          page++;
+
+          getMainPost();
+          // }
+        }
+      }
+    });
   }
 
   void setAnalytics() async {
     await analytics.setCurrentScreen(screenName: 'challenge_details');
+  }
+
+  Future<void> _onRefresh() async {
+    page = 1;
+
+    getChallengeBanner();
+    getTopPost();
+    getMainPost();
+    await Future.delayed(const Duration(milliseconds: 1000));
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -74,7 +108,9 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push(SearchScreen.routeName);
+            },
             icon: Icon(
               Icons.search,
               color: Constants.black,
@@ -82,48 +118,55 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (bannerLoading == false && challengeData != null) ...[
-              _infoVideosCarousel(context),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      context.push(AllChallengesScreen.routeName);
-                    },
-                    child: Text(
-                      "view_all".tr,
-                      style: TextStyle(
-                        color: Constants.black,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.bold,
+      body: LiquidPullToRefresh(
+        onRefresh: _onRefresh,
+        backgroundColor: Constants.primaryColor,
+        showChildOpacityTransition: false,
+        color: Constants.secondaryColor.withOpacity(0.2),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              if (bannerLoading == false && challengeData != null) ...[
+                _infoVideosCarousel(context),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        context.push(AllChallengesScreen.routeName);
+                      },
+                      child: Text(
+                        "view_all".tr,
+                        style: TextStyle(
+                          color: Constants.black,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-            _latestPostWidget(),
-            SizedBox(height: 4.w),
-            if (mainLoading == false && mainPost.isNotEmpty)
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final item = mainPost[index];
+                  ],
+                ),
+              ],
+              _latestPostWidget(),
+              SizedBox(height: 4.w),
+              if (mainPost.isNotEmpty)
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = mainPost[index];
 
-                  return PostCard(postData: item);
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 6.w);
-                },
-                itemCount: mainPost.length,
-              )
-          ],
+                    return PostCard(postData: item);
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 6.w);
+                  },
+                  itemCount: mainPost.length,
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -467,10 +510,16 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
     if (isInternet) {
       try {
         final result =
-            await PostRepo().getChallengeMainPostList(1, widget.challengeId);
+            await PostRepo().getChallengeMainPostList(page, widget.challengeId);
 
-        if (result.status == true && result.data != null) {
-          mainPost = result.data!;
+        if (result.status == true &&
+            result.data != null &&
+            result.data!.isNotEmpty) {
+          if (page == 1) {
+            mainPost.clear();
+          }
+
+          mainPost.addAll(result.data!);
 
           setState(() {});
         } else {

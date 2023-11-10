@@ -19,6 +19,7 @@ import 'package:coucou_v2/view/screens/update_password/update_password_screen.da
 import 'package:coucou_v2/view/screens/upload_post/camera_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen.dart';
+import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:coucou_v2/view/widgets/image_cropper_screen.dart';
@@ -187,6 +188,12 @@ class AppRouter {
         path: EditImageScreen.routeName,
         builder: (BuildContext context, GoRouterState state) {
           return const EditImageScreen();
+        },
+      ),
+      GoRoute(
+        path: SelectImageScreen2.routeName,
+        builder: (BuildContext context, GoRouterState state) {
+          return const SelectImageScreen2();
         },
       ),
     ],

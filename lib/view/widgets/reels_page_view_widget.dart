@@ -28,13 +28,29 @@ class ReelsPageViewWidget extends StatefulWidget {
 class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
   PostData? post;
 
+  // void getPostData() async {
+  //   post = widget.item;
+  //   setState(() {});
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getPostData();
+  // }
+
   void getPostData() async {
-    post = widget.item;
-    setState(() {});
+    await PostRepo().getPostData(widget.item.id!).then(
+      (value) {
+        post = value.data;
+        setState(() {});
+      },
+    );
   }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     getPostData();
   }
@@ -93,14 +109,25 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                     fontSize: 15,
                   ),
                 ),
-                Text(
-                  post?.voiceUrl ?? "",
-                  style: TextStyle(
-                    fontFamily: "Inika",
-                    color: Constants.white,
-                    fontSize: 12,
+                if (post?.voiceUrl != null && post!.voiceUrl!.isNotEmpty)
+                  Text(
+                    post?.voiceUrl ?? "",
+                    style: TextStyle(
+                      fontFamily: "Inika",
+                      color: Constants.white,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
+                if (post?.postLocation != null &&
+                    post!.postLocation!.isNotEmpty)
+                  Text(
+                    post?.postLocation ?? "",
+                    style: TextStyle(
+                      fontFamily: "Inika",
+                      color: Constants.white,
+                      fontSize: 12,
+                    ),
+                  ),
                 Text(
                   DateUtil.timeAgo2(post!.createdAt!),
                   // DateUtil.timeAgo(post!.createdAt!),
@@ -130,6 +157,9 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
             )
           : Image.network(
               post?.challengeVideo ?? "",
+              height: 100.h,
+              width: 100.w,
+              fit: BoxFit.cover,
             ),
     );
   }
@@ -161,9 +191,9 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                 ),
                 SizedBox(height: 1.w),
                 Text(
-                  post?.likeCount?.toString() ?? "0",
+                  "${post?.likeCount ?? 0}",
                   style: TextStyle(
-                    color: Constants.black,
+                    color: Constants.white,
                   ),
                 ),
               ],
@@ -184,7 +214,7 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                 Text(
                   post?.commentCount?.toString() ?? "0",
                   style: TextStyle(
-                    color: Constants.black,
+                    color: Constants.white,
                   ),
                 ),
               ],
@@ -243,7 +273,8 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
             ReadMoreText(
               post?.caption ?? "",
               trimLines: 1,
-              colorClickableText: Colors.black,
+              style: TextStyle(color: Constants.white),
+              colorClickableText: Colors.white,
               trimMode: TrimMode.Line,
               trimCollapsedText: 'more'.tr,
               trimExpandedText: 'less'.tr,

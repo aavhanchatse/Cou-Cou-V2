@@ -78,6 +78,9 @@ class _PageViewWidgetState extends State<PageViewWidget> {
             )
           : Image.network(
               post?.challengeVideo ?? "",
+              height: 100.h,
+              width: 100.w,
+              fit: BoxFit.cover,
             ),
     );
   }

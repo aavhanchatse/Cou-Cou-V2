@@ -33,6 +33,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
     // TODO: implement initState
     super.initState();
     getImages();
+
     setAnalytics();
   }
 
@@ -179,6 +180,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
   }
 
   Future<bool> _promptPermissionSetting() async {
+    await Permission.storage.request();
     if (Platform.isIOS &&
             await Permission.storage.request().isGranted &&
             await Permission.photos.request().isGranted ||

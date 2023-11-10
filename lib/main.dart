@@ -25,6 +25,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+FirebaseAnalyticsObserver observer =
+    FirebaseAnalyticsObserver(analytics: analytics);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -117,6 +119,7 @@ class _MyAppState extends State<MyApp> {
 
         return GetMaterialApp.router(
           title: 'Cou Cou',
+          navigatorObservers: <NavigatorObserver>[observer],
           routeInformationParser: AppRouter.router.routeInformationParser,
           routerDelegate: AppRouter.router.routerDelegate,
           routeInformationProvider: AppRouter.router.routeInformationProvider,
