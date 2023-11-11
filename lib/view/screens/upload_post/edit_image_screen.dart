@@ -105,14 +105,14 @@ class EditImageScreen extends StatelessWidget {
                 //     AssetImage("assets/icons/music.png"),
                 //   ),
                 // ),
-                IconButton(
-                  onPressed: () {
-                    recordAudio(context);
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/mic.png"),
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     recordAudio(context);
+                //   },
+                //   icon: const ImageIcon(
+                //     AssetImage("assets/icons/mic.png"),
+                //   ),
+                // ),
                 IconButton(
                   onPressed: () async {
                     await analytics.logEvent(name: "image_cropper_icon");
