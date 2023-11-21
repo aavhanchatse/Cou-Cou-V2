@@ -93,26 +93,26 @@ class EditImageScreen extends StatelessWidget {
                 //     AssetImage("assets/icons/Infinity.png"),
                 //   ),
                 // ),
-                // IconButton(
-                //   onPressed: () {
-                //     // checkAndRequestPermissions();
-                //     // showAudioBottomsheet(context);
-                //     selectAudioFromDevice(context);
-                //     // FfmpegHelper.combineAudioWithImage(
-                //     //     imagePath, audioFilePath);
-                //   },
-                //   icon: const ImageIcon(
-                //     AssetImage("assets/icons/music.png"),
-                //   ),
-                // ),
-                // IconButton(
-                //   onPressed: () {
-                //     recordAudio(context);
-                //   },
-                //   icon: const ImageIcon(
-                //     AssetImage("assets/icons/mic.png"),
-                //   ),
-                // ),
+                IconButton(
+                  onPressed: () {
+                    // checkAndRequestPermissions();
+                    // showAudioBottomsheet(context);
+                    selectAudioFromDevice(context);
+                    // FfmpegHelper.combineAudioWithImage(
+                    //     imagePath, audioFilePath);
+                  },
+                  icon: const ImageIcon(
+                    AssetImage("assets/icons/music.png"),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    recordAudio(context);
+                  },
+                  icon: const ImageIcon(
+                    AssetImage("assets/icons/mic.png"),
+                  ),
+                ),
                 IconButton(
                   onPressed: () async {
                     await analytics.logEvent(name: "image_cropper_icon");

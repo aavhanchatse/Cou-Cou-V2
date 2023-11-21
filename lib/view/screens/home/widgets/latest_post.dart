@@ -72,8 +72,16 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ReelsPageView(
-                                            postList: controller.topPostList,
+                                            // postList: controller.topPostList,
                                             initialIndex: index,
+                                            latest: true,
+                                            // loadNextData: () {
+                                            //   controller
+                                            //       .topPostListPage.value++;
+                                            //   controller
+                                            //       .getHomeScreenLatestPost();
+                                            //   setState(() {});
+                                            // },
                                           ),
                                         ),
                                       );

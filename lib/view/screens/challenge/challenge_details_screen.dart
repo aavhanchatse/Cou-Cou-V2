@@ -46,6 +46,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   ChallengeData? challengeData;
 
   int page = 1;
+  int topPostPage = 1;
 
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -220,8 +221,14 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ReelsPageView(
-                                              postList: topPost,
+                                              // postList: topPost,
                                               initialIndex: index,
+                                              latest: false,
+                                              id: widget.challengeId,
+                                              // loadNextData: () {
+                                              //   topPostPage++;
+                                              //   getTopPost();
+                                              // },
                                             ),
                                           ),
                                         );
@@ -322,7 +329,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   Widget _priceContainer(RewardsPrize prize, ChallengeData item, String text) {
     return Expanded(
       child: Container(
-        height: 16.h,
+        height: 32.w,
         padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -477,11 +484,16 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
     if (isInternet) {
       try {
-        final result =
-            await PostRepo().getChallengeTopPost(1, widget.challengeId);
+        final result = await PostRepo()
+            .getChallengeTopPost(topPostPage, widget.challengeId);
 
-        if (result.status == true && result.data != null) {
-          topPost = result.data!;
+        if (result.status == true &&
+            result.data != null &&
+            result.data!.isNotEmpty) {
+          if (topPostPage == 1) {
+            topPost.clear();
+          }
+          topPost.addAll(result.data!);
 
           setState(() {});
         } else {

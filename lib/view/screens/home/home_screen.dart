@@ -40,14 +40,18 @@ class _HomeScreenState extends State<HomeScreen> {
         if (controller.mainPostList.isNotEmpty) {
           // if (controller.mainPostList.length >=
           //     (15 * controller.mainPostListPage.value)) {
-          controller.mainPostListPage.value++;
-
-          controller.getHomeScreenMainPostList().then((value) {
-            setState(() {});
-          });
+          callApiAgain();
           // }
         }
       }
+    });
+  }
+
+  void callApiAgain() {
+    controller.mainPostListPage.value++;
+
+    controller.getHomeScreenMainPostList().then((value) {
+      setState(() {});
     });
   }
 
