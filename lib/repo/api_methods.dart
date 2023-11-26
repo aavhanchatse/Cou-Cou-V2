@@ -1,7 +1,6 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/utils/custom_exceptions.dart';

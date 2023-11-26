@@ -35,13 +35,13 @@ class _VideoPlayerWidgetState extends State<EditImageVideoPlayer>
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
 
-    _controller =
-        VideoPlayerController.file(File(postController.videoFilePath.value))
-          ..initialize().then((_) {
-            setState(() {
-              isPlaying = true;
-            });
-          });
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(postController.videoFilePath.value),
+    )..initialize().then((_) {
+        setState(() {
+          isPlaying = true;
+        });
+      });
 
     _controller.addListener(checkVideo);
   }
@@ -93,11 +93,15 @@ class _VideoPlayerWidgetState extends State<EditImageVideoPlayer>
               },
               child: Stack(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
+                  SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      ),
                     ),
                   ),
                   Align(

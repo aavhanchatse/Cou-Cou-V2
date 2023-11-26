@@ -187,7 +187,11 @@ class AppRouter {
       GoRoute(
         path: EditImageScreen.routeName,
         builder: (BuildContext context, GoRouterState state) {
-          return const EditImageScreen();
+          final bool isVideo = state.extra as bool;
+
+          return EditImageScreen(
+            isVideo: isVideo,
+          );
         },
       ),
       GoRoute(

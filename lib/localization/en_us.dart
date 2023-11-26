@@ -94,6 +94,10 @@ const Map<String, String> enUS = {
   "updated": "Updated",
   "okay": "Okay",
   "language": "Language",
+  "select_source": "Select Source",
+  "select_img_or_vid": "Select Image or Video",
+  "image": "Image",
+  "video": "Video"
 
   // "new_user_sign_up": "New User? Sign Up",
   // "verify_phone_number": "Verify Phone Number",

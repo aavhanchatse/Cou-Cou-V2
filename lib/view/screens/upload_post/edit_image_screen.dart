@@ -26,7 +26,9 @@ import 'package:image_editor_plus/image_editor_plus.dart';
 class EditImageScreen extends StatelessWidget {
   static const routeName = '/edit-image';
 
-  const EditImageScreen({super.key});
+  final bool isVideo;
+
+  const EditImageScreen({super.key, required this.isVideo});
 
   @override
   Widget build(BuildContext context) {
@@ -76,100 +78,102 @@ class EditImageScreen extends StatelessWidget {
               ),
             );
           }),
-          Positioned(
-            bottom: 10.h,
-            right: 3.w,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // IconButton(
-                //   onPressed: () async {
-                //     final String? path =
-                //         await context.push(CameraScreen.routeName);
+          if (isVideo == false)
+            Positioned(
+              bottom: 10.h,
+              right: 3.w,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // IconButton(
+                  //   onPressed: () async {
+                  //     final String? path =
+                  //         await context.push(CameraScreen.routeName);
 
-                //     debugPrint("path: $path");
-                //   },
-                //   icon: const ImageIcon(
-                //     AssetImage("assets/icons/Infinity.png"),
-                //   ),
-                // ),
-                IconButton(
-                  onPressed: () {
-                    // checkAndRequestPermissions();
-                    // showAudioBottomsheet(context);
-                    selectAudioFromDevice(context);
-                    // FfmpegHelper.combineAudioWithImage(
-                    //     imagePath, audioFilePath);
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/music.png"),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    recordAudio(context);
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/mic.png"),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await analytics.logEvent(name: "image_cropper_icon");
+                  //     debugPrint("path: $path");
+                  //   },
+                  //   icon: const ImageIcon(
+                  //     AssetImage("assets/icons/Infinity.png"),
+                  //   ),
+                  // ),
 
-                    final Uint8List? editedImage = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ImageCropper(
-                          image: controller.fileBytes.value as Uint8List,
+                  IconButton(
+                    onPressed: () {
+                      // checkAndRequestPermissions();
+                      // showAudioBottomsheet(context);
+                      selectAudioFromDevice(context);
+                      // FfmpegHelper.combineAudioWithImage(
+                      //     imagePath, audioFilePath);
+                    },
+                    icon: const ImageIcon(
+                      AssetImage("assets/icons/music.png"),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      recordAudio(context);
+                    },
+                    icon: const ImageIcon(
+                      AssetImage("assets/icons/mic.png"),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await analytics.logEvent(name: "image_cropper_icon");
+
+                      final Uint8List? editedImage = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ImageCropper(
+                            image: controller.fileBytes.value as Uint8List,
+                          ),
                         ),
-                      ),
-                    );
+                      );
 
-                    if (editedImage != null) {
-                      final File file =
-                          await ImageUtil.saveImageToTempStorage(editedImage);
+                      if (editedImage != null) {
+                        final File file =
+                            await ImageUtil.saveImageToTempStorage(editedImage);
 
-                      controller.filePath.value = file.path;
-                      controller.fileBytes.value = editedImage;
-                      controller.videoFilePath.value = "";
-                      controller.musicName.value = "";
-                    }
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/crop.png"),
+                        controller.filePath.value = file.path;
+                        controller.fileBytes.value = editedImage;
+                        controller.videoFilePath.value = "";
+                        controller.musicName.value = "";
+                      }
+                    },
+                    icon: const ImageIcon(
+                      AssetImage("assets/icons/crop.png"),
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await analytics.logEvent(name: "image_filter_icon");
+                  IconButton(
+                    onPressed: () async {
+                      await analytics.logEvent(name: "image_filter_icon");
 
-                    final Uint8List? editedImage =
-                        await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ImageEditor(
-                          image: controller.fileBytes.value,
+                      final Uint8List? editedImage =
+                          await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ImageEditor(
+                            image: controller.fileBytes.value,
+                          ),
                         ),
-                      ),
-                    );
+                      );
 
-                    if (editedImage != null) {
-                      final File file =
-                          await ImageUtil.saveImageToTempStorage(editedImage);
+                      if (editedImage != null) {
+                        final File file =
+                            await ImageUtil.saveImageToTempStorage(editedImage);
 
-                      controller.filePath.value = file.path;
-                      controller.fileBytes.value = editedImage;
-                      controller.videoFilePath.value = "";
-                      controller.musicName.value = "";
-                    }
-                  },
-                  icon: const ImageIcon(
-                    AssetImage("assets/icons/filters.png"),
+                        controller.filePath.value = file.path;
+                        controller.fileBytes.value = editedImage;
+                        controller.videoFilePath.value = "";
+                        controller.musicName.value = "";
+                      }
+                    },
+                    icon: const ImageIcon(
+                      AssetImage("assets/icons/filters.png"),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
