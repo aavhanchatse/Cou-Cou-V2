@@ -87,7 +87,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
 
               : ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = controller.mainPostList[index];

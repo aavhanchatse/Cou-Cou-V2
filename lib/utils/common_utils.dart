@@ -22,6 +22,21 @@ void consoleLog(
   }
 }
 
+Future<String> getTempImageFilePath(String ext) async {
+  String dir;
+  if (Platform.isIOS) {
+    dir = (await getApplicationDocumentsDirectory()).path;
+  } else {
+    dir = (await getExternalStorageDirectories())![0].path;
+  }
+
+  final currentTimeMillisecond =
+      DateTime.now().millisecondsSinceEpoch.toString();
+  String filePath = '$dir/${currentTimeMillisecond}_cou_cou$ext';
+
+  return filePath;
+}
+
 Future<File> saveImageToTempStorage(File filePath) async {
   Uint8List imageBytes = await filePath.readAsBytes();
   String dir;

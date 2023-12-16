@@ -5,12 +5,14 @@ import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
+import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
+import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class ChallengeDetailsScreen extends StatefulWidget {
@@ -39,6 +42,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
   bool topLoading = true;
   List<PostData> topPost = [];
+  List<PostData> top5Post = [];
 
   bool mainLoading = true;
   List<PostData> mainPost = [];
@@ -95,6 +99,27 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 6.w),
+        child: FloatingActionButton(
+          onPressed: () async {
+            await analytics.logEvent(name: "post_upload");
+
+            final ps = await PhotoManager.requestPermissionExtend();
+            if (ps.isAuth || ps.hasAccess) {
+              context.push(SelectImageScreen2.routeName);
+            } else {
+              return;
+            }
+          },
+          backgroundColor: Constants.primaryColor,
+          child: Icon(
+            Icons.add,
+            color: Constants.black,
+          ),
+        ),
+      ),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Constants.white,
@@ -154,7 +179,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
               if (mainPost.isNotEmpty)
                 ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = mainPost[index];
@@ -198,98 +223,251 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                   ),
                   SizedBox(height: 2.w),
                   SizedBox(
+                    // color: Colors.orange,
                     height: 27.w,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4.w),
-                      child: Wrap(
-                        spacing: 4.w,
-                        children: topPost.map((item) {
+                    width: 100.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: top5Post.map(
+                        (item) {
                           final index = topPost
                               .indexWhere((element) => element.id == item.id);
 
-                          return index > 4
-                              ? const SizedBox()
-                              : Column(
-                                  mainAxisSize: MainAxisSize.min,
+                          // return Container(
+                          //   color: Colors.blue,
+                          //   height: 27.w,
+                          //   width: 15.w,
+                          // );
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  navigateToReelView(index);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  // child: Image.network(
+                                  //   item.thumbnail ?? "",
+                                  //   height: 15.w,
+                                  //   width: 15.w,
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  child: ImageUtil.networkImage(
+                                    imageUrl: item.thumbnail ?? "",
+                                    height: 13.w,
+                                    width: 13.w,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 2.w),
+                              SizedBox(
+                                // height: 15.w,
+                                width: 13.w,
+                                child: Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        await analytics.logEvent(
-                                            name: "top_5_post_clicked");
-
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ReelsPageView(
-                                              // postList: topPost,
-                                              initialIndex: index,
-                                              latest: false,
-                                              id: widget.challengeId,
-                                              // loadNextData: () {
-                                              //   topPostPage++;
-                                              //   getTopPost();
-                                              // },
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: SizedBox(
-                                        height: 15.w,
-                                        width: 15.w,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: Image.network(
-                                            item.thumbnail ?? "",
-                                            height: 15.w,
-                                            width: 15.w,
-                                            fit: BoxFit.cover,
-                                          ),
+                                    if (item.userSingleData != null)
+                                      Text(
+                                        item.userSingleData!.firstname ?? "",
+                                        style: TextStyle(
+                                          color: Constants.black,
+                                          fontSize: 12,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(height: 2.w),
-                                    SizedBox(
-                                      height: 15.w,
-                                      child: Column(
-                                        children: [
-                                          if (item.userSingleData != null)
-                                            Text(
-                                              item.userSingleData!.firstname ??
-                                                  "",
-                                              style: TextStyle(
-                                                color: Constants.black,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Image.asset(
-                                                "assets/icons/cookie_selected.png",
-                                                height: 3.w,
-                                              ),
-                                              SizedBox(width: 1.w),
-                                              Text(
-                                                item.likeCount.toString(),
-                                                style: TextStyle(
-                                                  color: Constants.black,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          "assets/icons/cookie_selected.png",
+                                          height: 3.w,
+                                        ),
+                                        SizedBox(width: 1.w),
+                                        Text(
+                                          item.likeCount.toString(),
+                                          style: TextStyle(
+                                            color: Constants.black,
+                                            fontSize: 12,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ],
-                                );
-                        }).toList(),
-                      ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ).toList(),
                     ),
+                    // child: ListView.builder(
+                    //   itemCount: 5,
+                    //   padding: EdgeInsets.zero,
+                    //   scrollDirection: Axis.horizontal,
+                    //   shrinkWrap: true,
+                    //   itemBuilder: (context, index) {
+                    //     final item = topPost[index];
+
+                    //     return Column(
+                    //       mainAxisSize: MainAxisSize.min,
+                    //       children: [
+                    //         InkWell(
+                    //           onTap: () {
+                    //             navigateToReelView(index);
+                    //           },
+                    //           child: ClipRRect(
+                    //             borderRadius: BorderRadius.circular(100),
+                    //             // child: Image.network(
+                    //             //   item.thumbnail ?? "",
+                    //             //   height: 15.w,
+                    //             //   width: 15.w,
+                    //             //   fit: BoxFit.cover,
+                    //             // ),
+                    //             child: ImageUtil.networkImage(
+                    //               imageUrl: item.thumbnail ?? "",
+                    //               height: 13.w,
+                    //               width: 13.w,
+                    //               fit: BoxFit.cover,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 2.w),
+                    //         SizedBox(
+                    //           height: 15.w,
+                    //           width: 13.w,
+                    //           child: Column(
+                    //             children: [
+                    //               if (item.userSingleData != null)
+                    //                 Text(
+                    //                   item.userSingleData!.firstname ?? "",
+                    //                   style: TextStyle(
+                    //                     color: Constants.black,
+                    //                     fontSize: 12,
+                    //                   ),
+                    //                 ),
+                    //               Row(
+                    //                 mainAxisSize: MainAxisSize.min,
+                    //                 children: [
+                    //                   Image.asset(
+                    //                     "assets/icons/cookie_selected.png",
+                    //                     height: 3.w,
+                    //                   ),
+                    //                   SizedBox(width: 1.w),
+                    //                   Text(
+                    //                     item.likeCount.toString(),
+                    //                     style: TextStyle(
+                    //                       color: Constants.black,
+                    //                       fontSize: 12,
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // ),
+                    // child: Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    //   child: Wrap(
+                    //     // mainAxisSize: MainAxisSize.max,
+                    //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     spacing: 4.w,
+                    //     children: topPost.map((item) {
+                    //       final index = topPost
+                    //           .indexWhere((element) => element.id == item.id);
+
+                    //       return index > 4
+                    //           ? const SizedBox()
+                    //           : Column(
+                    //               mainAxisSize: MainAxisSize.min,
+                    //               children: [
+                    //                 InkWell(
+                    //                   onTap: () {
+                    //                     navigateToReelView(index);
+                    //                   },
+                    //                   child: ClipRRect(
+                    //                     borderRadius:
+                    //                         BorderRadius.circular(100),
+                    //                     // child: Image.network(
+                    //                     //   item.thumbnail ?? "",
+                    //                     //   height: 15.w,
+                    //                     //   width: 15.w,
+                    //                     //   fit: BoxFit.cover,
+                    //                     // ),
+                    //                     child: ImageUtil.networkImage(
+                    //                       imageUrl: item.thumbnail ?? "",
+                    //                       height: 13.w,
+                    //                       width: 13.w,
+                    //                       fit: BoxFit.cover,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //                 SizedBox(height: 2.w),
+                    //                 // SizedBox(
+                    //                 //   height: 15.w,
+                    //                 //   width: 13.w,
+                    //                 //   child: Column(
+                    //                 //     children: [
+                    //                 //       if (item.userSingleData != null)
+                    //                 //         Text(
+                    //                 //           item.userSingleData!.firstname ??
+                    //                 //               "",
+                    //                 //           style: TextStyle(
+                    //                 //             color: Constants.black,
+                    //                 //             fontSize: 12,
+                    //                 //           ),
+                    //                 //         ),
+                    //                 //       Row(
+                    //                 //         mainAxisSize: MainAxisSize.min,
+                    //                 //         children: [
+                    //                 //           Image.asset(
+                    //                 //             "assets/icons/cookie_selected.png",
+                    //                 //             height: 3.w,
+                    //                 //           ),
+                    //                 //           SizedBox(width: 1.w),
+                    //                 //           Text(
+                    //                 //             item.likeCount.toString(),
+                    //                 //             style: TextStyle(
+                    //                 //               color: Constants.black,
+                    //                 //               fontSize: 12,
+                    //                 //             ),
+                    //                 //           ),
+                    //                 //         ],
+                    //                 //       ),
+                    //                 //     ],
+                    //                 //   ),
+                    //                 // ),
+                    //               ],
+                    //             );
+                    //     }).toList(),
+                    //   ),
+                    // ),
                   ),
                 ],
               );
+  }
+
+  void navigateToReelView(int index) async {
+    await analytics.logEvent(name: "top_5_post_clicked");
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReelsPageView(
+          // postList: topPost,
+          initialIndex: index,
+          latest: false,
+          id: widget.challengeId,
+          // loadNextData: () {
+          //   topPostPage++;
+          //   getTopPost();
+          // },
+        ),
+      ),
+    );
   }
 
   Widget _priceWidget(BuildContext context) {
@@ -384,7 +562,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
   Widget _infoVideosCarousel(BuildContext context) {
     return SizedBox(
-      height: 42.h,
+      height: 100.w,
       child: CarouselSlider.builder(
         itemCount: 1,
         itemBuilder: (_, index, __) {
@@ -398,15 +576,16 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                   //   extra: challengeData!.id,
                   // );
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: SizedBox(
+                  // color: Colors.blue,
+                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
                   width: 100.w,
-                  height: 50.w,
+                  height: 62.w,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    // borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
                       imageUrl: challengeData!.challengeLogo ?? "",
-                      fit: BoxFit.cover,
+                      // fit: BoxFit.cover,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => SizedBox(
                         width: 10.w,
@@ -492,8 +671,12 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
             result.data!.isNotEmpty) {
           if (topPostPage == 1) {
             topPost.clear();
+            top5Post.clear();
           }
           topPost.addAll(result.data!);
+          for (int i = 0; i < 5 && i < topPost.length; i++) {
+            top5Post.add(topPost[i]);
+          }
 
           setState(() {});
         } else {

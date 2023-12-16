@@ -4,7 +4,6 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DismissPage extends StatefulWidget {
   static const routeName = '/dismiss';
@@ -30,8 +29,8 @@ class _DismissiblePageState extends State<DismissPage> {
         backgroundColor: Colors.transparent,
         onDismissed: () {
           // context.pop();
-          // Navigator.pop(context);
-          Navigator.of(context, rootNavigator: true).pop();
+          Navigator.pop(context);
+          // Navigator.of(context, rootNavigator: true).pop();
         },
         child: Container(
           color: Colors.black.withOpacity(0.5),
@@ -84,24 +83,27 @@ class _DismissiblePageState extends State<DismissPage> {
                 ),
               ),
               Positioned(
-                  top: 9.h,
-                  left: 4.w,
-                  child: InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Card(
-                          shape: const CircleBorder(),
-                          elevation: 0,
-                          color: Colors.white.withOpacity(0.4),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Icon(
-                              Icons.arrow_back,
-                              size: 3.t,
-                              color: Colors.white,
-                            ),
-                          ))))
+                top: 9.h,
+                left: 4.w,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Card(
+                    shape: const CircleBorder(),
+                    elevation: 0,
+                    color: Colors.white.withOpacity(0.4),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 3.t,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

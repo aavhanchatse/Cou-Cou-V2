@@ -101,10 +101,11 @@ class _BannerWidgetState extends State<BannerWidget> {
   }
 
   Widget _priceContainer(RewardsPrize prize, ChallengeData item, String text) {
+    // debugPrint("prize.ling: ${prize.link}");
     return Expanded(
       child: Container(
         height: 32.w,
-        padding: EdgeInsets.all(2.w),
+        // padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Constants.white,
@@ -129,17 +130,19 @@ class _BannerWidgetState extends State<BannerWidget> {
                 borderRadius: BorderRadius.circular(100),
                 child: Image.network(
                   prize.link ?? "",
-                  height: 15.w,
-                  width: 15.w,
+                  height: 20.w,
+                  width: 20.w,
                   fit: BoxFit.cover,
+                  // color: Colors.blue,
                 ),
               ),
             ),
-            SizedBox(height: 2.w),
+            // SizedBox(height: 2.w),
             Text(
               text,
               style: TextStyle(
                 color: Constants.black,
+                fontSize: 12,
               ),
             ),
             Text(
@@ -150,7 +153,7 @@ class _BannerWidgetState extends State<BannerWidget> {
               style: TextStyle(
                 color: Constants.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
           ],
@@ -161,7 +164,7 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   Widget _infoVideosCarousel(BuildContext context) {
     return SizedBox(
-      height: 88.w,
+      height: 100.w,
       child: CarouselSlider.builder(
         itemCount: controller.bannerList.length,
         itemBuilder: (_, index, __) {
@@ -177,15 +180,15 @@ class _BannerWidgetState extends State<BannerWidget> {
                     extra: {"id": item.id},
                   );
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: SizedBox(
+                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
                   width: 100.w,
-                  height: 50.w,
+                  height: 62.w,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    // borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImage(
                       imageUrl: item.challengeLogo ?? "",
-                      fit: BoxFit.cover,
+                      // fit: BoxFit.cover,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => SizedBox(
                         width: 10.w,

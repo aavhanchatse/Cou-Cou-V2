@@ -320,10 +320,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              item?.thumbnail ?? "",
-                              fit: BoxFit.cover,
+                            child: ImageUtil.networkImage(
+                              imageUrl: item?.thumbnail ?? "",
                             ),
+                            // child: Image.network(
+                            //   item?.thumbnail ?? "",
+                            //   fit: BoxFit.cover,
+                            // ),
                           ),
                         );
                       },

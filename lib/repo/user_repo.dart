@@ -153,6 +153,20 @@ class UserRepo {
     }
   }
 
+  Future<SuperResponse> appRating(int rating) async {
+    final token = StorageManager().getToken();
+    debugPrint('token: $token');
+
+    final headers = {'Authorization': token!};
+
+    final response =
+        await _api.getMethod("${Constants.appRating}?rating=$rating", headers);
+
+    Map<String, dynamic> map = (jsonDecode(response.body));
+
+    return SuperResponse.fromJson(map);
+  }
+
   // Future<SuperResponse<List<AddressData>?>> getUserAddress() async {
   //   final token = StorageManager().getToken();
   //   debugPrint('token: $token');

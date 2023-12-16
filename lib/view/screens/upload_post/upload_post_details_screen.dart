@@ -10,9 +10,11 @@ import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/models/super_response.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/address_search.dart';
+import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
+import 'package:coucou_v2/utils/location_util.dart';
 import 'package:coucou_v2/utils/place_service%20copy.dart';
 import 'package:coucou_v2/utils/s3_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
@@ -24,6 +26,9 @@ import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:coucou_v2/view/widgets/secondary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -342,20 +347,66 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     }
   }
 
-  Future<String>? _uploadFile(String path, String ext) async {
-    final currentTimeMillisecond =
-        DateTime.now().millisecondsSinceEpoch.toString();
+  Future<String?>? _uploadFile(String path, String ext) async {
+    debugPrint("path: $path");
+    debugPrint("ext: $ext");
 
-    final userId = userController.userData.value.id!;
+    final tempFilePath = await getTempImageFilePath(ext);
+    debugPrint("tempFilePath: $tempFilePath");
 
-    var filePath =
-        'Post_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond$ext';
+    final File? compressedImage = await testCompressAndGetFile(
+      File(path),
+      tempFilePath,
+    );
 
-    final downloadUrl = await S3Util.uploadFileToAws(File(path), filePath);
+    if (compressedImage != null) {
+      final currentTimeMillisecond =
+          DateTime.now().millisecondsSinceEpoch.toString();
 
-    debugPrint('downloadUrl: $downloadUrl');
+      final userId = userController.userData.value.id!;
 
-    return downloadUrl!;
+      var filePath =
+          'Post_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond$ext';
+
+      final downloadUrl =
+          await S3Util.uploadFileToAws(File(compressedImage.path), filePath);
+
+      debugPrint('downloadUrl: $downloadUrl');
+
+      return downloadUrl!;
+    }
+    return null;
+  }
+
+  Future<File?> testCompressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 80,
+    );
+
+    if (result != null) {
+      // print(file.lengthSync());
+      // print(result.lengthSync());
+
+      return result;
+    }
+    return null;
+  }
+
+  Future<String?> _getLocation() async {
+    final Position? location = await LocationUtils.getCurrentLocation();
+
+    if (location != null) {
+      final Placemark? placemark =
+          await LocationUtils.getLocationFromCoordinates(location);
+
+      if (placemark != null) {
+        final city = placemark.locality;
+        return city;
+      }
+    }
+    return null;
   }
 
   void uploadPost() async {
@@ -370,11 +421,22 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
 
     if (isInternet) {
       try {
+        final city = await _getLocation();
+
         String? imageUrl;
         String? videoUrl;
 
         if (widget.postData == null) {
-          imageUrl = await _uploadFile(controller.filePath.value, ".png");
+          String ext;
+
+          if (controller.filePath.value.endsWith('.jpg') ||
+              controller.filePath.value.endsWith('.jpeg')) {
+            ext = ".jpg";
+          } else {
+            ext = ".png";
+          }
+
+          imageUrl = await _uploadFile(controller.filePath.value, ext);
 
           if (controller.videoFilePath.value.isNotEmpty) {
             videoUrl = controller.videoFilePath.value;
@@ -397,7 +459,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
           "challengeId": selectedChallenge!.id,
           "challengeVideo": challengeVideo,
           "caption": caption,
-          "postLocation": location,
+          "postLocation": location ?? city,
           "recipeLocation": rlocation,
           "voice_URL": controller.musicName.value,
           "thumbnail": widget.postData != null

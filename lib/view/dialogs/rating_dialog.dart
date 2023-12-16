@@ -1,5 +1,10 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/repo/user_repo.dart';
+import 'package:coucou_v2/utils/default_snackbar_util.dart';
+import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -14,7 +19,7 @@ class RatingDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.only(top: 4.w, left: 8.w, right: 8.w, bottom: 8.w),
+        padding: EdgeInsets.only(top: 4.w, left: 4.w, right: 4.w, bottom: 8.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -49,19 +54,51 @@ class RatingDialog extends StatelessWidget {
               direction: Axis.horizontal,
               allowHalfRating: false,
               itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              // itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               itemBuilder: (context, _) => Icon(
                 Icons.star,
                 color: Constants.primaryColor,
               ),
               onRatingUpdate: (rating) {
                 debugPrint(rating.toString());
-                context.pop();
+                // context.pop();
+                giveRating(context, rating.toInt());
               },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void giveRating(BuildContext context, int rating) async {
+    ProgressDialog.showProgressDialog(context);
+    final isInternet = await InternetUtil.isInternetConnected();
+
+    if (isInternet) {
+      //try {
+
+      final result = await UserRepo().appRating(rating);
+      // Get.back();
+      context.pop();
+
+      if (result.status == true) {
+        final userController = Get.find<UserController>();
+        userController.getUserDataById();
+
+        context.pop();
+      } else {
+        SnackBarUtil.showSnackBar(result.message!, context: context);
+      }
+      // } catch (error) {
+      //   Get.back();
+      //   SnackBarUtil.showSnackBar('Something went wrong');
+      //   debugPrint('error: $error');
+      // }
+    } else {
+      // Get.back();
+      context.pop();
+      SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
+    }
   }
 }

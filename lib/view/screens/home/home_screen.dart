@@ -72,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         backgroundColor: Constants.white,
         title: InkWell(
-          onTap: () {},
+          onTap: () {
+            _scrollController.jumpTo(10);
+          },
           child: Text(
             "Cou Cou!",
             style: TextStyle(

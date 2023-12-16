@@ -15,13 +15,16 @@ class ReelsPageView extends StatefulWidget {
   final int? initialIndex;
   final bool latest;
   final String? id;
+  final bool? singlePost;
 
-  const ReelsPageView(
-      {super.key,
-      // required this.postList,
-      this.initialIndex = 0,
-      required this.latest,
-      this.id});
+  const ReelsPageView({
+    super.key,
+    // required this.postList,
+    this.initialIndex = 0,
+    required this.latest,
+    this.id,
+    this.singlePost = false,
+  });
 
   @override
   State<ReelsPageView> createState() => _ReelsPageViewState();
@@ -38,7 +41,9 @@ class _ReelsPageViewState extends State<ReelsPageView> {
     // TODO: implement initState
     super.initState();
 
-    getData();
+    if (widget.singlePost == false) {
+      getData();
+    }
 
     _pageController = PageController(
         initialPage: widget.initialIndex ?? 0, viewportFraction: 1);
@@ -168,7 +173,7 @@ class _ReelsPageViewState extends State<ReelsPageView> {
               itemCount: list.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                if (index == list.length - 2) {
+                if (index == list.length - 2 && widget.singlePost == false) {
                   page++;
                   getData();
                 }

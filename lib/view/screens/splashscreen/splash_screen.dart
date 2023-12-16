@@ -23,16 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
 
-    _controller = VideoPlayerController.asset("assets/lottie/splash.mp4")
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {
-          _controller!.play();
-          // isPlaying = true;
-        });
-      });
+    // _controller = VideoPlayerController.asset("assets/lottie/splash.mp4")
+    //   ..initialize().then((_) {
+    //     // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+    //     setState(() {
+    //       _controller!.play();
+    //       // isPlaying = true;
+    //     });
+    //   });
 
-    _controller!.addListener(checkVideo);
+    // _controller!.addListener(checkVideo);
+    _checkLogin();
   }
 
   @override

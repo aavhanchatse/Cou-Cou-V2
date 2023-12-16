@@ -1,11 +1,7 @@
-import 'package:app_settings/app_settings.dart';
-import 'package:coucou_v2/app_constants/constants.dart';
-import 'package:coucou_v2/utils/default_snackbar_util.dart';
-import 'package:coucou_v2/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart' as locationData;
+// import 'package:location/location.dart' as locationData;
 
 class LocationUtils {
   static Future<Location?> getLocationCoordinates(String place) async {
@@ -20,11 +16,11 @@ class LocationUtils {
     bool serviceEnabled;
     LocationPermission permission;
 
-    locationData.Location locationDatum = locationData.Location();
+    // locationData.Location locationDatum = locationData.Location();
 
     // Test if location services are enabled.
-    serviceEnabled = await locationDatum.serviceEnabled();
-    // serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    // serviceEnabled = await locationDatum.serviceEnabled();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
     debugPrint('serviceEnabled: $serviceEnabled');
 
     if (!serviceEnabled) {
@@ -33,12 +29,12 @@ class LocationUtils {
       // App to enable the location services.
       debugPrint('Location services are disabled, requesting again');
 
-      serviceEnabled = await locationDatum.requestService();
+      // serviceEnabled = await locationDatum.requestService();
 
-      debugPrint('requested again: $serviceEnabled');
-      if (!serviceEnabled) {
-        return null;
-      }
+      // debugPrint('requested again: $serviceEnabled');
+      // if (!serviceEnabled) {
+      //   return null;
+      // }
 
       // return null;
       // return Future.error('Location services are disabled.');

@@ -24,7 +24,7 @@ class PrizeImageViewDialog extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: Constants.green1,
+              // color: Constants.green1,
             ),
             height: 20.h,
             // width: 20.h,
@@ -35,7 +35,7 @@ class PrizeImageViewDialog extends StatelessWidget {
                   height: double.infinity,
                   width: double.infinity,
                   imageUrl: prize.link ?? "",
-                  fit: BoxFit.cover,
+                  // fit: BoxFit.cover,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       Center(
                     child: CircularProgressIndicator(

@@ -13,22 +13,24 @@ class ImageUtil {
           {required String imageUrl,
           double? height,
           double? width,
+          BoxFit? fit,
           Key? key}) =>
       CachedNetworkImage(
-          key: key,
-          placeholder: (context, url) =>
-              NoImageWidget(height: height, width: width, fit: BoxFit.cover),
-          errorWidget: (context, url, error) =>
-              NoImageWidget(height: height, width: width, fit: BoxFit.cover),
-          imageUrl: imageUrl /*?? Constants.placeholderImageUrl*/,
-          height: height,
-          // 9.h,
-          width: width,
-          // 30.w,
-          // maxHeightDiskCache: (height * 3).ceil(),
-          // maxWidthDiskCache: (width * 3).ceil(),
-          placeholderFadeInDuration: Constants.placeholderFadeInDuration,
-          fit: BoxFit.cover);
+        key: key,
+        placeholder: (context, url) =>
+            NoImageWidget(height: height, width: width, fit: BoxFit.cover),
+        errorWidget: (context, url, error) =>
+            NoImageWidget(height: height, width: width, fit: BoxFit.cover),
+        imageUrl: imageUrl /*?? Constants.placeholderImageUrl*/,
+        height: height,
+        // 9.h,
+        width: width,
+        // 30.w,
+        // maxHeightDiskCache: (height * 3).ceil(),
+        // maxWidthDiskCache: (width * 3).ceil(),
+        placeholderFadeInDuration: Constants.placeholderFadeInDuration,
+        fit: fit ?? BoxFit.cover,
+      );
 
   static CachedNetworkImageProvider netWorkImageProvider(
           {required String imageUrl}) =>

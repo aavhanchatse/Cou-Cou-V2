@@ -2,6 +2,7 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
+import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
@@ -10,6 +11,7 @@ import 'package:coucou_v2/view/screens/activity/my_activity_widget.dart';
 import 'package:coucou_v2/view/screens/home/home_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
+import 'package:coucou_v2/view/widgets/reels_page_view_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,11 +57,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     super.initState();
 
     getUser();
-    // _checkNotification();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ratingDialog();
-    });
+    _checkNotification();
+    handleDeepLink(context);
 
     // checkForInAppUpdate();
   }
@@ -84,6 +83,13 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     //   userController.getUserAddress(false);
     //   userController.getFollowingList();
     // });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (userController.userData.value.id != null &&
+          userController.userData.value.ratingVerify != true) {
+        ratingDialog();
+      }
+    });
   }
 
   @override
@@ -267,67 +273,21 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   }
 
   void _handleNotificationRedirect(RemoteMessage message) async {
-    // if (message.data['type'] == "orderCreated") {
-    //   setIndex(3);
-    // } else if (message.data['type'] == "order") {
-    //   setIndex(3);
-    // } else if (message.data['type'] == "chat") {
-    //   // redirect to chat screen
+    if (message.data['type'] == "NewPost") {
+      // redirect to post screen
 
-    //   final userId1 = message.data['id'];
-    //   final userId2 = StorageManager().getUserId();
+      final postId = message.data['id'];
+      final data = await PostRepo().getPostData(postId);
 
-    //   int largest = max(userId1.hashCode, userId2.hashCode);
-    //   int smallest = min(userId1.hashCode, userId2.hashCode);
+      Get.to(() => ReelsPageViewWidget(item: data.data!));
+    } else if (message.data['type'] == "like") {
+      // redirect to post screen
 
-    //   final chatId = "${smallest}_$largest";
+      final postId = message.data['id'];
+      final data = await PostRepo().getPostData(postId);
 
-    //   Get.to(
-    //     () => ChatDetailsScreen(
-    //         chatId: chatId, userId1: userId1, userId2: userId2),
-    //   );
-    // } else if (message.data['type'] == "NewPost") {
-    //   // redirect to post screen
-
-    //   final postId = message.data['id'];
-    //   final data = await PostRepo().getPostDetailsById(postId);
-
-    //   Get.to(() => CouCouListCartScreen(
-    //         postDataModelList: [data.data!],
-    //         index: 0,
-    //       ));
-    // } else if (message.data['type'] == "like") {
-    //   // redirect to post screen
-
-    //   final postId = message.data['id'];
-    //   final data = await PostRepo().getPostDetailsById(postId);
-
-    //   Get.to(() => CouCouListCartScreen(
-    //         postDataModelList: [data.data!],
-    //         index: 0,
-    //       ));
-    // } else if (message.data['type'] == "follow") {
-    //   // redirect to user profile screen
-
-    //   final userId = message.data['id'];
-
-    //   final SuperResponse<UserData?> result =
-    //       await UserRepo().getUserDataById(userId);
-
-    //   Get.to(() => ProfileDetailsScreen(user: result.data!));
-    // } else if (message.data['type'] == "story") {
-    //   // redirect to story screen
-
-    //   final storyId = message.data['id'];
-
-    //   final SuperResponse<StoryReelModel?> result =
-    //       await PostRepo().getStoryDetailsById(storyId);
-
-    //   Get.to(() => PageViewForStory(
-    //         storyReelList: [result.data!],
-    //         index: 0,
-    //       ));
-    // }
+      Get.to(() => ReelsPageViewWidget(item: data.data!));
+    }
   }
 
   void _handleNotificationOperation(RemoteMessage? message) {

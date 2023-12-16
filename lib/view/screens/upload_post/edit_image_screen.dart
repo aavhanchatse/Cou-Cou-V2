@@ -70,7 +70,7 @@ class EditImageScreen extends StatelessWidget {
                 child: controller.videoFilePath.isEmpty
                     ? Image.file(
                         File(controller.filePath.value),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fitWidth,
                         // height: 20.h,
                         // width: 20.h,
                       )
@@ -153,6 +153,7 @@ class EditImageScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => ImageEditor(
                             image: controller.fileBytes.value,
+                            cropOption: null,
                           ),
                         ),
                       );

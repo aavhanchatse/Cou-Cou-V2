@@ -175,8 +175,8 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
                       },
                       child: Image.asset(
                         userController.videoMute.value == true
-                            ? 'assets/icons/common_icons/unmute.png'
-                            : 'assets/icons/common_icons/mute.png',
+                            ? 'assets/icons/common_icons/mute.png'
+                            : 'assets/icons/common_icons/unmute.png',
                         width: 20,
                         height: 20,
                         color: widget.blackMute == true

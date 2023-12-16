@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
@@ -10,8 +13,13 @@ import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/firebase_options.dart';
 import 'package:coucou_v2/localization/localization_service.dart';
+import 'package:coucou_v2/models/user_data.dart';
+import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/storage_manager.dart';
+import 'package:coucou_v2/view/screens/login/login_screen.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
+import 'package:coucou_v2/view/widgets/reels_page_view_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -19,6 +27,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -53,6 +62,8 @@ void main() async {
   await FirebaseMessaging.instance.subscribeToTopic("all");
 
   runApp(const MyApp());
+
+  // handleDeepLink();
 }
 
 Future<void> checkNotificationPermissions() async {
@@ -150,3 +161,59 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
+
+void handleDeepLink(BuildContext context) {
+  streamSubscription.onData((data) async {
+    debugPrint("branch_key : ${jsonEncode(data)}");
+    debugPrint("data['+clicked_branch_link'] ${data['+clicked_branch_link']}");
+    debugPrint("data['~channel'] ${data['~channel']}");
+
+    if (data['+clicked_branch_link']) {
+      if (data['~channel'] == "challengePost") {
+        String postId = data['post_id'];
+
+        final result = await PostRepo().getPostData(postId);
+
+        // Get.to(() => ReelsPageViewWidget(item: result.data!));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                body: SafeArea(child: ReelsPageViewWidget(item: result.data!))),
+          ),
+        );
+      }
+    } else {
+      var box = StorageManager();
+
+      UserData? userData = box.getUserData();
+
+      if (userData != null) {
+        Get.offAll(
+          () => const NavBar(),
+          // transition: Transition.fade,
+          duration: const Duration(milliseconds: 300),
+        );
+      } else {
+        Get.offAll(
+          () => const LoginScreen(),
+          // transition: Transition.fade,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    }
+  });
+}
+
+StreamSubscription<Map> streamSubscription =
+    FlutterBranchSdk.initSession().listen((data) {
+  if (data.containsKey("+clicked_branch_link") &&
+      data["+clicked_branch_link"] == true) {
+    //Link clicked. Add logic to get link data and route user to correct screen
+    debugPrint('Custom string: ${data["custom_string"]}');
+  }
+}, onError: (error) {
+  PlatformException platformException = error as PlatformException;
+  debugPrint(
+      'InitSession error: ${platformException.code} - ${platformException.message}');
+});

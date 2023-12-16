@@ -6,10 +6,12 @@ import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/date_util.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
+import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
+import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,13 +45,22 @@ class _PostCardState extends State<PostCard> {
         ? const SizedBox()
         : Column(
             children: [
-              _headerWidget(context),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: _headerWidget(context),
+              ),
               SizedBox(height: 2.w),
               _contentImage(),
               SizedBox(height: 2.w),
-              _buttons(context),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: _buttons(context),
+              ),
               SizedBox(height: 2.w),
-              _descriptionWidget(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: _descriptionWidget(),
+              ),
             ],
           );
   }
@@ -116,69 +127,77 @@ class _PostCardState extends State<PostCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        InkWell(
-          onTap: () {
-            likePost();
-          },
-          child: Row(
-            children: [
-              Image.asset(
-                item?.like == true
-                    ? "assets/icons/cookie_selected.png"
-                    : "assets/icons/cookie_unselected.png",
-                height: 6.w,
-              ),
-              SizedBox(width: 1.w),
-              Text(
-                item?.likeCount?.toString() ?? "0",
-                style: TextStyle(
-                  color: Constants.black,
+        Expanded(
+          child: InkWell(
+            onTap: () {
+              likePost();
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  item?.like == true
+                      ? "assets/icons/cookie_selected.png"
+                      : "assets/icons/cookie_unselected.png",
+                  height: 6.w,
                 ),
-              ),
-            ],
+                SizedBox(width: 1.w),
+                Text(
+                  item?.likeCount?.toString() ?? "0",
+                  style: TextStyle(
+                    color: Constants.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        InkWell(
-          onTap: () {
-            context.push(CommentScreen.routeName, extra: item);
-          },
-          child: Row(
-            children: [
-              Image.asset(
-                "assets/icons/comment.png",
-                height: 6.w,
-              ),
-              SizedBox(width: 1.w),
-              Text(
-                item?.commentCount?.toString() ?? "0",
-                style: TextStyle(
-                  color: Constants.black,
+        Expanded(
+          child: InkWell(
+            onTap: () {
+              context.push(CommentScreen.routeName, extra: item);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/icons/comment.png",
+                  height: 6.w,
                 ),
-              ),
-            ],
+                SizedBox(width: 1.w),
+                Text(
+                  item?.commentCount?.toString() ?? "0",
+                  style: TextStyle(
+                    color: Constants.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        InkWell(
-          onTap: () async {
-            await analytics.logEvent(name: "share_post");
+        Expanded(
+          child: InkWell(
+            onTap: () async {
+              await analytics.logEvent(name: "share_post");
 
-            shareImageWithText(
-                item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
-          },
-          child: Row(
-            children: [
-              Image.asset(
-                "assets/icons/share.png",
-                height: 6.w,
-              ),
-              SizedBox(width: 1.w),
-              Text(
-                "share".tr,
-                style: TextStyle(
-                  color: Constants.black,
+              shareImageWithText(
+                  item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset(
+                  "assets/icons/share.png",
+                  height: 6.w,
                 ),
-              ),
-            ],
+                SizedBox(width: 1.w),
+                Text(
+                  "share".tr,
+                  style: TextStyle(
+                    color: Constants.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -225,11 +244,13 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget _contentImage() {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: double.infinity,
-        maxHeight: 50.h,
-      ),
+    // debugPrint("item?.challengeVideo: ${item?.challengeVideo}");
+    return SizedBox(
+      // constraints: BoxConstraints(
+      //   maxWidth: double.infinity,
+      //   maxHeight: 50.h,
+      // ),
+      height: 50.h,
       child: item!.challengeVideo!.endsWith(".mp4")
           ? InViewVideoPlayerCouCou(
               data: item!.challengeVideo!,
@@ -237,13 +258,43 @@ class _PostCardState extends State<PostCard> {
               isViewChanged: widget.isInView,
             )
           : ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
+              // borderRadius: const BorderRadius.only(
+              //   bottomLeft: Radius.circular(8),
+              //   bottomRight: Radius.circular(8),
+              // ),
+              child: Stack(
+                children: [
+                  ImageUtil.networkImage(
+                    imageUrl: item?.challengeVideo ?? "",
+                    height: 50.h,
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        context.push(
+                          DismissPage.routeName,
+                          extra: {
+                            "initialIndex": 0,
+                            "imageList": [item?.challengeVideo],
+                            "isVideo": false
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        Icons.zoom_out_map_outlined,
+                        color: Constants.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Image.network(
-                item?.challengeVideo ?? "",
-              ),
+              // child: Image.network(
+              //   item?.challengeVideo ?? "",
+              // ),
             ),
     );
   }
@@ -260,7 +311,7 @@ class _PostCardState extends State<PostCard> {
             profilePic: item?.userSingleData!.imageUrl,
             userName:
                 "${item?.userSingleData!.firstname} ${item?.userSingleData!.lastname}",
-            size: 60,
+            size: 50,
           ),
           SizedBox(width: 2.w),
           Column(

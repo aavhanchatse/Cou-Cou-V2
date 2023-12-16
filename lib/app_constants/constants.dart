@@ -171,4 +171,5 @@ class Constants {
       "postComment/deleteSubCommentByUsingSubCommentId";
   static const String deleteUserPost = "challenges/deleteUserChallengePost";
   static const String getVideoFromImage = "media/test";
+  static const String appRating = "mobileUser/apprating";
 }

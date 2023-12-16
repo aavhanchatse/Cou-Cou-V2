@@ -2,6 +2,7 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/date_util.dart';
+import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view.dart';
 import 'package:flutter/material.dart';
@@ -92,8 +93,8 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        child: Image.network(
-                                          item.thumbnail ?? "",
+                                        child: ImageUtil.networkImage(
+                                          imageUrl: item.thumbnail ?? "",
                                           height: 15.w,
                                           width: 15.w,
                                           fit: BoxFit.cover,
