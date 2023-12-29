@@ -151,7 +151,6 @@ class _MyAppState extends State<MyApp> {
         //     GlobalWidgetsLocalizations.delegate,
         //     GlobalCupertinoLocalizations.delegate,
         //   ],
-
         //   // locale: Locale(localeLan),
         //   // fallbackLocale: LocalizationService.fallbackLocale,
         //   // translations: LocalizationService(),
