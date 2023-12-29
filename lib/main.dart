@@ -61,6 +61,8 @@ void main() async {
   );
   await FirebaseMessaging.instance.subscribeToTopic("all");
 
+  analytics.setAnalyticsCollectionEnabled(true);
+
   runApp(const MyApp());
 
   // handleDeepLink();
