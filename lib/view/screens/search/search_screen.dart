@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/models/user_search_history_model.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
@@ -101,7 +102,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                         child: Text(
                                           e.keys ?? "",
                                           style: TextStyle(
-                                            fontFamily: "Inika",
                                             fontSize: 1.8.t,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -132,7 +132,6 @@ class _SearchScreenState extends State<SearchScreen> {
                           Text(
                             "clear".tr,
                             style: const TextStyle(
-                              fontFamily: "Inika",
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -341,6 +340,8 @@ class _SearchScreenState extends State<SearchScreen> {
         final value = await PostRepo().deleteSearchHistoryItem(payload);
 
         if (value.status == true) {
+          await analytics.logEvent(name: "search_history_deleted");
+
           _getUserHistory();
         }
       } catch (error) {

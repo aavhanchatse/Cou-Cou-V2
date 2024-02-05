@@ -2,6 +2,7 @@ import 'package:coucou_v2/models/super_response.dart';
 import 'package:coucou_v2/models/user_data.dart';
 import 'package:coucou_v2/repo/user_repo.dart';
 import 'package:coucou_v2/utils/storage_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
@@ -15,8 +16,10 @@ class UserController extends GetxController {
   var chatNotification = false.obs;
   var videoMute = true.obs;
 
-  void getUserDataById() async {
+  Future<void> getUserDataById() async {
     final userId = StorageManager().getUserId();
+
+    debugPrint("userid: $userId");
 
     final SuperResponse<UserData?> result =
         await UserRepo().getUserDataById(userId);

@@ -71,7 +71,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                 color: Constants.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
-                fontFamily: "Inika",
               ),
             ),
           ),
@@ -88,7 +87,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     color: Constants.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    fontFamily: "Inika",
                   ),
                 ),
                 SizedBox(height: 8.w),
@@ -114,7 +112,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               "New Password",
               style: TextStyle(
                 fontSize: 16,
-                fontFamily: "Inika",
               ),
             ),
             SizedBox(height: 2.w),
@@ -142,7 +139,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               "Confirm Password",
               style: TextStyle(
                 fontSize: 16,
-                fontFamily: "Inika",
               ),
             ),
             SizedBox(height: 2.w),

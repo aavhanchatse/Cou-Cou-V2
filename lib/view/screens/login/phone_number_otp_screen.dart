@@ -115,7 +115,6 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
                   : 'mobile_verification'.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontFamily: "Inika",
                 fontSize: 2.2.t,
               ),
             ),
@@ -160,7 +159,6 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           "phone_number".tr,
           style: const TextStyle(
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -208,7 +206,6 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
-            fontFamily: "Inika",
             fontWeight: FontWeight.bold,
           ),
         ),

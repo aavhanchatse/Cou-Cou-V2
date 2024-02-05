@@ -41,6 +41,7 @@ class UserData {
     this.verifyed,
     this.address,
     this.ratingVerify,
+    this.isSignup,
   });
 
   Location? location;
@@ -74,6 +75,7 @@ class UserData {
   int? postCount;
   bool? verifyed;
   bool? ratingVerify;
+  bool? isSignup;
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
         location: json["location"] == null
@@ -119,6 +121,7 @@ class UserData {
         verifyed: json["verifyed"] ?? false,
         postCount: json["PostCount"] ?? 0,
         ratingVerify: json["ratingVerify"] ?? false,
+        isSignup: json["isSignup"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -159,6 +162,7 @@ class UserData {
         "verifyed": verifyed,
         "PostCount": postCount,
         "ratingVerify": ratingVerify,
+        "isSignup": isSignup,
       };
 }
 

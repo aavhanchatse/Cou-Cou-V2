@@ -164,6 +164,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 void handleDeepLink(BuildContext context) {
+  debugPrint("inside deeplink");
+
   streamSubscription.onData((data) async {
     debugPrint("branch_key : ${jsonEncode(data)}");
     debugPrint("data['+clicked_branch_link'] ${data['+clicked_branch_link']}");

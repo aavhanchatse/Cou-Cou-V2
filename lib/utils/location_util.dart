@@ -1,3 +1,4 @@
+import 'package:coucou_v2/main.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -52,6 +53,7 @@ class LocationUtils {
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
         debugPrint('Location permissions are denied');
+        await analytics.logEvent(name: "location_permission_denied");
 
         // SnackBarUtil.showSnackBar('Location permission denied');
         return null;
@@ -63,6 +65,7 @@ class LocationUtils {
       // Permissions are denied forever, handle appropriately.
       debugPrint(
           'Location permissions are permanently denied, we cannot request permissions.');
+      await analytics.logEvent(name: "location_permission_denied");
 
       // SnackBarUtil.showSnackBar(
       //   'Location permission disabled',
@@ -84,6 +87,8 @@ class LocationUtils {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     final position = await Geolocator.getCurrentPosition();
+    await analytics.logEvent(name: "location_permission_enabled");
+
     return position;
   }
 

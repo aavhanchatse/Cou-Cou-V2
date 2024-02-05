@@ -19,6 +19,11 @@ class Constants {
 
   static Color shadowColor2 = HexColor('BFBFD3');
 
+  static Color yellowGradient1 = HexColor('DEE156');
+  static Color yellowGradient2 = HexColor('E19156');
+
+  static Color postCardBackground = HexColor('E5E5E5');
+
   static Color primaryGrey = HexColor('989899');
   static Color primaryGrey2 = HexColor('D9D9D9');
   static Color primaryGrey3 = HexColor('CAC9C7');
@@ -71,6 +76,8 @@ class Constants {
   static const String logoutUser = "mobileUser/logout";
   static const String checkUser = "mobileUser/CheckUserExites";
   static const String getUserDataById = "mobileUser/getMobileUserById";
+  static const String getUserDataByIdLogin =
+      "mobileUser/getMobileUserByIdLogin";
   static const String updatePassword = "mobileUser/updatePassword";
   static const String signupUser = "mobileUser/addMobileUser";
   static const String updateUserProfile = "mobileUser/updateMobileUser";

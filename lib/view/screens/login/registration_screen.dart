@@ -222,7 +222,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           "firstName".tr,
           style: const TextStyle(
             fontSize: 16,
-            fontFamily: "Inika",
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -257,7 +256,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -291,7 +289,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -319,7 +316,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -359,7 +355,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -404,7 +399,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -470,7 +464,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -517,7 +510,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -614,7 +606,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),

@@ -113,7 +113,6 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                   Text(
                     post?.voiceUrl ?? "",
                     style: TextStyle(
-                      fontFamily: "Inika",
                       color: Constants.white,
                       fontSize: 12,
                     ),
@@ -123,7 +122,6 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
                   Text(
                     post?.postLocation ?? "",
                     style: TextStyle(
-                      fontFamily: "Inika",
                       color: Constants.white,
                       fontSize: 12,
                     ),

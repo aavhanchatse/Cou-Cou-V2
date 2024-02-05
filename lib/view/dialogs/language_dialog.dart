@@ -19,6 +19,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
   @override
   void initState() {
     super.initState();
+
     var result = StorageManager().getData("language");
     if (result != null) {
       if (result == "en") {
@@ -29,6 +30,8 @@ class _LanguageDialogState extends State<LanguageDialog> {
         _selectedLanguage = 2;
       }
     }
+
+    setAnalytics();
   }
 
   void setAnalytics() async {

@@ -18,6 +18,7 @@ import 'package:coucou_v2/view/dialogs/language_dialog.dart';
 import 'package:coucou_v2/view/dialogs/logout_dialog.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/profile/profile_page_view.dart';
+import 'package:coucou_v2/view/screens/profile/update_profile_screen.dart';
 import 'package:coucou_v2/view/screens/update_address/update_address_screen.dart';
 import 'package:coucou_v2/view/screens/update_password/update_password_screen.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
@@ -83,7 +84,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             color: Constants.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
-                            fontFamily: "Inika",
                           ),
                         ),
                       ],
@@ -99,7 +99,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               'reset_password'.tr,
                               style: TextStyle(
                                 color: Constants.black,
-                                fontFamily: "Inika",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -116,7 +115,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 color: Constants.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
                               ),
                             ),
                             onTap: () {
@@ -131,7 +129,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 color: Constants.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
                               ),
                             ),
                             onTap: () async {
@@ -146,7 +143,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 color: Constants.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
                               ),
                             ),
                             onTap: () {
@@ -165,7 +161,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 color: Constants.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
                               ),
                             ),
                             onTap: () async {
@@ -180,7 +175,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 color: Constants.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Inika",
                               ),
                             ),
                             onTap: () async {
@@ -227,14 +221,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               color: Constants.black,
               fontWeight: FontWeight.bold,
               fontSize: 24,
-              fontFamily: "Inika",
             ),
           ),
         ),
         actions: (widget.userId == null)
             ? [
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await analytics.logEvent(name: "open_drawer");
+
                     _scaffoldKey.currentState!.openEndDrawer();
                   },
                   icon: ImageIcon(
@@ -264,7 +259,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         color: Constants.black,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        fontFamily: "Inika",
                       ),
                     ),
                     SizedBox(height: 4.w),
@@ -276,7 +270,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             color: Constants.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            fontFamily: "Inika",
                           ),
                         ),
                       ],
@@ -368,7 +361,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               right: 0,
               child: InkWell(
                 onTap: () {
-                  openImagePickerDialog();
+                  context.push(UpdateProfileScreen.routeName);
+                  // openImagePickerDialog();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -434,7 +428,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 color: Constants.black,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
-                fontFamily: "Inika",
               ),
             );
           }

@@ -160,7 +160,9 @@ class CommentScreenState extends State<CommentScreen> {
                 color: Constants.black,
               ),
             ),
-            if (item.userData!.id == userController.userData.value.id)
+            if (item.userData!.id == userController.userData.value.id ||
+                widget.postData.userSingleData!.id ==
+                    userController.userData.value.id)
               IconButton(
                 onPressed: () {
                   deleteComment(item);

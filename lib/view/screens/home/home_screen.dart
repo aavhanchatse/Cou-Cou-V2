@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/home/widgets/banner_widget.dart';
 import 'package:coucou_v2/view/screens/home/widgets/latest_post.dart';
@@ -63,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.getHomeScreenMainPostList();
     await Future.delayed(const Duration(milliseconds: 1000));
     _refreshController.refreshCompleted();
+
+    await analytics.logEvent(name: "home_screen_refresh");
   }
 
   @override
@@ -75,19 +78,34 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () {
             _scrollController.jumpTo(10);
           },
-          child: Text(
-            "Cou Cou!",
-            style: TextStyle(
-              color: Constants.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              fontFamily: "Inika",
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Cou Cou!",
+                style: TextStyle(
+                  color: Constants.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+              Text(
+                "participate_and_win".tr.toUpperCase(),
+                style: TextStyle(
+                  color: Constants.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  fontFamily: "Umba Soft",
+                ),
+              ),
+            ],
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await analytics.logEvent(name: "home_search_clicked");
+
               context.push(SearchScreen.routeName);
             },
             icon: Icon(

@@ -32,7 +32,12 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<void> setupCamera() async {
     cameras = await availableCameras();
-    _controller = CameraController(cameras[0], ResolutionPreset.high);
+    debugPrint("cameras: $cameras");
+
+    _controller = CameraController(
+      cameras[0],
+      ResolutionPreset.ultraHigh,
+    );
     await _controller!.initialize();
     if (mounted) {
       setState(() {});
@@ -177,32 +182,117 @@ class _CameraScreenState extends State<CameraScreen> {
       return Container();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Boomerang Camera App'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: _controller != null
-                  ? CameraPreview(_controller!)
-                  : const CircularProgressIndicator(),
+    // return CameraPreview(
+    //   _controller!,
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         color: Colors.black.withOpacity(0.7),
+    //         child: const Icon(Icons.photo),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    return SafeArea(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   title: const Text('Boomerang Camera App'),
+        //   backgroundColor: Colors.transparent,
+        // ),
+        // body: _controller != null
+        //     ? CameraPreview(
+        //         _controller!,
+        //         child: Column(
+        //           children: [
+        //             Container(
+        //               color: Colors.black.withOpacity(0.7),
+        //               child: const Icon(Icons.photo),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     : const CircularProgressIndicator(),
+        body: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: CameraPreview(
+                _controller!,
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              startRecording();
-            },
-            child: const Text('Start Recording'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              stopRecording();
-            },
-            child: const Text('Stop Recording'),
-          ),
-        ],
+            Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.7),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 100,
+                  width: double.infinity,
+                  color: Colors.black,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.flash_on,
+                        color: Colors.white,
+                      ),
+                      Icon(
+                        Icons.flash_on,
+                        color: Colors.white,
+                      ),
+                      Icon(
+                        Icons.flash_on,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        // body: Column(
+        //   children: [
+        //     Expanded(
+        //       child: Center(
+        //         child: _controller != null
+        //             ? CameraPreview(_controller!)
+        //             : const CircularProgressIndicator(),
+        //       ),
+        //     ),
+        //     ElevatedButton(
+        //       onPressed: () {
+        //         startRecording();
+        //       },
+        //       child: const Text('Start Recording'),
+        //     ),
+        //     ElevatedButton(
+        //       onPressed: () {
+        //         stopRecording();
+        //       },
+        //       child: const Text('Stop Recording'),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
@@ -428,7 +518,7 @@ class _CameraScreenState extends State<CameraScreen> {
 // //               color: Constants.black,
 // //               fontWeight: FontWeight.bold,
 // //               fontSize: 24,
-// //               fontFamily: "Inika",
+// //               
 // //             ),
 // //           ),
 // //         ),

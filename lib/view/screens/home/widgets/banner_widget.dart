@@ -9,6 +9,7 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
+import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,11 +51,14 @@ class _BannerWidgetState extends State<BannerWidget> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            await analytics.logEvent(
+                                name: "all_challenge_button_clicked");
+
                             context.push(AllChallengesScreen.routeName);
                           },
                           child: Text(
-                            "view_all".tr,
+                            "view_challenge".tr,
                             style: TextStyle(
                               color: Constants.black,
                               decoration: TextDecoration.underline,
@@ -124,6 +128,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                 //     "isVideo": false
                 //   },
                 // );
+
                 successDialog(context, prize, item);
               },
               child: ClipRRect(
@@ -173,40 +178,66 @@ class _BannerWidgetState extends State<BannerWidget> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              InkWell(
-                onTap: () {
-                  context.push(
-                    ChallengeDetailsScreen.routeName,
-                    extra: {"id": item.id},
-                  );
-                },
-                child: SizedBox(
-                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  width: 100.w,
-                  height: 62.w,
-                  child: ClipRRect(
-                    // borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
-                      imageUrl: item.challengeLogo ?? "",
-                      // fit: BoxFit.cover,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => SizedBox(
-                        width: 10.w,
-                        height: 10.w,
-                        child: SizedBox(
-                          width: 20.w,
-                          height: 20.w,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: downloadProgress.progress,
-                              color: Constants.primaryColor,
+              Stack(
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await analytics.logEvent(name: "challenge_poster_click");
+
+                      context.push(
+                        ChallengeDetailsScreen.routeName,
+                        extra: {"id": item.id},
+                      );
+                    },
+                    child: SizedBox(
+                      // padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      width: 100.w,
+                      height: 62.w,
+                      child: ClipRRect(
+                        // borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          imageUrl: item.challengeLogo ?? "",
+                          // fit: BoxFit.cover,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => SizedBox(
+                            width: 10.w,
+                            height: 10.w,
+                            child: SizedBox(
+                              width: 20.w,
+                              height: 20.w,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  color: Constants.primaryColor,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        context.push(
+                          DismissPage.routeName,
+                          extra: {
+                            "initialIndex": 0,
+                            "imageList": [item.challengeLogo],
+                            "isVideo": false
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        Icons.zoom_out_map_outlined,
+                        color: Constants.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 4.w),
               _priceWidget(context, item),

@@ -57,8 +57,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     super.initState();
 
     getUser();
-    _checkNotification();
-    handleDeepLink(context);
+    // _checkNotification();
+    // handleDeepLink(context);
 
     // checkForInAppUpdate();
   }
@@ -66,29 +66,26 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   Future<void> checkForInAppUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
       if (info.immediateUpdateAllowed) {
-        InAppUpdate.performImmediateUpdate().catchError((e) => debugPrint(e));
+        InAppUpdate.performImmediateUpdate()
+            .catchError((e) => debugPrint(e.toString()));
       } else if (info.flexibleUpdateAllowed) {
-        InAppUpdate.startFlexibleUpdate().catchError((e) => debugPrint(e));
+        InAppUpdate.startFlexibleUpdate()
+            .catchError((e) => debugPrint(e.toString()));
       }
-    }).catchError((e) => {debugPrint(e)});
+    }).catchError((e) => {debugPrint(e.toString())});
   }
 
   void getUser() async {
-    userController.getUserDataById();
+    debugPrint("inside getUser");
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final postController = Get.find<PostController>();
-    //   postController.init();
-
-    //   userController.getUserAddress(false);
-    //   userController.getFollowingList();
-    // });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (userController.userData.value.id != null &&
-          userController.userData.value.ratingVerify != true) {
-        ratingDialog();
-      }
+    await userController.getUserDataById().then((value) {
+      debugPrint("inside get user by id then block");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (userController.userData.value.id != null &&
+            userController.userData.value.ratingVerify != true) {
+          ratingDialog();
+        }
+      });
     });
   }
 
@@ -112,129 +109,181 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                   : navbarController.currentIndex.value == 1
                       ? const HomeScreen()
                       : const MyActivityWidget(isFromNavBar: true),
-              Positioned(
-                bottom: 4.w,
-                left: 25.w,
-                right: 25.w,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 2.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(500),
-                        color: Constants.white,
-                        boxShadow: StyleUtil.cardShadow(),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              await analytics.logEvent(
-                                  name: "self_profile_tab");
-
-                              navbarController.currentIndex.value = 0;
-                              setState(() {});
-                            },
-                            child: Container(
-                              decoration: navbarController.currentIndex.value ==
-                                      0
-                                  ? BoxDecoration(
-                                      color: Constants.primaryGrey2,
-                                      borderRadius: BorderRadius.circular(100),
-                                      boxShadow: StyleUtil.uploadButtonShadow(),
-                                    )
-                                  : null,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w, vertical: 0.7.w),
-                              child: SizedBox(
-                                height: 25,
-                                width: 25,
-                                child: DefaultPicProvider
-                                    .getCircularUserProfilePic(
-                                  profilePic:
-                                      userController.userData.value.imageUrl,
-                                  userName:
-                                      "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
-                                  size: 25,
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              await analytics.logEvent(name: "post_upload");
-
-                              final ps =
-                                  await PhotoManager.requestPermissionExtend();
-                              if (ps.isAuth || ps.hasAccess) {
-                                context.push(SelectImageScreen2.routeName);
-                              } else {
-                                return;
-                              }
-                            },
-                            child: Container(
-                              decoration: navbarController.currentIndex.value ==
-                                      1
-                                  ? BoxDecoration(
-                                      color: Constants.primaryGrey2,
-                                      borderRadius: BorderRadius.circular(100),
-                                      boxShadow: StyleUtil.uploadButtonShadow(),
-                                    )
-                                  : null,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w, vertical: 0.7.w),
-                              child: Icon(
-                                Icons.add_circle_rounded,
-                                color: Constants.black,
-                                size: 26,
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              await analytics.logEvent(name: "notifications");
-
-                              navbarController.currentIndex.value = 2;
-                              setState(() {});
-                            },
-                            child: Container(
-                              decoration: navbarController.currentIndex.value ==
-                                      2
-                                  ? BoxDecoration(
-                                      color: Constants.primaryGrey2,
-                                      borderRadius: BorderRadius.circular(100),
-                                      boxShadow: StyleUtil.uploadButtonShadow(),
-                                    )
-                                  : null,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 3.w, vertical: 0.7.w),
-                              child: const Center(
-                                  child: Icon(
-                                Icons.notifications_none_outlined,
-                              )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Constants.white,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(100),
-                        ),
-                      ),
-                      height: 4,
-                      width: 20.w,
-                    ),
-                  ],
-                ),
-              ),
+              _bottomNav(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _bottomNav() {
+    return Positioned(
+      bottom: 4.w,
+      left: 12.w,
+      right: 12.w,
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 8.w),
+            padding: EdgeInsets.symmetric(vertical: 2.w, horizontal: 4.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(500),
+              color: Constants.white,
+              boxShadow: StyleUtil.cardShadow(),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _profileButton(),
+                // _uploadPostButton(),
+                _notificationButton(),
+              ],
+            ),
+          ),
+          _uploadPostButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _dividerLine() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Constants.white,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(100),
+        ),
+      ),
+      height: 4,
+      width: 20.w,
+    );
+  }
+
+  Widget _uploadPostButton() {
+    return Positioned.fill(
+      child: Column(
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              await analytics.logEvent(name: "post_upload");
+
+              final ps = await PhotoManager.requestPermissionExtend();
+              if (ps.isAuth || ps.hasAccess) {
+                context.push(SelectImageScreen2.routeName);
+              } else {
+                return;
+              }
+            },
+            backgroundColor: Constants.primaryColor,
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Constants.yellowGradient1,
+                    Constants.yellowGradient2,
+                  ],
+                ),
+              ),
+              child: Icon(
+                Icons.add,
+                color: Constants.black,
+                size: 40,
+              ),
+            ),
+          ),
+          Text(
+            "participate_now".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              // fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _notificationButton() {
+    return InkWell(
+      onTap: () async {
+        await analytics.logEvent(name: "notifications");
+
+        navbarController.currentIndex.value = 2;
+        setState(() {});
+      },
+      child: Column(
+        children: [
+          Container(
+            decoration: navbarController.currentIndex.value == 2
+                ? BoxDecoration(
+                    color: Constants.primaryGrey2,
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: StyleUtil.uploadButtonShadow(),
+                  )
+                : null,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+            child: const Center(
+                child: Icon(
+              Icons.notifications_none_outlined,
+            )),
+          ),
+          Text(
+            "notifications".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _profileButton() {
+    return InkWell(
+      onTap: () async {
+        await analytics.logEvent(name: "self_profile_tab");
+
+        navbarController.currentIndex.value = 0;
+        setState(() {});
+      },
+      child: Column(
+        children: [
+          Container(
+            decoration: navbarController.currentIndex.value == 0
+                ? BoxDecoration(
+                    color: Constants.primaryGrey2,
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: StyleUtil.uploadButtonShadow(),
+                  )
+                : null,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+            child: SizedBox(
+              height: 25,
+              width: 25,
+              child: DefaultPicProvider.getCircularUserProfilePic(
+                profilePic: userController.userData.value.imageUrl,
+                userName:
+                    "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
+                size: 25,
+              ),
+            ),
+          ),
+          Text(
+            "profile".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -249,6 +298,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   }
 
   void _checkNotification() {
+    debugPrint("inside check notification");
+
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
@@ -265,28 +316,30 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       debugPrint(
-          '[NOTIFICATION]: onMessageOpenedApp: ${message.notification!.title}');
+          '[NOTIFICATION]: onMessageOpenedApp: ${message.notification?.title}');
 
       _handleNotificationOperation(message);
       _handleNotificationRedirect(message);
     });
   }
 
-  void _handleNotificationRedirect(RemoteMessage message) async {
-    if (message.data['type'] == "NewPost") {
-      // redirect to post screen
+  void _handleNotificationRedirect(RemoteMessage? message) async {
+    if (message != null) {
+      if (message.data['type'] == "NewPost") {
+        // redirect to post screen
 
-      final postId = message.data['id'];
-      final data = await PostRepo().getPostData(postId);
+        final postId = message.data['id'];
+        final data = await PostRepo().getPostData(postId);
 
-      Get.to(() => ReelsPageViewWidget(item: data.data!));
-    } else if (message.data['type'] == "like") {
-      // redirect to post screen
+        Get.to(() => ReelsPageViewWidget(item: data.data!));
+      } else if (message.data['type'] == "like") {
+        // redirect to post screen
 
-      final postId = message.data['id'];
-      final data = await PostRepo().getPostData(postId);
+        final postId = message.data['id'];
+        final data = await PostRepo().getPostData(postId);
 
-      Get.to(() => ReelsPageViewWidget(item: data.data!));
+        Get.to(() => ReelsPageViewWidget(item: data.data!));
+      }
     }
   }
 

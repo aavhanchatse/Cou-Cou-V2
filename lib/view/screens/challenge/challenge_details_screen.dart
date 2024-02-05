@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
@@ -11,6 +12,7 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
@@ -99,33 +101,32 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 6.w),
-        child: FloatingActionButton(
-          onPressed: () async {
-            await analytics.logEvent(name: "post_upload");
-
-            final ps = await PhotoManager.requestPermissionExtend();
-            if (ps.isAuth || ps.hasAccess) {
-              context.push(SelectImageScreen2.routeName);
-            } else {
-              return;
-            }
-          },
-          backgroundColor: Constants.primaryColor,
-          child: Icon(
-            Icons.add,
-            color: Constants.black,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 8.w, bottom: 4.w),
+            height: 15.w,
+            width: 40.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(500),
+              color: Constants.white,
+              boxShadow: StyleUtil.cardShadow(),
+            ),
           ),
-        ),
+          _uploadPostButton(),
+        ],
       ),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Constants.white,
         leading: IconButton(
-          onPressed: () {
-            context.pop();
+          onPressed: () async {
+            await analytics.logEvent(name: "challenge_details_back_button");
+
+            final navbarController = Get.find<NavbarController>();
+            navbarController.currentIndex.value = 1;
+            context.go(NavBar.routeName);
           },
           icon: ImageIcon(
             const AssetImage("assets/icons/back_arrow.png"),
@@ -163,7 +164,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                         context.push(AllChallengesScreen.routeName);
                       },
                       child: Text(
-                        "view_all".tr,
+                        "view_challenge".tr,
                         style: TextStyle(
                           color: Constants.black,
                           decoration: TextDecoration.underline,
@@ -194,6 +195,54 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _uploadPostButton() {
+    return Positioned.fill(
+      child: Column(
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              await analytics.logEvent(name: "post_upload");
+
+              final ps = await PhotoManager.requestPermissionExtend();
+              if (ps.isAuth || ps.hasAccess) {
+                context.push(SelectImageScreen2.routeName);
+              } else {
+                return;
+              }
+            },
+            backgroundColor: Constants.primaryColor,
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Constants.yellowGradient1,
+                    Constants.yellowGradient2,
+                  ],
+                ),
+              ),
+              child: Icon(
+                Icons.add,
+                color: Constants.black,
+                size: 40,
+              ),
+            ),
+          ),
+          Text(
+            "participate_now".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              // fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }

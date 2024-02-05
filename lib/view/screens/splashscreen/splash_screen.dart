@@ -1,3 +1,4 @@
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/user_data.dart';
 import 'package:coucou_v2/utils/storage_manager.dart';
 import 'package:coucou_v2/view/screens/login/login_screen.dart';
@@ -34,12 +35,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _controller!.addListener(checkVideo);
     // _checkLogin();
+
+    setAnalytics();
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller?.dispose();
+  }
+
+  void setAnalytics() async {
+    await analytics.setCurrentScreen(screenName: 'splash_screen');
   }
 
   void checkVideo() {

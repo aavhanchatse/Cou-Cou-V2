@@ -121,7 +121,6 @@ class _OTPScreenState extends State<OTPScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 2.2.t,
-              fontFamily: "Inika",
             ),
           ),
           SizedBox(height: 1.h),
@@ -129,7 +128,6 @@ class _OTPScreenState extends State<OTPScreen> {
             '${"phone_no".tr}\n+91 ${widget.phoneNumber}',
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontFamily: "Inika",
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -137,7 +135,6 @@ class _OTPScreenState extends State<OTPScreen> {
             'otp'.tr,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontFamily: "Inika",
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -305,7 +302,6 @@ class _OTPScreenState extends State<OTPScreen> {
           'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
-            fontFamily: "Inika",
             fontWeight: FontWeight.bold,
           ),
         ),

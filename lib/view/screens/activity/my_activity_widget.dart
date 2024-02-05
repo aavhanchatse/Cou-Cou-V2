@@ -327,7 +327,6 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
           color: Constants.black,
           fontWeight: FontWeight.bold,
           fontSize: 24,
-          fontFamily: "Inika",
         ),
       ),
     );

@@ -41,7 +41,6 @@ class PostUploadedSuccessDialog extends StatelessWidget {
                     fontSize: 20,
                     color: Constants.black,
                     fontWeight: FontWeight.bold,
-                    fontFamily: "Inika",
                   ),
                 ),
                 SizedBox(height: 4.w),
@@ -63,7 +62,6 @@ class PostUploadedSuccessDialog extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        fontFamily: "Inika",
                       ),
                     ),
                   ),

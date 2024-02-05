@@ -10,10 +10,10 @@ class Themes {
     ),
     // iconTheme: IconThemeData(color: Constant.generalBlack),
     textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Amiko',
+          fontFamily: 'Playfair Display',
         ),
     primaryTextTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Amiko',
+          fontFamily: 'Playfair Display',
         ),
 
     // textTheme: TextTheme(

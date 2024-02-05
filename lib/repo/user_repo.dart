@@ -26,6 +26,25 @@ class UserRepo {
         await _api.postMethod(Constants.getUserDataById, payload, headers);
 
     Map<String, dynamic> map = (jsonDecode(response.body));
+
+    if (map['status'] == true) {
+      var data = map['data'][0];
+      return SuperResponse<UserData>.fromJson(map, UserData.fromJson(data));
+    }
+    return SuperResponse.fromJson(map);
+  }
+
+  Future<SuperResponse<UserData?>> getUserDataByIdLogin(Map payload) async {
+    // final token = StorageManager().getToken();
+    // debugPrint('token: $token');
+
+    // final headers = {'Authorization': token!};
+
+    final response =
+        await _api.postMethod(Constants.getUserDataByIdLogin, payload);
+
+    Map<String, dynamic> map = (jsonDecode(response.body));
+
     if (map['status'] == true) {
       var data = map['data'][0];
       return SuperResponse<UserData>.fromJson(map, UserData.fromJson(data));

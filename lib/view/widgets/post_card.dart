@@ -16,6 +16,7 @@ import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 
 class PostCard extends StatefulWidget {
@@ -31,6 +32,9 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   PostData? item;
 
+  double? height = 69.5.h;
+  // final _key = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -41,28 +45,115 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return item == null
-        ? const SizedBox()
-        : Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: _headerWidget(context),
-              ),
-              SizedBox(height: 2.w),
-              _contentImage(),
-              SizedBox(height: 2.w),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: _buttons(context),
-              ),
-              SizedBox(height: 2.w),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: _descriptionWidget(),
-              ),
-            ],
-          );
+    // return item == null ? const SizedBox() : _cardWithBgImage();
+    return item == null ? const SizedBox() : _card();
+
+    // SizedBox(
+    //     height: height,
+    //     child: Stack(
+    //       children: [
+    //         Image.network(
+    //           item!.thumbnail ?? "",
+    //           fit: BoxFit.cover,
+    //           color: Colors.grey.withOpacity(0.3),
+    //           colorBlendMode: BlendMode.modulate,
+    //           height: height,
+    //           width: double.infinity,
+    //         ),
+    //         _card(),
+    //       ],
+    //     ),
+    //   );
+    // });
+  }
+
+  Widget _cardWithBgImage() {
+    return Stack(
+      children: [
+        _card(),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: _bgImage(),
+        ),
+        _card(),
+      ],
+    );
+  }
+
+  Widget _bgImage() {
+    return ImageUtil.networkImage(
+      imageUrl: item!.thumbnail ?? "",
+      errorImage:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgmedia.lbb.in%2Fmedia%2F2019%2F08%2F5d662c8ea84656a7661be92a_1566977166741.jpg&f=1&nofb=1&ipt=bbdaaabe584a623a962b0719a4673ac026c44c17a1420e9ec647368d409170fa&ipo=images",
+      fit: BoxFit.cover,
+      color: Colors.grey.withOpacity(0.3),
+      colorBlendMode: BlendMode.modulate,
+    );
+
+    // return Image.network(
+    //   item!.thumbnail ??
+    //       "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimgmedia.lbb.in%2Fmedia%2F2019%2F08%2F5d662c8ea84656a7661be92a_1566977166741.jpg&f=1&nofb=1&ipt=bbdaaabe584a623a962b0719a4673ac026c44c17a1420e9ec647368d409170fa&ipo=images",
+    //   fit: BoxFit.cover,
+    //   color: Colors.grey.withOpacity(0.3),
+    //   colorBlendMode: BlendMode.modulate,
+    // );
+  }
+
+  Widget _cardWithDominantBg() {
+    return FutureBuilder(
+      future: _updatePaletteGenerator(),
+      builder: (context, snapshot) {
+        Color bgColor = Constants.white;
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            bgColor = Constants.white;
+            break;
+          default:
+            if (snapshot.hasError) {
+              bgColor = Constants.white;
+            } else {
+              bgColor = snapshot.data!.dominantColor!.color;
+            }
+        }
+
+        return Container(
+          color: bgColor,
+          child: _card(),
+        );
+      },
+    );
+  }
+
+  Widget _card() {
+    return Container(
+      color: Constants.postCardBackground,
+      padding: EdgeInsets.symmetric(vertical: 1.h),
+      child: Column(
+        // key: _key,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: _headerWidget(context),
+          ),
+          SizedBox(height: 2.w),
+          _contentImage(),
+          SizedBox(height: 2.w),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: _buttons(context),
+          ),
+          SizedBox(height: 2.w),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: _descriptionWidget(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _descriptionWidget() {
@@ -101,10 +192,10 @@ class _PostCardState extends State<PostCard> {
               ),
               ReadMoreText(
                 item?.caption ?? "",
-                trimLines: 1,
-                trimLength: 25,
+                trimLines: 2,
+                // trimLength: 25,
                 colorClickableText: Colors.black,
-                trimMode: TrimMode.Length,
+                trimMode: TrimMode.Line,
                 trimCollapsedText: 'more'.tr,
                 trimExpandedText: 'less'.tr,
                 lessStyle: TextStyle(
@@ -153,7 +244,9 @@ class _PostCardState extends State<PostCard> {
         ),
         Expanded(
           child: InkWell(
-            onTap: () {
+            onTap: () async {
+              await analytics.logEvent(name: "comment_button_clicked");
+
               context.push(CommentScreen.routeName, extra: item);
             },
             child: Row(
@@ -245,12 +338,14 @@ class _PostCardState extends State<PostCard> {
 
   Widget _contentImage() {
     // debugPrint("item?.challengeVideo: ${item?.challengeVideo}");
-    return SizedBox(
-      // constraints: BoxConstraints(
-      //   maxWidth: double.infinity,
-      //   maxHeight: 50.h,
-      // ),
-      height: 50.h,
+    return Container(
+      constraints: BoxConstraints(
+        // maxWidth: double.infinity,
+
+        maxHeight: 50.h,
+      ),
+      color: Constants.postCardBackground,
+      // height: 50.h,
       child: item!.challengeVideo!.endsWith(".mp4")
           ? InViewVideoPlayerCouCou(
               data: item!.challengeVideo!,
@@ -266,7 +361,7 @@ class _PostCardState extends State<PostCard> {
                 children: [
                   ImageUtil.networkImage(
                     imageUrl: item?.challengeVideo ?? "",
-                    height: 50.h,
+                    // height: 50.h,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
                   ),
@@ -301,7 +396,9 @@ class _PostCardState extends State<PostCard> {
 
   Widget _headerWidget(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        await analytics.logEvent(name: "profile_image_clicked");
+
         context.push(UserProfileScreen.routeName,
             extra: item?.userSingleData?.id);
       },
@@ -329,7 +426,6 @@ class _PostCardState extends State<PostCard> {
               Text(
                 item?.postLocation ?? "",
                 style: TextStyle(
-                  fontFamily: "Inika",
                   color: Constants.black,
                   fontSize: 12,
                 ),
@@ -347,5 +443,13 @@ class _PostCardState extends State<PostCard> {
         ],
       ),
     );
+  }
+
+  Future<PaletteGenerator> _updatePaletteGenerator() async {
+    PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImageProvider(
+      NetworkImage(item!.thumbnail ?? ""),
+    );
+    return paletteGenerator;
   }
 }

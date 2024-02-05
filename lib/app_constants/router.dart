@@ -11,6 +11,7 @@ import 'package:coucou_v2/view/screens/login/phone_number_otp_screen.dart';
 import 'package:coucou_v2/view/screens/login/registration_screen.dart';
 import 'package:coucou_v2/view/screens/login/reset_password_screen.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
+import 'package:coucou_v2/view/screens/profile/update_profile_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:coucou_v2/view/screens/splashscreen/splash_screen.dart';
@@ -28,6 +29,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
+    // initialLocation: CameraScreen.routeName,
     initialLocation: SplashScreen.routeName,
     routes: <RouteBase>[
       GoRoute(
@@ -198,6 +200,12 @@ class AppRouter {
         path: SelectImageScreen2.routeName,
         builder: (BuildContext context, GoRouterState state) {
           return const SelectImageScreen2();
+        },
+      ),
+      GoRoute(
+        path: UpdateProfileScreen.routeName,
+        builder: (BuildContext context, GoRouterState state) {
+          return const UpdateProfileScreen();
         },
       ),
     ],

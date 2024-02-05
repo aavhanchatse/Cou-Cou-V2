@@ -14,20 +14,30 @@ class ImageUtil {
           double? height,
           double? width,
           BoxFit? fit,
+          BlendMode? colorBlendMode,
+          Color? color,
+          String? errorImage,
           Key? key}) =>
       CachedNetworkImage(
         key: key,
-        placeholder: (context, url) =>
-            NoImageWidget(height: height, width: width, fit: BoxFit.cover),
-        errorWidget: (context, url, error) =>
-            NoImageWidget(height: height, width: width, fit: BoxFit.cover),
+        placeholder: (context, url) => NoImageWidget(
+            height: height,
+            width: width,
+            fit: BoxFit.cover,
+            errorImage: errorImage),
+        errorWidget: (context, url, error) => NoImageWidget(
+          height: height,
+          width: width,
+          fit: BoxFit.cover,
+          errorImage: errorImage,
+        ),
         imageUrl: imageUrl /*?? Constants.placeholderImageUrl*/,
         height: height,
-        // 9.h,
         width: width,
-        // 30.w,
         // maxHeightDiskCache: (height * 3).ceil(),
         // maxWidthDiskCache: (width * 3).ceil(),
+        color: color,
+        colorBlendMode: colorBlendMode,
         placeholderFadeInDuration: Constants.placeholderFadeInDuration,
         fit: fit ?? BoxFit.cover,
       );
@@ -63,10 +73,13 @@ class NoImageWidget extends StatelessWidget {
     this.height,
     this.width,
     this.fit,
+    this.errorImage,
   }) : super(key: key);
+
   final double? height;
   final double? width;
   final BoxFit? fit;
+  final String? errorImage;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +87,15 @@ class NoImageWidget extends StatelessWidget {
       height: height,
       width: width,
       color: Constants.primaryGrey,
-      child: Image.asset(
-        Constants.noImage,
-        fit: fit ?? BoxFit.cover,
-      ),
+      child: errorImage != null
+          ? Image.network(
+              errorImage!,
+              fit: fit ?? BoxFit.cover,
+            )
+          : Image.asset(
+              Constants.noImage,
+              fit: fit ?? BoxFit.cover,
+            ),
     );
   }
 }

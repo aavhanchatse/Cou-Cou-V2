@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/repo/user_repo.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
@@ -35,7 +36,6 @@ class RatingDialog extends StatelessWidget {
                 fontSize: 22,
                 color: Constants.textColor,
                 fontWeight: FontWeight.w700,
-                fontFamily: "Inika",
               ),
             ),
             Text(
@@ -44,7 +44,6 @@ class RatingDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 color: Constants.textColor,
-                fontFamily: "Inika",
               ),
             ),
             SizedBox(height: 4.w),
@@ -85,6 +84,7 @@ class RatingDialog extends StatelessWidget {
       if (result.status == true) {
         final userController = Get.find<UserController>();
         userController.getUserDataById();
+        await analytics.logEvent(name: "rating_star_clicked");
 
         context.pop();
       } else {

@@ -174,7 +174,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           "password".tr,
           style: const TextStyle(
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -213,7 +212,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           "confirm_password".tr,
           style: const TextStyle(
             fontSize: 16,
-            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -264,7 +262,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           'Cou Cou!',
           style: TextStyle(
             fontSize: 3.5.t,
-            fontFamily: "Inika",
             fontWeight: FontWeight.bold,
           ),
         ),

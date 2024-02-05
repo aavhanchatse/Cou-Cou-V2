@@ -1,9 +1,11 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -40,12 +42,13 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
             color: Constants.black,
             fontWeight: FontWeight.bold,
             fontSize: 24,
-            fontFamily: "Inika",
           ),
         ),
         leading: IconButton(
           onPressed: () {
-            context.pop();
+            final navbarController = Get.find<NavbarController>();
+            navbarController.currentIndex.value = 1;
+            context.go(NavBar.routeName);
           },
           icon: ImageIcon(
             const AssetImage("assets/icons/back_arrow.png"),
