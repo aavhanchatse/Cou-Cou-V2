@@ -30,27 +30,28 @@ class PostData {
   DateTime? updatedAt;
   UserData? userSingleData;
   ChallengeData? challengeData;
+  List<String>? imagesMultiple;
 
-  PostData({
-    this.id,
-    this.userId,
-    this.challengeId,
-    this.challengeVideo,
-    this.voiceUrl,
-    this.like,
-    this.likeCount,
-    this.commentCount,
-    this.postLocation,
-    this.recipeLocation,
-    this.viewCount,
-    this.thumbnail,
-    this.caption,
-    this.deepLinkUrl,
-    this.createdAt,
-    this.updatedAt,
-    this.userSingleData,
-    this.challengeData,
-  });
+  PostData(
+      {this.id,
+      this.userId,
+      this.challengeId,
+      this.challengeVideo,
+      this.voiceUrl,
+      this.like,
+      this.likeCount,
+      this.commentCount,
+      this.postLocation,
+      this.recipeLocation,
+      this.viewCount,
+      this.thumbnail,
+      this.caption,
+      this.deepLinkUrl,
+      this.createdAt,
+      this.updatedAt,
+      this.userSingleData,
+      this.challengeData,
+      this.imagesMultiple});
 
   factory PostData.fromJson(Map<String, dynamic> json) => PostData(
         id: json["_id"],
@@ -79,6 +80,9 @@ class PostData {
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
+        imagesMultiple: json["imagesMultiple"] == null
+            ? []
+            : List<String>.from(json["imagesMultiple"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -100,5 +104,8 @@ class PostData {
         "updatedAt": updatedAt?.toIso8601String(),
         "userSingleData": userSingleData?.toJson(),
         "challengeData": challengeData?.toJson(),
+        "imagesMultiple": imagesMultiple == null
+            ? []
+            : List<dynamic>.from(imagesMultiple!.map((x) => x)),
       };
 }

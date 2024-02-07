@@ -4,6 +4,7 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class DismissPage extends StatefulWidget {
   static const routeName = '/dismiss';
@@ -11,9 +12,14 @@ class DismissPage extends StatefulWidget {
   final int? initialIndex;
   final List<dynamic>? imageList;
   final bool isVideo;
+  final bool? disableScreenshot;
 
   const DismissPage(
-      {Key? key, this.initialIndex, this.imageList, this.isVideo = false})
+      {Key? key,
+      this.initialIndex,
+      this.imageList,
+      this.isVideo = false,
+      this.disableScreenshot = false})
       : super(key: key);
 
   @override
@@ -21,6 +27,30 @@ class DismissPage extends StatefulWidget {
 }
 
 class _DismissiblePageState extends State<DismissPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.disableScreenshot == true) {
+      _disableScreenshot();
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _enableScreenshot();
+  }
+
+  void _enableScreenshot() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
+  void _disableScreenshot() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

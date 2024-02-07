@@ -71,6 +71,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                 color: Constants.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
+                fontFamily: "Inika",
               ),
             ),
           ),

@@ -441,7 +441,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           "id": userId,
           "firstname": _firstName,
           "lastname": _lastName,
-          "username": _userName,
+          // "username": _userName,
           "email": _email,
           "gender": _gender,
           "imageUrl": imageUrl,
@@ -454,7 +454,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
         if (result.status == true) {
           context.pop();
-          userController.getUserDataById();
+          await userController.getUserDataById();
           SnackBarUtil.showSnackBar(result.message!, context: context);
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);

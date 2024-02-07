@@ -87,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Constants.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
+                  fontFamily: "Inika",
                 ),
               ),
               Text(

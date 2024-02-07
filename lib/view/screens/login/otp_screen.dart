@@ -303,6 +303,7 @@ class _OTPScreenState extends State<OTPScreen> {
           style: TextStyle(
             fontSize: 3.5.t,
             fontWeight: FontWeight.bold,
+            fontFamily: "Inika",
           ),
         ),
       ],

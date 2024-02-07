@@ -38,6 +38,8 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
 
   final userController = Get.find<UserController>();
 
+  late ValueNotifier<VideoPlayerController> valueNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +61,7 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
 
     _initializeVideoPlayerFuture = _controller!.initialize().then((_) {
       // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      valueNotifier = ValueNotifier(_controller!);
       setState(() {
         isPlaying = true;
       });
@@ -184,6 +187,19 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
                             : null,
                       ),
                     ),
+                  ),
+                  Positioned(
+                    left: 10,
+                    // right: 0,
+                    // top: 0,
+                    bottom: 10,
+                    child: ValueListenableBuilder<VideoPlayerValue>(
+                        valueListenable: _controller!,
+                        builder: (context, controller, child) {
+                          return Text(
+                            "00:${controller.position.inSeconds.toString().padLeft(2, '0')}",
+                          );
+                        }),
                   ),
                 ],
               ),

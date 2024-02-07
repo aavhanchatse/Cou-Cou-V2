@@ -2,11 +2,13 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/my_activity_model_data.dart';
+import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/repo/user_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
+import 'package:coucou_v2/view/widgets/reels_page_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -164,14 +166,11 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
 
   Widget _likePostWidget(MyActivityModelData e) {
     return InkWell(
-      onTap: () {
-        // e.postData!.userId = e.postOwnerData;
-        // debugPrint('e.postData!: ${e.postData!.toMap()}');
+      onTap: () async {
+        final postId = e.postData?.id;
+        final data = await PostRepo().getPostData(postId!);
 
-        // Get.to(() => CouCouListCartScreen(
-        //       postDataModelList: [e.postData!],
-        //       index: 0,
-        //     ));
+        Get.to(() => ReelsPageViewWidget(item: data.data!));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 4.w),
@@ -237,12 +236,11 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
 
   Widget _commentPostWidget(MyActivityModelData e) {
     return InkWell(
-      onTap: () {
-        // e.postData!.userId = e.postOwnerData;
-        // Get.to(() => CouCouListCartScreen(
-        //       postDataModelList: [e.postData!],
-        //       index: 0,
-        //     ));
+      onTap: () async {
+        final postId = e.postData?.id;
+        final data = await PostRepo().getPostData(postId!);
+
+        Get.to(() => ReelsPageViewWidget(item: data.data!));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 4.w),

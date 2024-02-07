@@ -74,6 +74,7 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
             style: TextStyle(
               color: Constants.black,
               fontWeight: FontWeight.bold,
+              fontFamily: "Inika",
               fontSize: 24,
             ),
           ),

@@ -94,7 +94,9 @@ class DefaultTextField extends StatelessWidget {
             //   color: Constants.primaryColor,
             //   backgroundColor: Colors.white,
             // ),
-
+            errorStyle: TextStyle(
+              color: Constants.red1,
+            ),
             focusedBorder: StyleUtil.defaultTextFieldBorder(),
             enabledBorder: StyleUtil.defaultTextFieldBorder(),
             border: StyleUtil.defaultTextFieldBorder(),

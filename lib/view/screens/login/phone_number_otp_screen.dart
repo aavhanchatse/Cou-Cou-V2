@@ -207,6 +207,7 @@ class _PhoneNumberOTPScreenState extends State<PhoneNumberOTPScreen> {
           style: TextStyle(
             fontSize: 3.5.t,
             fontWeight: FontWeight.bold,
+            fontFamily: "Inika",
           ),
         ),
       ],

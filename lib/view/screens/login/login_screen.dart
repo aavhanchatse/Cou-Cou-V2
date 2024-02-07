@@ -129,6 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  fontFamily: "Amiko",
                 ),
               ),
               SizedBox(height: 1.h),
@@ -421,6 +422,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
+            fontFamily: "Amiko",
           ),
         ),
         SizedBox(height: 4.w),
@@ -467,6 +469,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(
             fontSize: 3.5.t,
             fontWeight: FontWeight.bold,
+            fontFamily: "Inika",
           ),
         ),
       ],

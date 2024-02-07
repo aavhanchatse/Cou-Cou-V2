@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
@@ -6,16 +10,22 @@ import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/date_util.dart';
 import 'package:coucou_v2/utils/default_pic_provider.dart';
+import 'package:coucou_v2/utils/image_download_util.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
+import 'package:coucou_v2/view/widgets/heart_animation_widget.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image/image.dart' as image;
 import 'package:palette_generator/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 
@@ -32,8 +42,16 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   PostData? item;
 
+  int currentIndex = 0;
+
+  bool isHeartAnimating = false;
+
   double? height = 69.5.h;
   // final _key = GlobalKey();
+
+  final userController = Get.find<UserController>();
+
+  final GlobalKey _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -221,15 +239,24 @@ class _PostCardState extends State<PostCard> {
         Expanded(
           child: InkWell(
             onTap: () {
-              likePost();
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                likePost();
+              } else {
+                context.push(CompleteDetailsScreen.routeName);
+              }
+              // likePost();
             },
             child: Row(
               children: [
-                Image.asset(
-                  item?.like == true
-                      ? "assets/icons/cookie_selected.png"
-                      : "assets/icons/cookie_unselected.png",
-                  height: 6.w,
+                HeartAnimationWidget(
+                  isAnimating: item!.like!,
+                  child: Image.asset(
+                    item?.like == true
+                        ? "assets/icons/cookie_selected.png"
+                        : "assets/icons/cookie_unselected.png",
+                    height: 6.w,
+                  ),
                 ),
                 SizedBox(width: 1.w),
                 Text(
@@ -245,9 +272,14 @@ class _PostCardState extends State<PostCard> {
         Expanded(
           child: InkWell(
             onTap: () async {
-              await analytics.logEvent(name: "comment_button_clicked");
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                await analytics.logEvent(name: "comment_button_clicked");
 
-              context.push(CommentScreen.routeName, extra: item);
+                context.push(CommentScreen.routeName, extra: item);
+              } else {
+                context.push(CompleteDetailsScreen.routeName);
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -270,10 +302,15 @@ class _PostCardState extends State<PostCard> {
         Expanded(
           child: InkWell(
             onTap: () async {
-              await analytics.logEvent(name: "share_post");
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                await analytics.logEvent(name: "share_post");
 
-              shareImageWithText(
-                  item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
+                shareImageWithText(
+                    item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
+              } else {
+                context.push(CompleteDetailsScreen.routeName);
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -357,40 +394,120 @@ class _PostCardState extends State<PostCard> {
               //   bottomLeft: Radius.circular(8),
               //   bottomRight: Radius.circular(8),
               // ),
-              child: Stack(
-                children: [
-                  ImageUtil.networkImage(
-                    imageUrl: item?.challengeVideo ?? "",
-                    // height: 50.h,
-                    width: double.infinity,
-                    fit: BoxFit.fitWidth,
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        context.push(
-                          DismissPage.routeName,
-                          extra: {
-                            "initialIndex": 0,
-                            "imageList": [item?.challengeVideo],
-                            "isVideo": false
-                          },
-                        );
-                      },
-                      icon: Icon(
-                        Icons.zoom_out_map_outlined,
-                        color: Constants.white,
+              child: GestureDetector(
+                onDoubleTap: () {
+                  if (userController.userData.value.username != null &&
+                      userController.userData.value.username!.isNotEmpty) {
+                    isHeartAnimating = true;
+                    setState(() {});
+
+                    likePost();
+                  } else {
+                    context.push(CompleteDetailsScreen.routeName);
+                  }
+                },
+                child: Stack(
+                  children: [
+                    RepaintBoundary(
+                      key: _globalKey,
+                      child: _multipleImage(),
+                      // child: _singleImage(item?.challengeVideo ?? ""),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: IconButton(
+                        onPressed: () {
+                          final imageList = item!.imagesMultiple != null &&
+                                  item!.imagesMultiple!.isNotEmpty
+                              ? item!.imagesMultiple
+                              : [item!.challengeVideo];
+
+                          context.push(
+                            DismissPage.routeName,
+                            extra: {
+                              "initialIndex": currentIndex,
+                              "imageList": imageList,
+                              "isVideo": false
+                            },
+                          );
+                        },
+                        icon: Icon(
+                          Icons.zoom_out_map_outlined,
+                          color: Constants.white,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: isHeartAnimating ? 1 : 0,
+                        child: HeartAnimationWidget(
+                          isAnimating: isHeartAnimating,
+                          duration: const Duration(milliseconds: 700),
+                          onEnd: () {
+                            isHeartAnimating = false;
+                            setState(() {});
+                          },
+                          // child: Icon(
+                          //   Icons.favorite,
+                          //   color: Constants.white,
+                          //   size: 100,),
+                          child: Container(
+                            padding: EdgeInsets.all(30.w),
+                            height: 10.w,
+                            width: 10.w,
+                            child: Image.asset(
+                              "assets/icons/cookie_selected.png",
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               // child: Image.network(
               //   item?.challengeVideo ?? "",
               // ),
             ),
+    );
+  }
+
+  Widget _multipleImage() {
+    return CarouselSlider.builder(
+      itemCount: item!.imagesMultiple == null || item!.imagesMultiple!.isEmpty
+          ? 1
+          : item!.imagesMultiple!.length,
+      itemBuilder: (context, index, realIndex) {
+        final element =
+            item!.imagesMultiple != null && item!.imagesMultiple!.isNotEmpty
+                ? item!.imagesMultiple![index]
+                : item!.challengeVideo ?? "";
+
+        return _singleImage(element);
+      },
+      options: CarouselOptions(
+        scrollDirection: Axis.horizontal,
+        viewportFraction: 1.0,
+        disableCenter: true,
+        initialPage: 0,
+        autoPlay: false,
+        enableInfiniteScroll: false,
+        height: 50.h,
+        onPageChanged: (index, reason) {
+          currentIndex = index;
+          setState(() {});
+        },
+      ),
+    );
+  }
+
+  Widget _singleImage(String image) {
+    return ImageUtil.networkImage(
+      imageUrl: image,
+      // height: 50.h,
+      width: double.infinity,
+      // fit: BoxFit.fitWidth,
     );
   }
 
@@ -440,9 +557,73 @@ class _PostCardState extends State<PostCard> {
               ),
             ],
           ),
+          const Spacer(),
+          item!.challengeVideo!.endsWith(".mp4")
+              ? const SizedBox()
+              : IconButton(
+                  onPressed: () {
+                    // ImageDownloadUtil.downloadImageToGallery(
+                    //   context,
+                    //   item!.challengeVideo!,
+                    //   item!.id!,
+                    // );
+                    _getCanvasAsImage();
+                  },
+                  icon: Icon(
+                    Icons.file_download_outlined,
+                    color: Constants.black,
+                  ),
+                ),
         ],
       ),
     );
+  }
+
+  Future<ui.Image> _getCanvasAsImage() async {
+    RenderRepaintBoundary boundary =
+        _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+    ui.Image renderedImage = await boundary.toImage(
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+
+    ByteData? byteData =
+        await renderedImage.toByteData(format: ui.ImageByteFormat.png);
+
+    final imageBytes = byteData!.buffer.asUint8List();
+
+    _addWatermarkToImage(imageBytes);
+
+    return renderedImage;
+  }
+
+  Future<void> _addWatermarkToImage(Uint8List inputImage) async {
+    var decodeImg = image.decodeImage(inputImage);
+
+    image.drawString(
+      decodeImg!,
+      "Cou Cou!",
+      font: image.arial48,
+      color: image.ColorRgba8(0, 0, 0, 1),
+      x: 100,
+      y: 100,
+    );
+
+    var encodeImage = image.encodeJpg(decodeImg, quality: 100);
+
+    final path = await getTempImageFilePath(".png");
+
+    var finalImage = File(path)..writeAsBytesSync(encodeImage);
+
+    await ImageDownloadUtil.saveImageToGallery(
+      context: context,
+      imageBytes: encodeImage,
+      imageName: item!.id!,
+    );
+  }
+
+  Future<Uint8List> _readFileByte(String filePath) async {
+    ByteData bytes = await rootBundle.load(filePath);
+    return Uint8List.fromList(bytes.buffer.asUint8List());
   }
 
   Future<PaletteGenerator> _updatePaletteGenerator() async {

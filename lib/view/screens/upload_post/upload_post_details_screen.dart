@@ -465,6 +465,10 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
           "thumbnail": widget.postData != null
               ? widget.postData!.thumbnail
               : imageUrl ?? "",
+          "imagesMultiple": [
+            "https://images.unsplash.com/photo-1707246519904-82761aaa1efa?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1707045130985-35f4f74235c0?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          ],
         };
 
         SuperResponse result;

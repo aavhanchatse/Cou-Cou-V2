@@ -263,6 +263,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           style: TextStyle(
             fontSize: 3.5.t,
             fontWeight: FontWeight.bold,
+            fontFamily: "Inika",
           ),
         ),
       ],

@@ -17,13 +17,14 @@ import 'package:coucou_v2/view/bottomsheets/select_image_source_bottomsheet.dart
 import 'package:coucou_v2/view/dialogs/language_dialog.dart';
 import 'package:coucou_v2/view/dialogs/logout_dialog.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/profile/profile_page_view.dart';
 import 'package:coucou_v2/view/screens/profile/update_profile_screen.dart';
 import 'package:coucou_v2/view/screens/update_address/update_address_screen.dart';
-import 'package:coucou_v2/view/screens/update_password/update_password_screen.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:coucou_v2/view/widgets/image_cropper_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -53,6 +54,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     super.initState();
     getProfile();
     setAnalytics();
+    _disableScreenshot();
+  }
+
+  void _disableScreenshot() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   void setAnalytics() async {
@@ -84,6 +90,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             color: Constants.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
+                            fontFamily: "Inika",
                           ),
                         ),
                       ],
@@ -94,20 +101,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          InkWell(
-                            child: Text(
-                              'reset_password'.tr,
-                              style: TextStyle(
-                                color: Constants.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            onTap: () {
-                              context.push(UpdatePasswordScreen.routeName);
-                            },
-                          ),
-                          SizedBox(height: 2.w),
+                          // InkWell(
+                          //   child: Text(
+                          //     'reset_password'.tr,
+                          //     style: TextStyle(
+                          //       color: Constants.black,
+                          //       fontSize: 18,
+                          //       fontWeight: FontWeight.w500,
+                          //     ),
+                          //   ),
+                          //   onTap: () {
+                          //     context.push(UpdatePasswordScreen.routeName);
+                          //   },
+                          // ),
+                          // SizedBox(height: 2.w),
                           InkWell(
                             child: Text(
                               'update_address'.tr,
@@ -117,8 +124,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            onTap: () {
-                              context.push(UpdateAddressScreen.routeName);
+                            onTap: () async {
+                              if (userController.userData.value.username !=
+                                      null &&
+                                  userController
+                                      .userData.value.username!.isNotEmpty) {
+                                context.push(UpdateAddressScreen.routeName);
+                              } else {
+                                final result = await context
+                                    .push(CompleteDetailsScreen.routeName);
+                                if (result == true) {
+                                  getProfile();
+                                }
+                              }
                             },
                           ),
                           SizedBox(height: 2.w),
@@ -221,6 +239,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               color: Constants.black,
               fontWeight: FontWeight.bold,
               fontSize: 24,
+              fontFamily: "Inika",
             ),
           ),
         ),
@@ -344,7 +363,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 extra: {
                   "initialIndex": 0,
                   "imageList": [userProfile?.imageUrl],
-                  "isVideo": false
+                  "isVideo": false,
+                  "disableScreenshot": true,
                 },
               );
             },
@@ -360,8 +380,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               bottom: 0,
               right: 0,
               child: InkWell(
-                onTap: () {
-                  context.push(UpdateProfileScreen.routeName);
+                onTap: () async {
+                  if (userController.userData.value.username != null &&
+                      userController.userData.value.username!.isNotEmpty) {
+                    await context.push(UpdateProfileScreen.routeName);
+                    getProfile();
+                  } else {
+                    final result =
+                        await context.push(CompleteDetailsScreen.routeName);
+                    if (result == true) {
+                      getProfile();
+                    }
+                  }
                   // openImagePickerDialog();
                 },
                 child: Container(

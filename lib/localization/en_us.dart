@@ -104,4 +104,6 @@ const Map<String, String> enUS = {
   "participate_now": "Participate Now",
   "mobile_number": "Mobile Number",
   "enter_valid_otp": "Enter valid OTP",
+  "user_name_2": "Username",
+  "details": "Details",
 };

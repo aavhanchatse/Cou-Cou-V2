@@ -103,22 +103,26 @@ class RewardsPrize {
   String? name;
   String? price;
   String? link;
+  String? title;
 
   RewardsPrize({
     this.name,
     this.price,
     this.link,
+    this.title,
   });
 
   factory RewardsPrize.fromJson(Map<String, dynamic> json) => RewardsPrize(
         name: json["name"],
         price: json["price"],
         link: json["link"],
+        title: json["title"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "price": price,
         "link": link,
+        "title": title,
       };
 }

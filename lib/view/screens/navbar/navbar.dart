@@ -9,6 +9,7 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/rating_dialog.dart';
 import 'package:coucou_v2/view/screens/activity/my_activity_widget.dart';
 import 'package:coucou_v2/view/screens/home/home_screen.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/widgets/reels_page_view_widget.dart';
@@ -57,10 +58,10 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     super.initState();
 
     getUser();
-    // _checkNotification();
-    // handleDeepLink(context);
+    _checkNotification();
+    handleDeepLink(context);
 
-    // checkForInAppUpdate();
+    checkForInAppUpdate();
   }
 
   Future<void> checkForInAppUpdate() async {
@@ -166,13 +167,18 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
         children: [
           FloatingActionButton(
             onPressed: () async {
-              await analytics.logEvent(name: "post_upload");
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                await analytics.logEvent(name: "post_upload");
 
-              final ps = await PhotoManager.requestPermissionExtend();
-              if (ps.isAuth || ps.hasAccess) {
-                context.push(SelectImageScreen2.routeName);
+                final ps = await PhotoManager.requestPermissionExtend();
+                if (ps.isAuth || ps.hasAccess) {
+                  context.push(SelectImageScreen2.routeName);
+                } else {
+                  return;
+                }
               } else {
-                return;
+                context.push(CompleteDetailsScreen.routeName);
               }
             },
             backgroundColor: Constants.primaryColor,

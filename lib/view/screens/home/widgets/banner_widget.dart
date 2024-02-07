@@ -151,7 +151,7 @@ class _BannerWidgetState extends State<BannerWidget> {
               ),
             ),
             Text(
-              prize.name ?? "",
+              prize.title ?? "",
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,

@@ -36,15 +36,11 @@ class API<T> {
 
     var body = json.encode(payLoad);
 
-    debugPrint("body: $body");
-
     var response = await http.post(
       Uri.parse(Constants.baseURL + endpoint),
       body: body,
       headers: head,
     );
-
-    debugPrint("response in post api method: ${response.body}");
 
     return _handledResponse(response, endpoint);
   }

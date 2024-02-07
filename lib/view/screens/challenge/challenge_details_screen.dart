@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
@@ -13,6 +14,7 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
 import 'package:coucou_v2/view/screens/navbar/navbar.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
@@ -205,13 +207,20 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
         children: [
           FloatingActionButton(
             onPressed: () async {
-              await analytics.logEvent(name: "post_upload");
+              final userController = Get.find<UserController>();
 
-              final ps = await PhotoManager.requestPermissionExtend();
-              if (ps.isAuth || ps.hasAccess) {
-                context.push(SelectImageScreen2.routeName);
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                await analytics.logEvent(name: "post_upload");
+
+                final ps = await PhotoManager.requestPermissionExtend();
+                if (ps.isAuth || ps.hasAccess) {
+                  context.push(SelectImageScreen2.routeName);
+                } else {
+                  return;
+                }
               } else {
-                return;
+                context.push(CompleteDetailsScreen.routeName);
               }
             },
             backgroundColor: Constants.primaryColor,
