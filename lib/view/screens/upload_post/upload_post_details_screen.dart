@@ -22,11 +22,11 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/post_uploaded_success_dialog.dart';
 import 'package:coucou_v2/view/widgets/default_container_2.dart';
 import 'package:coucou_v2/view/widgets/default_text_field.dart';
+import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:coucou_v2/view/widgets/secondary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -59,6 +59,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
   String? rlocation;
   List<ChallengeNameData> list = [];
   ChallengeNameData? selectedChallenge;
+  bool? isVeg = false;
 
   @override
   void initState() {
@@ -139,11 +140,37 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                                         height: 20.h,
                                         width: 20.h,
                                       )
-                                    : Image.file(
-                                        File(controller.filePath.value),
-                                        fit: BoxFit.cover,
-                                        height: 20.h,
-                                        width: 20.h,
+                                    : InkWell(
+                                        onTap: controller.isVideo.value == true
+                                            ? null
+                                            : () {
+                                                List<String> imageList = [];
+
+                                                for (var element in controller
+                                                    .filesSelected) {
+                                                  imageList
+                                                      .add(element.filePath);
+                                                }
+
+                                                context.push(
+                                                  DismissPage.routeName,
+                                                  extra: {
+                                                    "initialIndex": 0,
+                                                    "imageList": imageList,
+                                                    "isVideo": false,
+                                                    "localList": true,
+                                                  },
+                                                );
+                                              },
+                                        child: Image.file(
+                                          File(
+                                            controller.thumbnailFilePath.value,
+                                          ),
+                                          // File(controller.filePath.value),
+                                          fit: BoxFit.cover,
+                                          height: 20.h,
+                                          width: 20.h,
+                                        ),
                                       ),
                               ),
                             ),
@@ -190,6 +217,42 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
                               child: Text(rlocation ?? ""),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 4.w),
+                        Text(
+                          "is_veg".tr,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 2.w),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: true,
+                                groupValue: isVeg,
+                                activeColor: Constants.primaryColor,
+                                onChanged: (val) {
+                                  isVeg = val;
+                                  setState(() {});
+                                },
+                                title: Text("veg".tr),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                activeColor: Constants.primaryColor,
+                                value: false,
+                                groupValue: isVeg,
+                                onChanged: (val) {
+                                  isVeg = val;
+                                  setState(() {});
+                                },
+                                title: Text("non_veg".tr),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 4.w),
                         Text(
@@ -352,9 +415,8 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     debugPrint("ext: $ext");
 
     final tempFilePath = await getTempImageFilePath(ext);
-    debugPrint("tempFilePath: $tempFilePath");
 
-    final File? compressedImage = await testCompressAndGetFile(
+    final File? compressedImage = await controller.testCompressAndGetFile(
       File(path),
       tempFilePath,
     );
@@ -378,21 +440,21 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     return null;
   }
 
-  Future<File?> testCompressAndGetFile(File file, String targetPath) async {
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: 80,
-    );
+  // Future<File?> testCompressAndGetFile(File file, String targetPath) async {
+  //   var result = await FlutterImageCompress.compressAndGetFile(
+  //     file.absolute.path,
+  //     targetPath,
+  //     quality: 80,
+  //   );
 
-    if (result != null) {
-      // print(file.lengthSync());
-      // print(result.lengthSync());
+  //   if (result != null) {
+  //     // print(file.lengthSync());
+  //     // print(result.lengthSync());
 
-      return result;
-    }
-    return null;
-  }
+  //     return result;
+  //   }
+  //   return null;
+  // }
 
   Future<String?> _getLocation() async {
     final Position? location = await LocationUtils.getCurrentLocation();
@@ -423,53 +485,58 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
       try {
         final city = await _getLocation();
 
-        String? imageUrl;
-        String? videoUrl;
-
-        if (widget.postData == null) {
-          String ext;
-
-          if (controller.filePath.value.endsWith('.jpg') ||
-              controller.filePath.value.endsWith('.jpeg')) {
-            ext = ".jpg";
-          } else {
-            ext = ".png";
-          }
-
-          imageUrl = await _uploadFile(controller.filePath.value, ext);
-
-          if (controller.videoFilePath.value.isNotEmpty) {
-            videoUrl = controller.videoFilePath.value;
-          }
-        }
-
-        String challengeVideo = '';
-
-        if (widget.postData == null) {
-          if (controller.videoFilePath.value.isNotEmpty) {
-            challengeVideo = videoUrl!;
-          } else {
-            challengeVideo = imageUrl!;
-          }
-        } else {
-          challengeVideo = widget.postData!.challengeVideo!;
-        }
-
         Map payload = {
           "challengeId": selectedChallenge!.id,
-          "challengeVideo": challengeVideo,
+          "challengeVideo": null,
           "caption": caption,
           "postLocation": location ?? city,
           "recipeLocation": rlocation,
           "voice_URL": controller.musicName.value,
-          "thumbnail": widget.postData != null
-              ? widget.postData!.thumbnail
-              : imageUrl ?? "",
-          "imagesMultiple": [
-            "https://images.unsplash.com/photo-1707246519904-82761aaa1efa?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            "https://images.unsplash.com/photo-1707045130985-35f4f74235c0?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          ],
         };
+
+        if (widget.postData == null) {
+          if (controller.isVideo.value == true) {
+            payload['isVideo'] = true;
+            payload['videoUrl'] = controller.videoFilePath.value;
+          } else {
+            final list = await _getImageUrlList();
+            payload['imagesMultiple'] = list;
+          }
+
+          final String? thumbnail = await controller.getImageThumbnailUrl();
+
+          payload['thumbnail'] = thumbnail ?? "";
+          payload['isVeg'] = isVeg;
+        } else {
+          payload['isVideo'] = widget.postData!.isVideo;
+          payload['videoUrl'] = widget.postData!.videoUrl;
+          payload['imagesMultiple'] = widget.postData!.imagesMultiple;
+          payload['thumbnail'] = widget.postData!.thumbnail;
+          payload['isVeg'] = widget.postData!.isVeg;
+        }
+
+        // String challengeVideo = '';
+
+        // Map payload = {
+        //   "challengeId": selectedChallenge!.id,
+        //   "challengeVideo": null,
+
+        //   "videoUrl": videoUrl,
+        //   "isVideo": controller.isVideo.value,
+
+        //   // "challengeVideo": challengeVideo,
+        //   "caption": caption,
+        //   "postLocation": location ?? city,
+        //   "recipeLocation": rlocation,
+        //   "voice_URL": controller.musicName.value,
+        //   "thumbnail": widget.postData != null
+        //       ? widget.postData!.thumbnail
+        //       : imageUrl ?? "",
+        //   "imagesMultiple": [
+        //     "https://images.unsplash.com/photo-1707246519904-82761aaa1efa?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        //     "https://images.unsplash.com/photo-1707045130985-35f4f74235c0?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        //   ],
+        // };
 
         SuperResponse result;
 
@@ -509,5 +576,33 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
       context.pop();
       SnackBarUtil.showSnackBar('internet_not_available'.tr, context: context);
     }
+  }
+
+  Future<List<String>> _getImageUrlList() async {
+    List<String> urlList = [];
+
+    for (var element in controller.filesSelected) {
+      String ext;
+
+      if (element.filePath.endsWith('.jpg') ||
+          element.filePath.endsWith('.jpeg')) {
+        ext = ".jpg";
+      } else {
+        ext = ".png";
+      }
+
+      final url = await _uploadFile(element.filePath, ext);
+
+      if (url != null) {
+        urlList.add(url);
+      }
+    }
+    debugPrint("urlList: $urlList");
+
+    return urlList;
+  }
+
+  String _getVideoUrl() {
+    return controller.videoFilePath.value;
   }
 }

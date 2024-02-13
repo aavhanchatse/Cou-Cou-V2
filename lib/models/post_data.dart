@@ -31,27 +31,34 @@ class PostData {
   UserData? userSingleData;
   ChallengeData? challengeData;
   List<String>? imagesMultiple;
+  bool? isVideo;
+  bool? isVeg;
+  String? videoUrl;
 
-  PostData(
-      {this.id,
-      this.userId,
-      this.challengeId,
-      this.challengeVideo,
-      this.voiceUrl,
-      this.like,
-      this.likeCount,
-      this.commentCount,
-      this.postLocation,
-      this.recipeLocation,
-      this.viewCount,
-      this.thumbnail,
-      this.caption,
-      this.deepLinkUrl,
-      this.createdAt,
-      this.updatedAt,
-      this.userSingleData,
-      this.challengeData,
-      this.imagesMultiple});
+  PostData({
+    this.id,
+    this.userId,
+    this.challengeId,
+    this.challengeVideo,
+    this.voiceUrl,
+    this.like,
+    this.likeCount,
+    this.commentCount,
+    this.postLocation,
+    this.recipeLocation,
+    this.viewCount,
+    this.thumbnail,
+    this.caption,
+    this.deepLinkUrl,
+    this.createdAt,
+    this.updatedAt,
+    this.userSingleData,
+    this.challengeData,
+    this.imagesMultiple,
+    this.isVeg,
+    this.isVideo,
+    this.videoUrl,
+  });
 
   factory PostData.fromJson(Map<String, dynamic> json) => PostData(
         id: json["_id"],
@@ -68,6 +75,9 @@ class PostData {
         thumbnail: json["thumbnail"],
         caption: json["caption"],
         deepLinkUrl: json["deepLink_URL"],
+        isVideo: json["isVideo"],
+        isVeg: json["isVeg"],
+        videoUrl: json["videoUrl"],
         userSingleData: json["userSingleData"] == null
             ? null
             : UserData.fromJson(json["userSingleData"]),
@@ -100,6 +110,9 @@ class PostData {
         "thumbnail": thumbnail,
         "caption": caption,
         "deepLink_URL": deepLinkUrl,
+        "isVeg": isVeg,
+        "isVideo": isVideo,
+        "videoUrl": videoUrl,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "userSingleData": userSingleData?.toJson(),

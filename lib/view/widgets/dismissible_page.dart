@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
@@ -13,14 +15,16 @@ class DismissPage extends StatefulWidget {
   final List<dynamic>? imageList;
   final bool isVideo;
   final bool? disableScreenshot;
+  final bool? localList;
 
-  const DismissPage(
-      {Key? key,
-      this.initialIndex,
-      this.imageList,
-      this.isVideo = false,
-      this.disableScreenshot = false})
-      : super(key: key);
+  const DismissPage({
+    Key? key,
+    this.initialIndex,
+    this.imageList,
+    this.isVideo = false,
+    this.disableScreenshot = false,
+    this.localList = false,
+  }) : super(key: key);
 
   @override
   State<DismissPage> createState() => _DismissiblePageState();
@@ -90,16 +94,20 @@ class _DismissiblePageState extends State<DismissPage> {
                         boundaryMargin: const EdgeInsets.all(100),
                         minScale: 0.5,
                         maxScale: 2,
-                        child: CachedNetworkImage(
-                          imageUrl: widget.imageList![index],
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                            child: CircularProgressIndicator(
-                              value: downloadProgress.progress,
-                              color: Constants.primaryColor,
-                            ),
-                          ),
-                        ),
+                        child: widget.localList == true
+                            ? Image.file(
+                                File(widget.imageList![index]),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: widget.imageList![index],
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                    color: Constants.primaryColor,
+                                  ),
+                                ),
+                              ),
                       ),
                     ));
                   },

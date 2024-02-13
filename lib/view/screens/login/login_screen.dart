@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/user_data.dart';
 import 'package:coucou_v2/repo/auth_repo.dart';
@@ -214,7 +215,11 @@ class _LoginScreenState extends State<LoginScreen> {
         await analytics.logEvent(name: "user_logged_in");
 
         debugPrint("navigating user to navbar");
-        context.go(NavBar.routeName);
+
+        final UserController userController = Get.find<UserController>();
+        userController.setValues(result.data!);
+
+        context.go(NavBar.routeName, extra: true);
       } else {
         SnackBarUtil.showSnackBar(result.message!, context: context);
       }

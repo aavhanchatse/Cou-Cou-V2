@@ -19,7 +19,7 @@ class UserController extends GetxController {
   Future<void> getUserDataById() async {
     final userId = StorageManager().getUserId();
 
-    debugPrint("userid: $userId");
+    debugPrint("userId in getuser: $userId");
 
     final SuperResponse<UserData?> result =
         await UserRepo().getUserDataById(userId);

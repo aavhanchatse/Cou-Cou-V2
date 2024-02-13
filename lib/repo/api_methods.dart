@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/custom_exceptions.dart';
 import 'package:coucou_v2/utils/storage_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +36,14 @@ class API<T> {
     }
 
     var body = json.encode(payLoad);
+
+    final config = await setupRemoteConfig();
+    final networkAvailable = config.getBool("local_notification");
+    debugPrint("networkAvailable = $networkAvailable");
+
+    if (networkAvailable == false) {
+      return http.Response("", 404);
+    }
 
     var response = await http.post(
       Uri.parse(Constants.baseURL + endpoint),
@@ -87,6 +96,14 @@ class API<T> {
     Map<String, String> head = {};
 
     head["Content-Type"] = 'application/json';
+
+    final config = await setupRemoteConfig();
+    final networkAvailable = config.getBool("local_notification");
+    debugPrint("networkAvailable = $networkAvailable");
+
+    if (networkAvailable == false) {
+      return http.Response("", 404);
+    }
 
     final response = await retry(
       () async => await http.get(

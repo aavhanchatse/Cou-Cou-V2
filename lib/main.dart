@@ -24,6 +24,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -124,42 +126,63 @@ class _MyAppState extends State<MyApp> {
     Get.put(HomescreenController());
     Get.put(PostController());
 
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return OrientationBuilder(
-          builder: (BuildContext context2, Orientation orientation) {
-        SizeConfig.init(constraints, orientation);
+    return ShowCaseWidget(
+      onStart: (index, key) {
+        debugPrint('onStart: $index, $key');
+      },
+      onComplete: (index, key) {
+        debugPrint('onComplete: $index, $key');
+        if (index == 4) {
+          SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle.light.copyWith(
+              statusBarIconBrightness: Brightness.dark,
+              statusBarColor: Colors.white,
+            ),
+          );
+        }
+      },
+      blurValue: 1,
+      builder: Builder(builder: (context) {
+        return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return OrientationBuilder(
+              builder: (BuildContext context2, Orientation orientation) {
+            SizeConfig.init(constraints, orientation);
 
-        return GetMaterialApp.router(
-          title: 'Cou Cou',
-          navigatorObservers: <NavigatorObserver>[observer],
-          routeInformationParser: AppRouter.router.routeInformationParser,
-          routerDelegate: AppRouter.router.routerDelegate,
-          routeInformationProvider: AppRouter.router.routeInformationProvider,
-          theme: Themes.light,
-          debugShowCheckedModeBanner: false,
-          locale: Locale(localeLan),
-          fallbackLocale: LocalizationService.fallbackLocale,
-          translations: LocalizationService(),
-        );
+            return GetMaterialApp.router(
+              title: 'Cou Cou',
+              navigatorObservers: <NavigatorObserver>[observer],
+              routeInformationParser: AppRouter.router.routeInformationParser,
+              routerDelegate: AppRouter.router.routerDelegate,
+              routeInformationProvider:
+                  AppRouter.router.routeInformationProvider,
+              theme: Themes.light,
+              debugShowCheckedModeBanner: false,
+              locale: Locale(localeLan),
+              fallbackLocale: LocalizationService.fallbackLocale,
+              translations: LocalizationService(),
+            );
 
-        // return MaterialApp.router(
-        //   title: 'Cou Cou',
-        //   routerConfig: AppRouter.router,
-        //   theme: Themes.light,
-        //   localizationsDelegates: [
-        //     S.delegate,
-        //     GlobalMaterialLocalizations.delegate,
-        //     GlobalWidgetsLocalizations.delegate,
-        //     GlobalCupertinoLocalizations.delegate,
-        //   ],
-        //   // locale: Locale(localeLan),
-        //   // fallbackLocale: LocalizationService.fallbackLocale,
-        //   // translations: LocalizationService(),
-        //   debugShowCheckedModeBanner: false,
-        // );
-      });
-    });
+            // return MaterialApp.router(
+            //   title: 'Cou Cou',
+            //   routerConfig: AppRouter.router,
+            //   theme: Themes.light,
+            //   localizationsDelegates: [
+            //     S.delegate,
+            //     GlobalMaterialLocalizations.delegate,
+            //     GlobalWidgetsLocalizations.delegate,
+            //     GlobalCupertinoLocalizations.delegate,
+            //   ],
+            //   // locale: Locale(localeLan),
+            //   // fallbackLocale: LocalizationService.fallbackLocale,
+            //   // translations: LocalizationService(),
+            //   debugShowCheckedModeBanner: false,
+            // );
+          });
+        });
+      }),
+      autoPlayDelay: const Duration(seconds: 3),
+    );
   }
 }
 
@@ -220,3 +243,20 @@ StreamSubscription<Map> streamSubscription =
   debugPrint(
       'InitSession error: ${platformException.code} - ${platformException.message}');
 });
+
+Future<FirebaseRemoteConfig> setupRemoteConfig() async {
+  await Firebase.initializeApp();
+
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(seconds: 10),
+    minimumFetchInterval: const Duration(minutes: 5),
+  ));
+
+  await remoteConfig.fetchAndActivate();
+
+  RemoteConfigValue(null, ValueSource.valueStatic);
+
+  return remoteConfig;
+}

@@ -170,7 +170,14 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
         final postId = e.postData?.id;
         final data = await PostRepo().getPostData(postId!);
 
-        Get.to(() => ReelsPageViewWidget(item: data.data!));
+        // Get.to(() => ReelsPageViewWidget(item: data.data!));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                body: SafeArea(child: ReelsPageViewWidget(item: data.data!))),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 4.w),
@@ -240,7 +247,14 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
         final postId = e.postData?.id;
         final data = await PostRepo().getPostData(postId!);
 
-        Get.to(() => ReelsPageViewWidget(item: data.data!));
+        // Get.to(() => ReelsPageViewWidget(item: data.data!));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                body: SafeArea(child: ReelsPageViewWidget(item: data.data!))),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 4.w),

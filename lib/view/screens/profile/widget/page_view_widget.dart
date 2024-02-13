@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
@@ -5,6 +6,7 @@ import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
+import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/dialogs/delete_post_dialog.dart';
@@ -67,21 +69,72 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           );
   }
 
+  bool findIfVideo() {
+    if (post!.challengeVideo == null) {
+      if (post!.isVideo == true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    if (post!.challengeVideo!.endsWith(".mp4")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget _contentImage() {
     return Expanded(
-      child: post!.challengeVideo!.endsWith(".mp4")
+      child: findIfVideo()
           ? InViewVideoPlayerCouCou(
-              data: post!.challengeVideo!,
+              data: post!.challengeVideo == null
+                  ? post!.videoUrl ?? ""
+                  : post!.challengeVideo ?? "",
               postDataList: post!,
               isViewChanged: true,
               blackMute: true,
             )
-          : Image.network(
-              post?.challengeVideo ?? "",
-              height: 100.h,
-              width: 100.w,
-              fit: BoxFit.cover,
-            ),
+          : _multipleImage(),
+      // : Image.network(
+      //     post?.challengeVideo ?? "",
+      //     height: 100.h,
+      //     width: 100.w,
+      //     fit: BoxFit.cover,
+      //   ),
+    );
+  }
+
+  Widget _multipleImage() {
+    return CarouselSlider.builder(
+      itemCount: post!.imagesMultiple == null || post!.imagesMultiple!.isEmpty
+          ? 1
+          : post!.imagesMultiple!.length,
+      itemBuilder: (context, index, realIndex) {
+        final element =
+            post!.imagesMultiple != null && post!.imagesMultiple!.isNotEmpty
+                ? post!.imagesMultiple![index]
+                : post!.challengeVideo ?? "";
+
+        return _singleImage(element);
+      },
+      options: CarouselOptions(
+        scrollDirection: Axis.horizontal,
+        viewportFraction: 1.0,
+        disableCenter: true,
+        initialPage: 0,
+        enableInfiniteScroll: false,
+      ),
+    );
+  }
+
+  Widget _singleImage(String image) {
+    return ImageUtil.networkImage(
+      imageUrl: image,
+      // height: 50.h,
+      width: double.infinity,
+      // fit: BoxFit.fitWidth,
     );
   }
 

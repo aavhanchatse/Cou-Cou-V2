@@ -5,12 +5,14 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/home/widgets/banner_widget.dart';
 import 'package:coucou_v2/view/screens/home/widgets/latest_post.dart';
 import 'package:coucou_v2/view/screens/home/widgets/timeline_widget.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -46,6 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+
+    // ambiguate(WidgetsBinding.instance)?.addPostFrameCallback(
+    //   (_) => ShowCaseWidget.of(context).startShowCase([_one, _two, _three]),
+    // );
   }
 
   void callApiAgain() {
@@ -103,16 +109,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await analytics.logEvent(name: "home_search_clicked");
+          Showcase(
+            key: fourthShowCaseKey,
+            description: "Tap to search a profile or a post",
+            onBarrierClick: () => debugPrint('Barrier clicked'),
+            child: IconButton(
+              onPressed: () async {
+                await analytics.logEvent(name: "home_search_clicked");
 
-              context.push(SearchScreen.routeName);
-            },
-            icon: Icon(
-              Icons.search,
-              color: Constants.black,
-              size: 32,
+                context.push(SearchScreen.routeName);
+              },
+              icon: Icon(
+                Icons.search,
+                color: Constants.black,
+                size: 32,
+              ),
             ),
           ),
         ],

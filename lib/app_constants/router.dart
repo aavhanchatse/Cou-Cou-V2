@@ -42,7 +42,9 @@ class AppRouter {
       GoRoute(
         path: NavBar.routeName,
         builder: (BuildContext context, GoRouterState state) {
-          return const NavBar();
+          final bool? fromLogin = state.extra as bool?;
+
+          return NavBar(fromLogin: fromLogin);
         },
       ),
       GoRoute(
@@ -169,6 +171,7 @@ class AppRouter {
             imageList: map["imageList"],
             isVideo: map["isVideo"],
             disableScreenshot: map["disableScreenshot"],
+            localList: map["localList"],
           );
         },
       ),

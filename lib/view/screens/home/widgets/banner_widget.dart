@@ -9,11 +9,13 @@ import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/prize_image_view_dialgo.dart';
 import 'package:coucou_v2/view/screens/challenge/all_challenges_screen.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
+import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class BannerWidget extends StatefulWidget {
   const BannerWidget({super.key});
@@ -50,19 +52,24 @@ class _BannerWidgetState extends State<BannerWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
-                          onPressed: () async {
-                            await analytics.logEvent(
-                                name: "all_challenge_button_clicked");
+                        Showcase(
+                          key: fifthShowCaseKey,
+                          description: "Tap to view all active challenges",
+                          onBarrierClick: () => debugPrint('Barrier clicked'),
+                          child: TextButton(
+                            onPressed: () async {
+                              await analytics.logEvent(
+                                  name: "all_challenge_button_clicked");
 
-                            context.push(AllChallengesScreen.routeName);
-                          },
-                          child: Text(
-                            "view_challenge".tr,
-                            style: TextStyle(
-                              color: Constants.black,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
+                              context.push(AllChallengesScreen.routeName);
+                            },
+                            child: Text(
+                              "view_challenge".tr,
+                              style: TextStyle(
+                                color: Constants.black,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

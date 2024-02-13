@@ -657,6 +657,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.8"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      name: firebase_remote_config
+      sha256: ddc50948e549d333d289b6e3d7b0a298f6411ad7b531277d2abe440cdb40f8d9
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.7"
+  firebase_remote_config_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_remote_config_platform_interface
+      sha256: c5afbe049fa5235538c51f0765fd7663062ac8294f39814fb28bc4f9cc4920b6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.7"
+  firebase_remote_config_web:
+    dependency: transitive
+    description:
+      name: firebase_remote_config_web
+      sha256: "2c670b001787e27f9f5c7d332f976d32cb814ab0206f244f297a92379fa739ac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.7"
   fixnum:
     dependency: transitive
     description:
@@ -1541,6 +1565,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  showcaseview:
+    dependency: "direct main"
+    description:
+      name: showcaseview
+      sha256: dc62ce38820dead4a27ce39d9e6c98384be89c2f2b4da3255238a59b041c7ccd
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   sky_engine:
     dependency: transitive
     description: flutter

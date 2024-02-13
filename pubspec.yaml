@@ -87,6 +87,7 @@ dependencies:
   intl: ^0.18.1
   image_gallery_saver: ^2.0.3
   image_watermark: ^0.0.5
+  showcaseview: ^2.0.3
   flutter_localizations: 
     sdk: flutter
 
@@ -99,6 +100,7 @@ dependencies:
   firebase_messaging: ^14.6.9
   firebase_dynamic_links: ^5.0.11
   firebase_analytics: ^10.1.6
+  firebase_remote_config: ^4.2.1
   # google_sign_in: 5.0.2
   # flutter_facebook_auth: ^5.0.6
   flutter_branch_sdk: ^6.6.0

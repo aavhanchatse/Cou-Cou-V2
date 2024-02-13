@@ -1,14 +1,10 @@
 import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
-import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/size_config.dart';
-import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_gallery/photo_gallery.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -50,7 +46,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
         child: FloatingActionButton(
           onPressed: () async {
             // context.push(CameraScreen.routeName);
-            _getImageFromCamera();
+            // _getImageFromCamera();
           },
           backgroundColor: Constants.white,
           child: Icon(
@@ -104,7 +100,7 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
                     // _setUserTemplateValues(index);
                     return InkWell(
                       onTap: () {
-                        _selectImage(index);
+                        // _selectImage(index);
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -125,42 +121,42 @@ class _SelectImageScreenState extends State<SelectImageScreen> {
     );
   }
 
-  void _getImageFromCamera() async {
-    final XFile? image = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxHeight: 1500,
-      maxWidth: 1500,
-    );
+  // void _getImageFromCamera() async {
+  //   final XFile? image = await ImagePicker().pickImage(
+  //     source: ImageSource.camera,
+  //     maxHeight: 1500,
+  //     maxWidth: 1500,
+  //   );
 
-    if (image != null) {
-      final bytes = await image.readAsBytes();
+  //   if (image != null) {
+  //     final bytes = await image.readAsBytes();
 
-      final controller = Get.find<PostController>();
-      controller.filePath.value = image.path;
-      controller.fileBytes.value = bytes;
-      controller.videoFilePath.value = "";
-      controller.musicName.value = "";
+  //     final controller = Get.find<PostController>();
+  //     controller.filePath.value = image.path;
+  //     controller.fileBytes.value = bytes;
+  //     controller.videoFilePath.value = "";
+  //     controller.musicName.value = "";
 
-      await analytics.logEvent(name: "upload_image_camera");
+  //     await analytics.logEvent(name: "upload_image_camera");
 
-      context.push(EditImageScreen.routeName);
-    }
-  }
+  //     context.push(EditImageScreen.routeName);
+  //   }
+  // }
 
-  void _selectImage(int index) async {
-    final File image = await _media![index].getFile();
-    final bytes = await image.readAsBytes();
+  // void _selectImage(int index) async {
+  //   final File image = await _media![index].getFile();
+  //   final bytes = await image.readAsBytes();
 
-    final controller = Get.find<PostController>();
-    controller.filePath.value = image.path;
-    controller.fileBytes.value = bytes;
-    controller.videoFilePath.value = "";
-    controller.musicName.value = "";
+  //   final controller = Get.find<PostController>();
+  //   controller.filePath.value = image.path;
+  //   controller.fileBytes.value = bytes;
+  //   controller.videoFilePath.value = "";
+  //   controller.musicName.value = "";
 
-    await analytics.logEvent(name: "select_gallery_image");
+  //   await analytics.logEvent(name: "select_gallery_image");
 
-    context.push(EditImageScreen.routeName);
-  }
+  //   context.push(EditImageScreen.routeName);
+  // }
 
   Future<void> getImages() async {
     if (await _promptPermissionSetting()) {

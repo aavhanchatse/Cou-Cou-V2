@@ -106,4 +106,8 @@ const Map<String, String> enUS = {
   "enter_valid_otp": "Enter valid OTP",
   "user_name_2": "Username",
   "details": "Details",
+  "select_one_picture": "Select atleast one picture",
+  "is_veg": "Is Veg?",
+  "veg": "Veg",
+  "non_veg": "Non - Veg",
 };

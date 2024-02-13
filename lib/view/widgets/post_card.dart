@@ -373,6 +373,22 @@ class _PostCardState extends State<PostCard> {
     });
   }
 
+  bool findIfVideo() {
+    if (item!.challengeVideo == null) {
+      if (item!.isVideo == true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    if (item!.challengeVideo!.endsWith(".mp4")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget _contentImage() {
     // debugPrint("item?.challengeVideo: ${item?.challengeVideo}");
     return Container(
@@ -383,9 +399,11 @@ class _PostCardState extends State<PostCard> {
       ),
       color: Constants.postCardBackground,
       // height: 50.h,
-      child: item!.challengeVideo!.endsWith(".mp4")
+      child: findIfVideo()
           ? InViewVideoPlayerCouCou(
-              data: item!.challengeVideo!,
+              data: item!.challengeVideo == null
+                  ? item!.videoUrl ?? ""
+                  : item!.challengeVideo ?? "",
               postDataList: item!,
               isViewChanged: widget.isInView,
             )
@@ -558,7 +576,7 @@ class _PostCardState extends State<PostCard> {
             ],
           ),
           const Spacer(),
-          item!.challengeVideo!.endsWith(".mp4")
+          findIfVideo()
               ? const SizedBox()
               : IconButton(
                   onPressed: () {

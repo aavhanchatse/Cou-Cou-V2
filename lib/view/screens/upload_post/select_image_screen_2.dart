@@ -3,20 +3,15 @@ import 'dart:typed_data';
 
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
-import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
-import 'package:coucou_v2/utils/image_utility.dart';
-import 'package:coucou_v2/utils/s3_util.dart';
+import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/bottomsheets/pick_image_or_video_bottomsheet.dart';
 import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
-import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class SelectImageScreen2 extends StatefulWidget {
   static const routeName = '/selectImage2';
@@ -30,6 +25,8 @@ class SelectImageScreen2 extends StatefulWidget {
 class _SelectImageScreen2State extends State<SelectImageScreen2> {
   bool _loading = true;
   List<AssetEntity> assets = [];
+
+  final PostController postController = Get.find<PostController>();
 
   @override
   void initState() {
@@ -88,6 +85,26 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
             color: Constants.black,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (postController.filesSelected.isNotEmpty) {
+                postController.setThumbnailOfFirstImage();
+
+                context.push(EditImageScreen.routeName, extra: false);
+              } else {
+                SnackBarUtil.showSnackBar(
+                  "select_one_picture".tr,
+                  context: context,
+                );
+              }
+            },
+            icon: Icon(
+              Icons.check,
+              color: Constants.black,
+            ),
+          ),
+        ],
       ),
       body: _loading == true
           ? Center(
@@ -130,78 +147,78 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
     );
   }
 
-  void _getImageFromCamera() async {
-    final XFile? image = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxHeight: 1500,
-      maxWidth: 1500,
-    );
+  // void _getImageFromCamera() async {
+  //   final XFile? image = await ImagePicker().pickImage(
+  //     source: ImageSource.camera,
+  //     maxHeight: 1500,
+  //     maxWidth: 1500,
+  //   );
 
-    if (image != null) {
-      final bytes = await image.readAsBytes();
+  //   if (image != null) {
+  //     final bytes = await image.readAsBytes();
 
-      final controller = Get.find<PostController>();
-      controller.filePath.value = image.path;
-      controller.fileBytes.value = bytes;
-      controller.videoFilePath.value = "";
-      controller.musicName.value = "";
+  //     final controller = Get.find<PostController>();
+  //     controller.filePath.value = image.path;
+  //     controller.fileBytes.value = bytes;
+  //     controller.videoFilePath.value = "";
+  //     controller.musicName.value = "";
 
-      await analytics.logEvent(name: "upload_image_camera");
+  //     await analytics.logEvent(name: "upload_image_camera");
 
-      context.push(EditImageScreen.routeName, extra: false);
-    }
-  }
+  //     context.push(EditImageScreen.routeName, extra: false);
+  //   }
+  // }
 
-  void _getVideoFromCamera() async {
-    final XFile? image = await ImagePicker().pickVideo(
-      source: ImageSource.camera,
-    );
+  // void _getVideoFromCamera() async {
+  //   final XFile? image = await ImagePicker().pickVideo(
+  //     source: ImageSource.camera,
+  //   );
 
-    if (image != null) {
-      final controller = Get.find<PostController>();
-      final userController = Get.find<UserController>();
+  //   if (image != null) {
+  //     final controller = Get.find<PostController>();
+  //     final userController = Get.find<UserController>();
 
-      final currentTimeMillisecond =
-          DateTime.now().millisecondsSinceEpoch.toString();
+  //     final currentTimeMillisecond =
+  //         DateTime.now().millisecondsSinceEpoch.toString();
 
-      final userId = userController.userData.value.id!;
+  //     final userId = userController.userData.value.id!;
 
-      var filePath =
-          'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
+  //     var filePath =
+  //         'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
 
-      ProgressDialog.showProgressDialog(context);
+  //     ProgressDialog.showProgressDialog(context);
 
-      final output = await S3Util.uploadFileToAws(File(image.path), filePath);
+  //     final output = await S3Util.uploadFileToAws(File(image.path), filePath);
 
-      if (output != null) {
-        context.pop();
+  //     if (output != null) {
+  //       context.pop();
 
-        final Uint8List? uint8list = await VideoThumbnail.thumbnailData(
-          video: image.path,
-          imageFormat: ImageFormat.JPEG,
-          maxWidth:
-              128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-          quality: 25,
-        );
+  //       final Uint8List? uint8list = await VideoThumbnail.thumbnailData(
+  //         video: image.path,
+  //         imageFormat: ImageFormat.JPEG,
+  //         maxWidth:
+  //             128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+  //         quality: 25,
+  //       );
 
-        if (uint8list != null) {
-          final File thumbnailFile =
-              await ImageUtil.saveImageToTempStorage(uint8list);
+  //       if (uint8list != null) {
+  //         final File thumbnailFile =
+  //             await ImageUtil.saveImageToTempStorage(uint8list);
 
-          final thumbnailBytes = await thumbnailFile.readAsBytes();
+  //         final thumbnailBytes = await thumbnailFile.readAsBytes();
 
-          controller.filePath.value = thumbnailFile.path;
-          controller.fileBytes.value = thumbnailBytes;
-          controller.videoFilePath.value = output;
-          controller.musicName.value = "";
+  //         controller.filePath.value = thumbnailFile.path;
+  //         controller.fileBytes.value = thumbnailBytes;
+  //         controller.videoFilePath.value = output;
+  //         controller.musicName.value = "";
 
-          await analytics.logEvent(name: "select_gallery_video");
+  //         await analytics.logEvent(name: "select_gallery_video");
 
-          context.push(EditImageScreen.routeName, extra: true);
-        }
-      }
-    }
-  }
+  //         context.push(EditImageScreen.routeName, extra: true);
+  //       }
+  //     }
+  //   }
+  // }
 
   void openImagePickerDialog() async {
     final bool? filePath = await showModalBottomSheet(
@@ -217,10 +234,10 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
 
     if (filePath == true) {
       // select video
-      _getVideoFromCamera();
+      postController.getVideoFromCamera(context);
     } else if (filePath == false) {
       // select image
-      _getImageFromCamera();
+      postController.getImageFromCamera(context);
     }
   }
 
@@ -250,7 +267,7 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
   }
 }
 
-class AssetThumbnail extends StatelessWidget {
+class AssetThumbnail extends StatefulWidget {
   final AssetEntity asset;
 
   const AssetThumbnail({
@@ -259,10 +276,26 @@ class AssetThumbnail extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<AssetThumbnail> createState() => _AssetThumbnailState();
+}
+
+class _AssetThumbnailState extends State<AssetThumbnail> {
+  late File assetFile;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getFile();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final PostController postController = Get.find<PostController>();
     // We're using a FutureBuilder since thumbData is a future
+
     return FutureBuilder<Uint8List?>(
-      future: asset.thumbnailData,
+      future: widget.asset.thumbnailData,
       builder: (_, snapshot) {
         final bytes = snapshot.data;
         // If we have no data, display a spinner
@@ -272,107 +305,63 @@ class AssetThumbnail extends StatelessWidget {
           );
         }
         // If there's data, display it as an image
-        return InkWell(
-          onTap: () {
-            if (asset.type == AssetType.video) {
-              _selectVideo(context);
-            } else {
-              _selectImage(context);
-            }
-          },
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                  width: double.infinity,
-                ),
-              ),
-              if (asset.type == AssetType.video)
-                Container(
-                  color: Colors.white.withOpacity(0.5),
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: const Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                    ),
+        return Obx(
+          () => InkWell(
+            onTap: () {
+              if (widget.asset.type == AssetType.video) {
+                postController.selectVideo(context, widget.asset);
+              } else {
+                postController.selectImage(context, widget.asset);
+              }
+            },
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    width: double.infinity,
                   ),
                 ),
-            ],
+                if (widget.asset.type == AssetType.video)
+                  Container(
+                    color: Colors.white.withOpacity(0.5),
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: const Center(
+                      child: Icon(
+                        Icons.play_arrow,
+                      ),
+                    ),
+                  ),
+                if (widget.asset.type != AssetType.video &&
+                    postController.filesSelected
+                        .any((element) => element.filePath == assetFile.path))
+                  Container(
+                    color: Colors.white.withOpacity(0.5),
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: const Center(
+                      child: Icon(
+                        Icons.check,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  void _selectImage(BuildContext context) async {
-    final File? image = await asset.originFile;
-    final bytes = await image?.readAsBytes();
-
-    if (image != null && bytes != null) {
-      final controller = Get.find<PostController>();
-      controller.filePath.value = image.path;
-      controller.fileBytes.value = bytes;
-      controller.videoFilePath.value = "";
-      controller.musicName.value = "";
-
-      await analytics.logEvent(name: "select_gallery_image");
-
-      context.push(EditImageScreen.routeName, extra: false);
-    }
-  }
-
-  void _selectVideo(BuildContext context) async {
-    final File? image = await asset.originFile;
-    final bytes = await image?.readAsBytes();
-
-    if (image != null && bytes != null) {
-      final controller = Get.find<PostController>();
-      final userController = Get.find<UserController>();
-
-      final currentTimeMillisecond =
-          DateTime.now().millisecondsSinceEpoch.toString();
-
-      final userId = userController.userData.value.id!;
-
-      var filePath =
-          'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
-
-      ProgressDialog.showProgressDialog(context);
-
-      final output = await S3Util.uploadFileToAws(image, filePath);
-
-      if (output != null) {
-        context.pop();
-
-        final Uint8List? uint8list = await VideoThumbnail.thumbnailData(
-          video: image.path,
-          imageFormat: ImageFormat.JPEG,
-          maxWidth:
-              128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-          quality: 25,
-        );
-
-        if (uint8list != null) {
-          final File thumbnailFile =
-              await ImageUtil.saveImageToTempStorage(uint8list);
-
-          final thumbnailBytes = await thumbnailFile.readAsBytes();
-
-          controller.filePath.value = thumbnailFile.path;
-          controller.fileBytes.value = thumbnailBytes;
-          controller.videoFilePath.value = output;
-          controller.musicName.value = "";
-
-          await analytics.logEvent(name: "select_gallery_video");
-
-          context.push(EditImageScreen.routeName, extra: true);
-        }
-      }
+  Future<void> getFile() async {
+    final file = await widget.asset.originFile;
+    if (file != null) {
+      assetFile = file;
+      setState(() {});
     }
   }
 }

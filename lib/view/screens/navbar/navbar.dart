@@ -22,15 +22,23 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class NavBar extends StatefulWidget {
+  final bool? fromLogin;
   static const routeName = '/';
 
-  const NavBar({super.key});
+  const NavBar({super.key, this.fromLogin});
 
   @override
   State<NavBar> createState() => _NavBarState();
 }
+
+final GlobalKey firstShowCaseKey = GlobalKey();
+final GlobalKey secondShowCaseKey = GlobalKey();
+final GlobalKey thirdShowCaseKey = GlobalKey();
+final GlobalKey fourthShowCaseKey = GlobalKey();
+final GlobalKey fifthShowCaseKey = GlobalKey();
 
 class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   final navbarController = Get.find<NavbarController>();
@@ -57,7 +65,14 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    getUser();
+    debugPrint("fromLogin: ${widget.fromLogin}");
+
+    if (widget.fromLogin == true) {
+      _showRatingDialog();
+    } else {
+      getUser();
+    }
+
     _checkNotification();
     handleDeepLink(context);
 
@@ -79,41 +94,70 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   void getUser() async {
     debugPrint("inside getUser");
 
-    await userController.getUserDataById().then((value) {
-      debugPrint("inside get user by id then block");
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (userController.userData.value.id != null &&
-            userController.userData.value.ratingVerify != true) {
-          ratingDialog();
+    Future.delayed(
+      const Duration(seconds: 2),
+      () async {
+        await userController.getUserDataById().then(
+          (value) {
+            debugPrint("inside get user by id then block");
+            _showRatingDialog();
+          },
+        );
+      },
+    );
+  }
+
+  void _showRatingDialog() {
+    debugPrint("inside showRating dialog");
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (widget.fromLogin == true) {
+          if (userController.userData.value.id != null &&
+              userController.userData.value.ratingVerify != true) {
+            ratingDialog();
+          }
+
+          ambiguate(WidgetsBinding.instance)?.addPostFrameCallback(
+            (_) => ShowCaseWidget.of(context).startShowCase([
+              firstShowCaseKey,
+              secondShowCaseKey,
+              thirdShowCaseKey,
+              fourthShowCaseKey,
+              fifthShowCaseKey
+            ]),
+          );
         }
-      });
-    });
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        body: WillPopScope(
-          onWillPop: () {
-            if (navbarController.currentIndex == 1) {
-              return _onWillPop();
-            } else {
-              navbarController.currentIndex.value = 1;
-              return Future.value(false);
-            }
-          },
-          child: Stack(
-            children: [
-              navbarController.currentIndex.value == 0
-                  ? const UserProfileScreen()
-                  : navbarController.currentIndex.value == 1
-                      ? const HomeScreen()
-                      : const MyActivityWidget(isFromNavBar: true),
-              _bottomNav(),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: Obx(
+        () {
+          return WillPopScope(
+            onWillPop: () {
+              if (navbarController.currentIndex == 1) {
+                return _onWillPop();
+              } else {
+                navbarController.currentIndex.value = 1;
+                return Future.value(false);
+              }
+            },
+            child: Stack(
+              children: [
+                navbarController.currentIndex.value == 0
+                    ? const UserProfileScreen()
+                    : navbarController.currentIndex.value == 1
+                        ? const HomeScreen()
+                        : const MyActivityWidget(isFromNavBar: true),
+                _bottomNav(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -165,39 +209,45 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     return Positioned.fill(
       child: Column(
         children: [
-          FloatingActionButton(
-            onPressed: () async {
-              if (userController.userData.value.username != null &&
-                  userController.userData.value.username!.isNotEmpty) {
-                await analytics.logEvent(name: "post_upload");
+          Showcase(
+            key: firstShowCaseKey,
+            description: "Start adding posts from here",
+            disableDefaultTargetGestures: false,
+            onBarrierClick: () => debugPrint('Barrier clicked'),
+            child: FloatingActionButton(
+              onPressed: () async {
+                if (userController.userData.value.username != null &&
+                    userController.userData.value.username!.isNotEmpty) {
+                  await analytics.logEvent(name: "post_upload");
 
-                final ps = await PhotoManager.requestPermissionExtend();
-                if (ps.isAuth || ps.hasAccess) {
-                  context.push(SelectImageScreen2.routeName);
+                  final ps = await PhotoManager.requestPermissionExtend();
+                  if (ps.isAuth || ps.hasAccess) {
+                    context.push(SelectImageScreen2.routeName);
+                  } else {
+                    return;
+                  }
                 } else {
-                  return;
+                  context.push(CompleteDetailsScreen.routeName);
                 }
-              } else {
-                context.push(CompleteDetailsScreen.routeName);
-              }
-            },
-            backgroundColor: Constants.primaryColor,
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Constants.yellowGradient1,
-                    Constants.yellowGradient2,
-                  ],
+              },
+              backgroundColor: Constants.primaryColor,
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Constants.yellowGradient1,
+                      Constants.yellowGradient2,
+                    ],
+                  ),
                 ),
-              ),
-              child: Icon(
-                Icons.add,
-                color: Constants.black,
-                size: 40,
+                child: Icon(
+                  Icons.add,
+                  color: Constants.black,
+                  size: 40,
+                ),
               ),
             ),
           ),
@@ -215,81 +265,91 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   }
 
   Widget _notificationButton() {
-    return InkWell(
-      onTap: () async {
-        await analytics.logEvent(name: "notifications");
+    return Showcase(
+      key: thirdShowCaseKey,
+      description: "Tap to see the latest activity",
+      onBarrierClick: () => debugPrint('Barrier clicked'),
+      child: InkWell(
+        onTap: () async {
+          await analytics.logEvent(name: "notifications");
 
-        navbarController.currentIndex.value = 2;
-        setState(() {});
-      },
-      child: Column(
-        children: [
-          Container(
-            decoration: navbarController.currentIndex.value == 2
-                ? BoxDecoration(
-                    color: Constants.primaryGrey2,
-                    borderRadius: BorderRadius.circular(100),
-                    boxShadow: StyleUtil.uploadButtonShadow(),
-                  )
-                : null,
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
-            child: const Center(
-                child: Icon(
-              Icons.notifications_none_outlined,
-            )),
-          ),
-          Text(
-            "notifications".tr,
-            style: TextStyle(
-              color: Constants.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+          navbarController.currentIndex.value = 2;
+          setState(() {});
+        },
+        child: Column(
+          children: [
+            Container(
+              decoration: navbarController.currentIndex.value == 2
+                  ? BoxDecoration(
+                      color: Constants.primaryGrey2,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: StyleUtil.uploadButtonShadow(),
+                    )
+                  : null,
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+              child: const Center(
+                  child: Icon(
+                Icons.notifications_none_outlined,
+              )),
             ),
-          ),
-        ],
+            Text(
+              "notifications".tr,
+              style: TextStyle(
+                color: Constants.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _profileButton() {
-    return InkWell(
-      onTap: () async {
-        await analytics.logEvent(name: "self_profile_tab");
+    return Showcase(
+      key: secondShowCaseKey,
+      description: "Tap to see the profile",
+      onBarrierClick: () => debugPrint('Barrier clicked'),
+      child: InkWell(
+        onTap: () async {
+          await analytics.logEvent(name: "self_profile_tab");
 
-        navbarController.currentIndex.value = 0;
-        setState(() {});
-      },
-      child: Column(
-        children: [
-          Container(
-            decoration: navbarController.currentIndex.value == 0
-                ? BoxDecoration(
-                    color: Constants.primaryGrey2,
-                    borderRadius: BorderRadius.circular(100),
-                    boxShadow: StyleUtil.uploadButtonShadow(),
-                  )
-                : null,
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
-            child: SizedBox(
-              height: 25,
-              width: 25,
-              child: DefaultPicProvider.getCircularUserProfilePic(
-                profilePic: userController.userData.value.imageUrl,
-                userName:
-                    "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
-                size: 25,
+          navbarController.currentIndex.value = 0;
+          setState(() {});
+        },
+        child: Column(
+          children: [
+            Container(
+              decoration: navbarController.currentIndex.value == 0
+                  ? BoxDecoration(
+                      color: Constants.primaryGrey2,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: StyleUtil.uploadButtonShadow(),
+                    )
+                  : null,
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+              child: SizedBox(
+                height: 25,
+                width: 25,
+                child: DefaultPicProvider.getCircularUserProfilePic(
+                  profilePic: userController.userData.value.imageUrl,
+                  userName:
+                      "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
+                  size: 25,
+                ),
               ),
             ),
-          ),
-          Text(
-            "profile".tr,
-            style: TextStyle(
-              color: Constants.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+            Text(
+              "profile".tr,
+              style: TextStyle(
+                color: Constants.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -337,14 +397,28 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
         final postId = message.data['id'];
         final data = await PostRepo().getPostData(postId);
 
-        Get.to(() => ReelsPageViewWidget(item: data.data!));
+        // Get.to(() => ReelsPageViewWidget(item: data.data!));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                body: SafeArea(child: ReelsPageViewWidget(item: data.data!))),
+          ),
+        );
       } else if (message.data['type'] == "like") {
         // redirect to post screen
 
         final postId = message.data['id'];
         final data = await PostRepo().getPostData(postId);
 
-        Get.to(() => ReelsPageViewWidget(item: data.data!));
+        // Get.to(() => ReelsPageViewWidget(item: data.data!));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                body: SafeArea(child: ReelsPageViewWidget(item: data.data!))),
+          ),
+        );
       }
     }
   }

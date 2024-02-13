@@ -195,7 +195,7 @@ class _VideoPlayerWidgetState extends State<EditImageVideoPlayer>
                   child: SizedBox(
                     width: 100.w,
                     child: Image.file(
-                      File(postController.filePath.value),
+                      File(postController.thumbnailFilePath.value),
                     ),
                   ),
                 ),
