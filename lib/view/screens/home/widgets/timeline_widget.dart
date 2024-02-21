@@ -3,6 +3,7 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
 
 class TimeLineWidget extends StatefulWidget {
   const TimeLineWidget({super.key});
@@ -21,7 +22,7 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
     super.initState();
 
     // controller.mainPostListPage.value = 1;
-    controller.getHomeScreenMainPostList();
+    // controller.getHomeScreenMainPostList();
 
     // _scrollController.addListener(() {
     //   if (_scrollController.offset >=
@@ -48,57 +49,59 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
           ? const SizedBox()
           : controller.mainPostList.isEmpty
               ? const SizedBox()
-              // : InViewNotifierList(
-              //     padding: EdgeInsets.symmetric(horizontal: 4.w),
-              //     // controller: _scrollController,
-              //     // scrollDirection: Axis.vertical,
-              //     shrinkWrap: true,
-              //     initialInViewIds: const ['0'],
-              //     // physics: const BouncingScrollPhysics(),
-              //     isInViewPortCondition: (
-              //       double deltaTop,
-              //       double deltaBottom,
-              //       double viewPortDimension,
-              //     ) {
-              //       return deltaTop < (0.5 * viewPortDimension) &&
-              //           deltaBottom > (0.5 * viewPortDimension);
-              //     },
-              //     itemCount: controller.mainPostList.length,
-              //     builder: (BuildContext context, int index) {
-              //       return InViewNotifierWidget(
-              //         id: '$index',
-              //         builder: (
-              //           BuildContext context,
-              //           bool isInView,
-              //           Widget? child,
-              //         ) {
-              //           final item = controller.mainPostList[index];
-              //           return Padding(
-              //             padding: EdgeInsets.only(bottom: 4.w),
-              //             child: PostCard(
-              //               isInView: isInView,
-              //               postData: item,
-              //             ),
-              //           );
-              //         },
-              //       );
-              //     },
-              //   );
-
-              : ListView.separated(
+              : InViewNotifierList(
                   physics: const NeverScrollableScrollPhysics(),
                   // padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  // controller: _scrollController,
+                  // scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final item = controller.mainPostList[index];
-
-                    return PostCard(postData: item);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 6.w);
+                  initialInViewIds: const ['0'],
+                  // physics: const BouncingScrollPhysics(),
+                  isInViewPortCondition: (
+                    double deltaTop,
+                    double deltaBottom,
+                    double viewPortDimension,
+                  ) {
+                    return deltaTop < (0.5 * viewPortDimension) &&
+                        deltaBottom > (0.5 * viewPortDimension);
                   },
                   itemCount: controller.mainPostList.length,
+                  builder: (BuildContext context, int index) {
+                    return InViewNotifierWidget(
+                      id: '$index',
+                      builder: (
+                        BuildContext context,
+                        bool isInView,
+                        Widget? child,
+                      ) {
+                        final item = controller.mainPostList[index];
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 0.5.w),
+                          child: PostCard(
+                            isInView: isInView,
+                            postData: item,
+                          ),
+                        );
+                      },
+                    );
+                  },
                 );
+
+      // : ListView.separated(
+      //     physics: const NeverScrollableScrollPhysics(),
+      //     // padding: EdgeInsets.symmetric(horizontal: 4.w),
+      //     shrinkWrap: true,
+      //     itemBuilder: (context, index) {
+      //       final item = controller.mainPostList[index];
+
+      //       return PostCard(postData: item);
+      //     },
+      //     separatorBuilder: (context, index) {
+      //       return SizedBox(height: 0.5.w);
+      //     },
+      //     itemCount: controller.mainPostList.length,
+      //   );
     });
   }
 }

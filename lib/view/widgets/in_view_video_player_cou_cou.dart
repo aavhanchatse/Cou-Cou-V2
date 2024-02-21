@@ -176,15 +176,23 @@ class _VideoPlayerWidgetState extends State<InViewVideoPlayerCouCou> {
 
                         soundToggle();
                       },
-                      child: Image.asset(
-                        userController.videoMute.value == true
-                            ? 'assets/icons/common_icons/mute.png'
-                            : 'assets/icons/common_icons/unmute.png',
-                        width: 20,
-                        height: 20,
-                        color: widget.blackMute == true
-                            ? Constants.primaryGrey2
-                            : null,
+                      child: Container(
+                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Constants.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(
+                          userController.videoMute.value == true
+                              ? 'assets/icons/common_icons/mute.png'
+                              : 'assets/icons/common_icons/unmute.png',
+                          width: 20,
+                          height: 20,
+                          color: widget.blackMute == true
+                              ? Constants.primaryGrey2
+                              : Constants.black,
+                        ),
                       ),
                     ),
                   ),

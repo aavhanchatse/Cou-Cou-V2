@@ -56,19 +56,23 @@ class _BannerWidgetState extends State<BannerWidget> {
                           key: fifthShowCaseKey,
                           description: "Tap to view all active challenges",
                           onBarrierClick: () => debugPrint('Barrier clicked'),
-                          child: TextButton(
-                            onPressed: () async {
+                          child: InkWell(
+                            onTap: () async {
                               await analytics.logEvent(
                                   name: "all_challenge_button_clicked");
 
                               context.push(AllChallengesScreen.routeName);
                             },
-                            child: Text(
-                              "view_challenge".tr,
-                              style: TextStyle(
-                                color: Constants.black,
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4.w, top: 2.w),
+                              child: Text(
+                                "view_challenge".tr,
+                                style: TextStyle(
+                                  color: Constants.black,
+                                  height: 1,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -227,8 +231,8 @@ class _BannerWidgetState extends State<BannerWidget> {
                   Positioned(
                     right: 0,
                     bottom: 0,
-                    child: IconButton(
-                      onPressed: () {
+                    child: InkWell(
+                      onTap: () {
                         context.push(
                           DismissPage.routeName,
                           extra: {
@@ -238,9 +242,18 @@ class _BannerWidgetState extends State<BannerWidget> {
                           },
                         );
                       },
-                      icon: Icon(
-                        Icons.zoom_out_map_outlined,
-                        color: Constants.white,
+                      child: Container(
+                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Constants.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.zoom_out_map_outlined,
+                          color: Constants.black,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ),

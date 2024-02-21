@@ -180,7 +180,7 @@ class AppRouter {
         builder: (BuildContext context, GoRouterState state) {
           final PostData data = state.extra as PostData;
 
-          return CommentScreen(postData: data);
+          return CommentScreen(post: data);
         },
       ),
       GoRoute(

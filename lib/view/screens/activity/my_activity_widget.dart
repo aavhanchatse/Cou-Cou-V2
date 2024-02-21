@@ -168,6 +168,8 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
     return InkWell(
       onTap: () async {
         final postId = e.postData?.id;
+        debugPrint("postId: ${e.id}");
+
         final data = await PostRepo().getPostData(postId!);
 
         // Get.to(() => ReelsPageViewWidget(item: data.data!));

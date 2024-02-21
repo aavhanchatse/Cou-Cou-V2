@@ -7,6 +7,7 @@ import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/widgets/default_text_field.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -94,8 +95,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   _getTagUser(e.keys!, _pageIndex);
                                 },
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 15.w),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.w, vertical: 3),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -107,12 +108,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                           ),
                                         ),
                                       ),
-                                      IconButton(
-                                        onPressed: () {
-                                          deleteSearch(e.id);
-                                        },
-                                        icon: const Icon(Icons.close),
-                                      ),
+                                      // InkWell(
+                                      //   onTap: () {
+                                      //     deleteSearch(e.id);
+                                      //   },
+                                      //   child: const Icon(Icons.close),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -239,47 +240,70 @@ class _SearchScreenState extends State<SearchScreen> {
     return Row(
       children: [
         IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: const Icon(
-              Icons.arrow_back_outlined,
-            )),
+          onPressed: () {
+            context.pop();
+          },
+          // icon: const Icon(
+          //   Icons.arrow_back_outlined,
+          // ),
+          icon: ImageIcon(
+            const AssetImage("assets/icons/back_arrow.png"),
+            color: Constants.black,
+          ),
+        ),
         Expanded(
-          child: TextField(
+          child: DefaultTextField(
+            hintText: "",
             autofocus: true,
             textInputAction: TextInputAction.search,
             onChanged: (String value) {
               _search(value);
             },
             cursorColor: Constants.black,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.search,
-                  color: Constants.black,
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Constants.black),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Constants.black),
-              ),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Constants.black),
-              ),
-              errorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Constants.black),
-              ),
-              disabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Constants.black),
+            textEditingController: _textSearchBusinessController,
+            suffixIcon: IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.search,
+                color: Constants.black,
               ),
             ),
-            controller: _textSearchBusinessController,
           ),
+          // child: TextField(
+          //   autofocus: true,
+          //   textInputAction: TextInputAction.search,
+          //   onChanged: (String value) {
+          //     _search(value);
+          //   },
+          //   cursorColor: Constants.black,
+          //   decoration: InputDecoration(
+          //     suffixIcon: IconButton(
+          //       onPressed: () {},
+          //       icon: Icon(
+          //         Icons.search,
+          //         color: Constants.black,
+          //       ),
+          //     ),
+          //     focusedBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(color: Constants.black),
+          //     ),
+          //     enabledBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(color: Constants.black),
+          //     ),
+          //     border: UnderlineInputBorder(
+          //       borderSide: BorderSide(color: Constants.black),
+          //     ),
+          //     errorBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(color: Constants.black),
+          //     ),
+          //     disabledBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(color: Constants.black),
+          //     ),
+          //   ),
+          //   controller: _textSearchBusinessController,
+          // ),
         ),
+        SizedBox(width: 4.w),
       ],
     );
   }

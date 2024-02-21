@@ -276,7 +276,14 @@ class _PostCardState extends State<PostCard> {
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "comment_button_clicked");
 
-                context.push(CommentScreen.routeName, extra: item);
+                // context.push(CommentScreen.routeName, extra: item);
+                final PostData? data =
+                    await context.push(CommentScreen.routeName, extra: item);
+
+                if (data != null) {
+                  item = data;
+                  setState(() {});
+                }
               } else {
                 context.push(CompleteDetailsScreen.routeName);
               }
@@ -306,8 +313,12 @@ class _PostCardState extends State<PostCard> {
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "share_post");
 
-                shareImageWithText(
-                    item?.challengeVideo ?? "", item?.deepLinkUrl ?? "");
+                String imageUrl = item!.imagesMultiple != null &&
+                        item!.imagesMultiple!.isNotEmpty
+                    ? item!.imagesMultiple![currentIndex]
+                    : item!.challengeVideo ?? "";
+
+                shareImageWithText(imageUrl ?? "", item?.deepLinkUrl ?? "");
               } else {
                 context.push(CompleteDetailsScreen.routeName);
               }
@@ -391,39 +402,40 @@ class _PostCardState extends State<PostCard> {
 
   Widget _contentImage() {
     // debugPrint("item?.challengeVideo: ${item?.challengeVideo}");
-    return Container(
-      constraints: BoxConstraints(
-        // maxWidth: double.infinity,
+    return GestureDetector(
+      onDoubleTap: () {
+        if (userController.userData.value.username != null &&
+            userController.userData.value.username!.isNotEmpty) {
+          isHeartAnimating = true;
+          setState(() {});
 
-        maxHeight: 50.h,
-      ),
-      color: Constants.postCardBackground,
-      // height: 50.h,
-      child: findIfVideo()
-          ? InViewVideoPlayerCouCou(
-              data: item!.challengeVideo == null
-                  ? item!.videoUrl ?? ""
-                  : item!.challengeVideo ?? "",
-              postDataList: item!,
-              isViewChanged: widget.isInView,
-            )
-          : ClipRRect(
-              // borderRadius: const BorderRadius.only(
-              //   bottomLeft: Radius.circular(8),
-              //   bottomRight: Radius.circular(8),
-              // ),
-              child: GestureDetector(
-                onDoubleTap: () {
-                  if (userController.userData.value.username != null &&
-                      userController.userData.value.username!.isNotEmpty) {
-                    isHeartAnimating = true;
-                    setState(() {});
+          likePost();
+        } else {
+          context.push(CompleteDetailsScreen.routeName);
+        }
+      },
+      child: Container(
+        constraints: BoxConstraints(
+          // maxWidth: double.infinity,
 
-                    likePost();
-                  } else {
-                    context.push(CompleteDetailsScreen.routeName);
-                  }
-                },
+          maxHeight: 50.h,
+        ),
+        color: Constants.postCardBackground,
+        // height: 50.h,
+        child: findIfVideo()
+            ? InViewVideoPlayerCouCou(
+                data: item!.challengeVideo == null
+                    ? item!.videoUrl ?? ""
+                    : item!.challengeVideo ?? "",
+                postDataList: item!,
+                // isViewChanged: true,
+                isViewChanged: widget.isInView,
+              )
+            : ClipRRect(
+                // borderRadius: const BorderRadius.only(
+                //   bottomLeft: Radius.circular(8),
+                //   bottomRight: Radius.circular(8),
+                // ),
                 child: Stack(
                   children: [
                     RepaintBoundary(
@@ -434,8 +446,8 @@ class _PostCardState extends State<PostCard> {
                     Positioned(
                       right: 0,
                       bottom: 0,
-                      child: IconButton(
-                        onPressed: () {
+                      child: InkWell(
+                        onTap: () {
                           final imageList = item!.imagesMultiple != null &&
                                   item!.imagesMultiple!.isNotEmpty
                               ? item!.imagesMultiple
@@ -450,9 +462,18 @@ class _PostCardState extends State<PostCard> {
                             },
                           );
                         },
-                        icon: Icon(
-                          Icons.zoom_out_map_outlined,
-                          color: Constants.white,
+                        child: Container(
+                          margin: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Constants.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.zoom_out_map_outlined,
+                            color: Constants.black,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -483,11 +504,11 @@ class _PostCardState extends State<PostCard> {
                     ),
                   ],
                 ),
+                // child: Image.network(
+                //   item?.challengeVideo ?? "",
+                // ),
               ),
-              // child: Image.network(
-              //   item?.challengeVideo ?? "",
-              // ),
-            ),
+      ),
     );
   }
 

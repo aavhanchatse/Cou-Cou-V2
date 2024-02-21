@@ -12,7 +12,9 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/dialogs/delete_post_dialog.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
+import 'package:coucou_v2/view/widgets/heart_animation_widget.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,8 @@ class PageViewWidget extends StatefulWidget {
 
 class _PageViewWidgetState extends State<PageViewWidget> {
   PostData? post;
+  int currentIndex = 0;
+  bool isHeartAnimating = false;
 
   final userController = Get.find<UserController>();
 
@@ -87,16 +91,58 @@ class _PageViewWidgetState extends State<PageViewWidget> {
 
   Widget _contentImage() {
     return Expanded(
-      child: findIfVideo()
-          ? InViewVideoPlayerCouCou(
-              data: post!.challengeVideo == null
-                  ? post!.videoUrl ?? ""
-                  : post!.challengeVideo ?? "",
-              postDataList: post!,
-              isViewChanged: true,
-              blackMute: true,
-            )
-          : _multipleImage(),
+      child: GestureDetector(
+        onDoubleTap: () {
+          if (userController.userData.value.username != null &&
+              userController.userData.value.username!.isNotEmpty) {
+            isHeartAnimating = true;
+            setState(() {});
+
+            likePost();
+          } else {
+            context.push(CompleteDetailsScreen.routeName);
+          }
+        },
+        child: findIfVideo()
+            ? InViewVideoPlayerCouCou(
+                data: post!.challengeVideo == null
+                    ? post!.videoUrl ?? ""
+                    : post!.challengeVideo ?? "",
+                postDataList: post!,
+                isViewChanged: true,
+                blackMute: true,
+              )
+            : Stack(
+                children: [
+                  Positioned.fill(child: _multipleImage()),
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: isHeartAnimating ? 1 : 0,
+                      child: HeartAnimationWidget(
+                        isAnimating: isHeartAnimating,
+                        duration: const Duration(milliseconds: 700),
+                        onEnd: () {
+                          isHeartAnimating = false;
+                          setState(() {});
+                        },
+                        // child: Icon(
+                        //   Icons.favorite,
+                        //   color: Constants.white,
+                        //   size: 100,),
+                        child: Container(
+                          padding: EdgeInsets.all(30.w),
+                          height: 10.w,
+                          width: 10.w,
+                          child: Image.asset(
+                            "assets/icons/cookie_selected.png",
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+      ),
       // : Image.network(
       //     post?.challengeVideo ?? "",
       //     height: 100.h,
@@ -125,6 +171,10 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         disableCenter: true,
         initialPage: 0,
         enableInfiniteScroll: false,
+        onPageChanged: (index, reason) {
+          currentIndex = index;
+          setState(() {});
+        },
       ),
     );
   }
@@ -167,8 +217,14 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           ),
           SizedBox(width: 2.w),
           InkWell(
-            onTap: () {
-              context.push(CommentScreen.routeName, extra: post);
+            onTap: () async {
+              final PostData? data =
+                  await context.push(CommentScreen.routeName, extra: post);
+
+              if (data != null) {
+                post = data;
+                setState(() {});
+              }
             },
             child: Row(
               children: [
@@ -191,8 +247,12 @@ class _PageViewWidgetState extends State<PageViewWidget> {
             onTap: () async {
               await analytics.logEvent(name: "share_post");
 
-              shareImageWithText(
-                  post?.challengeVideo ?? "", post?.deepLinkUrl ?? "");
+              String imageUrl = post!.imagesMultiple != null &&
+                      post!.imagesMultiple!.isNotEmpty
+                  ? post!.imagesMultiple![currentIndex]
+                  : post!.challengeVideo ?? "";
+
+              shareImageWithText(imageUrl ?? "", post?.deepLinkUrl ?? "");
             },
             child: Image.asset(
               "assets/icons/share.png",

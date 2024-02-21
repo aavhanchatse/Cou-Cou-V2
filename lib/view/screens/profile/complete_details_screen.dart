@@ -245,9 +245,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
         Text(
           "firstName".tr,
           style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+              fontSize: 16, fontWeight: FontWeight.bold, fontFamily: "Inika"),
         ),
         SizedBox(height: 2.w),
         DefaultTextField2(
@@ -278,9 +276,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
         Text(
           "lastName".tr,
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Inika"),
         ),
         SizedBox(height: 2.w),
         DefaultTextField2(
@@ -311,9 +307,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
         Text(
           "email".tr,
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Inika"),
         ),
         SizedBox(height: 2.w),
         DefaultTextField2(
@@ -340,6 +334,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),
@@ -377,9 +372,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
         Text(
           "gender".tr,
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 16, fontFamily: "Inika"),
         ),
         SizedBox(height: 2.w),
         DropdownButtonHideUnderline(
@@ -423,6 +416,7 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+            fontFamily: "Inika",
           ),
         ),
         SizedBox(height: 2.w),

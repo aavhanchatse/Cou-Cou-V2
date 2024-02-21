@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
@@ -165,8 +166,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   Widget _bottomNav() {
     return Positioned(
       bottom: 4.w,
-      left: 12.w,
-      right: 12.w,
+      left: 15.w,
+      right: 15.w,
       child: Stack(
         children: [
           Container(
@@ -214,14 +215,21 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
             description: "Start adding posts from here",
             disableDefaultTargetGestures: false,
             onBarrierClick: () => debugPrint('Barrier clicked'),
-            child: FloatingActionButton(
-              onPressed: () async {
+            child: InkWell(
+              onTap: () async {
                 if (userController.userData.value.username != null &&
                     userController.userData.value.username!.isNotEmpty) {
                   await analytics.logEvent(name: "post_upload");
 
                   final ps = await PhotoManager.requestPermissionExtend();
                   if (ps.isAuth || ps.hasAccess) {
+                    final PostController postController =
+                        Get.find<PostController>();
+
+                    postController.unselectImages();
+                    postController.unselectMusic();
+                    postController.unselectVideo();
+
                     context.push(SelectImageScreen2.routeName);
                   } else {
                     return;
@@ -230,12 +238,12 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                   context.push(CompleteDetailsScreen.routeName);
                 }
               },
-              backgroundColor: Constants.primaryColor,
               child: Container(
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                  boxShadow: StyleUtil.uploadButtonShadow(),
                   gradient: LinearGradient(
                     colors: [
                       Constants.yellowGradient1,
@@ -290,6 +298,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
               child: const Center(
                   child: Icon(
                 Icons.notifications_none_outlined,
+                size: 30,
               )),
             ),
             Text(
@@ -330,8 +339,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                   : null,
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
               child: SizedBox(
-                height: 25,
-                width: 25,
+                height: 30,
+                width: 30,
                 child: DefaultPicProvider.getCircularUserProfilePic(
                   profilePic: userController.userData.value.imageUrl,
                   userName:

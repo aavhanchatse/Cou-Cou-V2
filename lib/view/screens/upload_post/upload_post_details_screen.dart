@@ -10,13 +10,11 @@ import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/models/super_response.dart';
 import 'package:coucou_v2/repo/post_repo.dart';
 import 'package:coucou_v2/utils/address_search.dart';
-import 'package:coucou_v2/utils/common_utils.dart';
 import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/gesturedetector_util.dart';
 import 'package:coucou_v2/utils/internet_util.dart';
 import 'package:coucou_v2/utils/location_util.dart';
 import 'package:coucou_v2/utils/place_service%20copy.dart';
-import 'package:coucou_v2/utils/s3_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/dialogs/post_uploaded_success_dialog.dart';
@@ -410,35 +408,35 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     }
   }
 
-  Future<String?>? _uploadFile(String path, String ext) async {
-    debugPrint("path: $path");
-    debugPrint("ext: $ext");
+  // Future<String?>? _uploadFile(String path, String ext) async {
+  //   debugPrint("path: $path");
+  //   debugPrint("ext: $ext");
 
-    final tempFilePath = await getTempImageFilePath(ext);
+  //   final tempFilePath = await getTempImageFilePath(ext);
 
-    final File? compressedImage = await controller.testCompressAndGetFile(
-      File(path),
-      tempFilePath,
-    );
+  //   final File? compressedImage = await controller.testCompressAndGetFile(
+  //     File(path),
+  //     tempFilePath,
+  //   );
 
-    if (compressedImage != null) {
-      final currentTimeMillisecond =
-          DateTime.now().millisecondsSinceEpoch.toString();
+  //   if (compressedImage != null) {
+  //     final currentTimeMillisecond =
+  //         DateTime.now().millisecondsSinceEpoch.toString();
 
-      final userId = userController.userData.value.id!;
+  //     final userId = userController.userData.value.id!;
 
-      var filePath =
-          'Post_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond$ext';
+  //     var filePath =
+  //         'Post_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond$ext';
 
-      final downloadUrl =
-          await S3Util.uploadFileToAws(File(compressedImage.path), filePath);
+  //     final downloadUrl =
+  //         await S3Util.uploadFileToAws(File(compressedImage.path), filePath);
 
-      debugPrint('downloadUrl: $downloadUrl');
+  //     debugPrint('downloadUrl: $downloadUrl');
 
-      return downloadUrl!;
-    }
-    return null;
-  }
+  //     return downloadUrl!;
+  //   }
+  //   return null;
+  // }
 
   // Future<File?> testCompressAndGetFile(File file, String targetPath) async {
   //   var result = await FlutterImageCompress.compressAndGetFile(
@@ -499,7 +497,7 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
             payload['isVideo'] = true;
             payload['videoUrl'] = controller.videoFilePath.value;
           } else {
-            final list = await _getImageUrlList();
+            final list = await controller.getImageUrlList();
             payload['imagesMultiple'] = list;
           }
 
@@ -578,29 +576,29 @@ class _UploadPostDetailsScreenState extends State<UploadPostDetailsScreen> {
     }
   }
 
-  Future<List<String>> _getImageUrlList() async {
-    List<String> urlList = [];
+  // Future<List<String>> _getImageUrlList() async {
+  //   List<String> urlList = [];
 
-    for (var element in controller.filesSelected) {
-      String ext;
+  //   for (var element in controller.filesSelected) {
+  //     String ext;
 
-      if (element.filePath.endsWith('.jpg') ||
-          element.filePath.endsWith('.jpeg')) {
-        ext = ".jpg";
-      } else {
-        ext = ".png";
-      }
+  //     if (element.filePath.endsWith('.jpg') ||
+  //         element.filePath.endsWith('.jpeg')) {
+  //       ext = ".jpg";
+  //     } else {
+  //       ext = ".png";
+  //     }
 
-      final url = await _uploadFile(element.filePath, ext);
+  //     final url = await _uploadFile(element.filePath, ext);
 
-      if (url != null) {
-        urlList.add(url);
-      }
-    }
-    debugPrint("urlList: $urlList");
+  //     if (url != null) {
+  //       urlList.add(url);
+  //     }
+  //   }
+  //   debugPrint("urlList: $urlList");
 
-    return urlList;
-  }
+  //   return urlList;
+  // }
 
   String _getVideoUrl() {
     return controller.videoFilePath.value;

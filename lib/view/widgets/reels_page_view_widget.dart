@@ -11,7 +11,9 @@ import 'package:coucou_v2/utils/image_utility.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/challenge/challenge_details_screen.dart';
 import 'package:coucou_v2/view/screens/comment/comment_screen.dart';
+import 'package:coucou_v2/view/screens/profile/complete_details_screen.dart';
 import 'package:coucou_v2/view/screens/profile/user_profile_screen.dart';
+import 'package:coucou_v2/view/widgets/heart_animation_widget.dart';
 import 'package:coucou_v2/view/widgets/in_view_video_player_cou_cou.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +31,10 @@ class ReelsPageViewWidget extends StatefulWidget {
 
 class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
   PostData? post;
+  bool isHeartAnimating = false;
+  int currentIndex = 0;
+
+  final userController = Get.find<UserController>();
 
   // void getPostData() async {
   //   post = widget.item;
@@ -65,16 +71,54 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
               color: Constants.primaryColor,
             ),
           )
-        : SizedBox(
-            // height: 100.h,
-            // width: 100.w,
-            child: Stack(
-              children: [
-                _contentImage(),
-                _buttons(context),
-                _descriptionWidget(),
-                _headerWidget(),
-              ],
+        : GestureDetector(
+            onDoubleTap: () {
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                isHeartAnimating = true;
+                setState(() {});
+
+                likePost();
+              } else {
+                context.push(CompleteDetailsScreen.routeName);
+              }
+            },
+            child: SizedBox(
+              // height: 100.h,
+              // width: 100.w,
+              child: Stack(
+                children: [
+                  _contentImage(),
+                  _buttons(context),
+                  _descriptionWidget(),
+                  _headerWidget(),
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: isHeartAnimating ? 1 : 0,
+                      child: HeartAnimationWidget(
+                        isAnimating: isHeartAnimating,
+                        duration: const Duration(milliseconds: 700),
+                        onEnd: () {
+                          isHeartAnimating = false;
+                          setState(() {});
+                        },
+                        // child: Icon(
+                        //   Icons.favorite,
+                        //   color: Constants.white,
+                        //   size: 100,),
+                        child: Container(
+                          padding: EdgeInsets.all(30.w),
+                          height: 10.w,
+                          width: 10.w,
+                          child: Image.asset(
+                            "assets/icons/cookie_selected.png",
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           );
   }
@@ -202,6 +246,10 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
         disableCenter: true,
         initialPage: 0,
         enableInfiniteScroll: false,
+        onPageChanged: (index, reason) {
+          currentIndex = index;
+          setState(() {});
+        },
       ),
     );
   }
@@ -252,14 +300,29 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
           ),
           SizedBox(height: 2.w),
           InkWell(
-            onTap: () {
-              context.push(CommentScreen.routeName, extra: post);
+            onTap: () async {
+              // context.push(CommentScreen.routeName, extra: post);
+              final PostData? data =
+                  await context.push(CommentScreen.routeName, extra: post);
+
+              if (data != null) {
+                post = data;
+                setState(() {});
+              }
             },
             child: Column(
               children: [
-                Image.asset(
-                  "assets/icons/comment2.png",
-                  height: 6.w,
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Constants.white,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Image.asset(
+                    "assets/icons/comment2.png",
+                    height: 6.w,
+                    color: Constants.black,
+                  ),
                 ),
                 SizedBox(height: 1.w),
                 Text(
@@ -276,12 +339,24 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
             onTap: () async {
               await analytics.logEvent(name: "share_post");
 
-              shareImageWithText(
-                  post?.challengeVideo ?? "", post?.deepLinkUrl ?? "");
+              String imageUrl = post!.imagesMultiple != null &&
+                      post!.imagesMultiple!.isNotEmpty
+                  ? post!.imagesMultiple![currentIndex]
+                  : post!.challengeVideo ?? "";
+
+              shareImageWithText(imageUrl ?? "", post?.deepLinkUrl ?? "");
             },
-            child: Image.asset(
-              "assets/icons/share2.png",
-              height: 6.w,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Constants.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Image.asset(
+                "assets/icons/share2.png",
+                height: 6.w,
+                color: Constants.black,
+              ),
             ),
           ),
         ],
@@ -354,8 +429,6 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
     // }
 
     // setState(() {});
-
-    final userController = Get.find<UserController>();
 
     var payLoad = {
       "postOwnerId": post?.userSingleData!.id!,

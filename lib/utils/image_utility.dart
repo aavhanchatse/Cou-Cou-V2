@@ -61,7 +61,7 @@ class ImageUtil {
     final currentTimeMillisecond =
         DateTime.now().millisecondsSinceEpoch.toString();
     File file = File(
-        '$dir/${currentTimeMillisecond.substring(currentTimeMillisecond.length - 6)}_image.png');
+        '$dir/${currentTimeMillisecond.substring(currentTimeMillisecond.length - 6)}_image.webp');
     await file.writeAsBytes(imageBytes);
     return file;
   }

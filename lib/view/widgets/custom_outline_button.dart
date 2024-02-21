@@ -29,6 +29,7 @@ class CustomOutlineButton extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
+            fontFamily: "Inika",
           ),
         ),
       ),

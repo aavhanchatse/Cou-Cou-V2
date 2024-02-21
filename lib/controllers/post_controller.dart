@@ -24,6 +24,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class PostController extends GetxController {
@@ -64,7 +65,8 @@ class PostController extends GetxController {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
-      quality: quality ?? 80,
+      quality: quality ?? 60,
+      format: CompressFormat.webp,
     );
 
     if (result != null) {
@@ -82,14 +84,14 @@ class PostController extends GetxController {
   }
 
   Future<String?> getImageThumbnailUrl() async {
-    String ext;
+    String ext = ".webp";
 
-    if (thumbnailFilePath.value.endsWith('.jpg') ||
-        thumbnailFilePath.value.endsWith('.jpeg')) {
-      ext = ".jpg";
-    } else {
-      ext = ".png";
-    }
+    // if (thumbnailFilePath.value.endsWith('.jpg') ||
+    //     thumbnailFilePath.value.endsWith('.jpeg')) {
+    //   ext = ".jpg";
+    // } else {
+    //   ext = ".png";
+    // }
 
     final targetPath = await getTempImageFilePath(ext);
 
@@ -105,6 +107,25 @@ class PostController extends GetxController {
       final String downloadUrl = await uploadToAws(compressedImage.path, ext);
 
       debugPrint("thumbnail url: $downloadUrl");
+
+      return downloadUrl;
+    }
+    return null;
+  }
+
+  Future<String?>? uploadFile(String path, String ext) async {
+    debugPrint("path: $path");
+    debugPrint("ext: $ext");
+
+    final tempFilePath = await getTempImageFilePath(ext);
+
+    final File? compressedImage = await testCompressAndGetFile(
+      File(path),
+      tempFilePath,
+    );
+
+    if (compressedImage != null) {
+      final String downloadUrl = await uploadToAws(compressedImage.path, ext);
 
       return downloadUrl;
     }
@@ -479,5 +500,43 @@ class PostController extends GetxController {
             context: context);
       }
     }
+  }
+
+  Future<List<String>> getImageUrlList() async {
+    List<String> urlList = [];
+
+    for (var element in filesSelected) {
+      String ext = ".webp";
+
+      // if (element.filePath.endsWith('.jpg') ||
+      //     element.filePath.endsWith('.jpeg')) {
+      //   ext = ".jpg";
+      // } else {
+      //   ext = ".png";
+      // }
+
+      final url = await uploadFile(element.filePath, ext);
+
+      if (url != null) {
+        urlList.add(url);
+      }
+    }
+    debugPrint("urlList: $urlList");
+
+    return urlList;
+  }
+
+  Future<File?> compressVideo(String path) async {
+    MediaInfo? mediaInfo = await VideoCompress.compressVideo(
+      path,
+      quality: VideoQuality.DefaultQuality,
+      deleteOrigin: false, // It's false by default
+    );
+
+    if (mediaInfo != null) {
+      return mediaInfo.file;
+    }
+
+    return null;
   }
 }

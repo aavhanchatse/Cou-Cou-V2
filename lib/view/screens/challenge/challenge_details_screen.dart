@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/navbar_controller.dart';
+import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -104,109 +106,192 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Stack(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 8.w, bottom: 4.w),
-            height: 15.w,
-            width: 40.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(500),
-              color: Constants.white,
-              boxShadow: StyleUtil.cardShadow(),
-            ),
-          ),
-          _uploadPostButton(),
-        ],
-      ),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Constants.white,
-        leading: IconButton(
-          onPressed: () async {
-            await analytics.logEvent(name: "challenge_details_back_button");
+      floatingActionButton: _fab(),
+      appBar: _appBar(),
+      body: _body(),
+    );
+  }
 
-            final navbarController = Get.find<NavbarController>();
-            navbarController.currentIndex.value = 1;
-            context.go(NavBar.routeName);
+  Widget _body() {
+    return LiquidPullToRefresh(
+      onRefresh: _onRefresh,
+      backgroundColor: Constants.primaryColor,
+      showChildOpacityTransition: false,
+      color: Constants.secondaryColor.withOpacity(0.2),
+      child: InViewNotifierList(
+        controller: _scrollController,
+        shrinkWrap: true,
+        // physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        initialInViewIds: const ['0'],
+        isInViewPortCondition:
+            (double deltaTop, double deltaBottom, double viewPortDimension) {
+          return deltaTop < (0.5 * viewPortDimension) &&
+              deltaBottom > (0.5 * viewPortDimension);
+        },
+        itemCount: mainPost.isEmpty ? 2 : mainPost.length + 2,
+        builder: (BuildContext context, int index) {
+          if (index == 0) {
+            return _banner();
+          }
+          if (index == 1) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 4.w),
+              child: _latestPostWidget(),
+            );
+          }
+
+          final item = mainPost[index - 2];
+
+          return mainPost.isEmpty ? const SizedBox() : _postItem(index, item);
+        },
+      ),
+    );
+  }
+
+  Widget _postItem(int index, PostData item) {
+    return InViewNotifierWidget(
+      id: '$index',
+      builder: (
+        BuildContext context,
+        bool isInView,
+        Widget? child,
+      ) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 0.5.w),
+          child: PostCard(
+            isInView: isInView,
+            postData: item,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _bodyWithoutInView() {
+    return LiquidPullToRefresh(
+      onRefresh: _onRefresh,
+      backgroundColor: Constants.primaryColor,
+      showChildOpacityTransition: false,
+      color: Constants.secondaryColor.withOpacity(0.2),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            _banner(),
+            _latestPostWidget(),
+            SizedBox(height: 4.w),
+            if (mainPost.isNotEmpty)
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                // padding: EdgeInsets.symmetric(horizontal: 4.w),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final item = mainPost[index];
+
+                  return PostCard(postData: item);
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 0.5.w);
+                },
+                itemCount: mainPost.length,
+              )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _fab() {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 8.w, bottom: 4.w),
+          height: 15.w,
+          width: 40.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(500),
+            color: Constants.white,
+            boxShadow: StyleUtil.cardShadow(),
+          ),
+        ),
+        _uploadPostButton(),
+      ],
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Constants.white,
+      leading: IconButton(
+        onPressed: () async {
+          await analytics.logEvent(name: "challenge_details_back_button");
+
+          final navbarController = Get.find<NavbarController>();
+          navbarController.currentIndex.value = 1;
+          context.go(NavBar.routeName);
+        },
+        icon: ImageIcon(
+          const AssetImage("assets/icons/back_arrow.png"),
+          color: Constants.black,
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            context.push(SearchScreen.routeName);
           },
-          icon: ImageIcon(
-            const AssetImage("assets/icons/back_arrow.png"),
+          icon: Icon(
+            Icons.search,
             color: Constants.black,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push(SearchScreen.routeName);
-            },
-            icon: Icon(
-              Icons.search,
-              color: Constants.black,
-            ),
-          ),
-        ],
-      ),
-      body: LiquidPullToRefresh(
-        onRefresh: _onRefresh,
-        backgroundColor: Constants.primaryColor,
-        showChildOpacityTransition: false,
-        color: Constants.secondaryColor.withOpacity(0.2),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
+      ],
+    );
+  }
+
+  Widget _banner() {
+    return (bannerLoading == false && challengeData != null)
+        ? Column(
             children: [
-              if (bannerLoading == false && challengeData != null) ...[
-                _infoVideosCarousel(context),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        context.push(AllChallengesScreen.routeName);
-                      },
+              _infoVideosCarousel(context),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      await analytics.logEvent(
+                          name: "all_challenge_button_clicked");
+
+                      context.push(AllChallengesScreen.routeName);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 4.w, top: 2.w),
                       child: Text(
                         "view_challenge".tr,
                         style: TextStyle(
                           color: Constants.black,
+                          height: 1,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-              _latestPostWidget(),
-              SizedBox(height: 4.w),
-              if (mainPost.isNotEmpty)
-                ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  // padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final item = mainPost[index];
-
-                    return PostCard(postData: item);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 6.w);
-                  },
-                  itemCount: mainPost.length,
-                )
+                  ),
+                ],
+              ),
             ],
-          ),
-        ),
-      ),
-    );
+          )
+        : const SizedBox();
   }
 
   Widget _uploadPostButton() {
     return Positioned.fill(
       child: Column(
         children: [
-          FloatingActionButton(
-            onPressed: () async {
+          InkWell(
+            onTap: () async {
               final userController = Get.find<UserController>();
 
               if (userController.userData.value.username != null &&
@@ -215,6 +300,13 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
 
                 final ps = await PhotoManager.requestPermissionExtend();
                 if (ps.isAuth || ps.hasAccess) {
+                  final PostController postController =
+                      Get.find<PostController>();
+
+                  postController.unselectImages();
+                  postController.unselectMusic();
+                  postController.unselectVideo();
+
                   context.push(SelectImageScreen2.routeName);
                 } else {
                   return;
@@ -223,12 +315,12 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                 context.push(CompleteDetailsScreen.routeName);
               }
             },
-            backgroundColor: Constants.primaryColor,
             child: Container(
               width: 60,
               height: 60,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                boxShadow: StyleUtil.uploadButtonShadow(),
                 gradient: LinearGradient(
                   colors: [
                     Constants.yellowGradient1,
@@ -274,6 +366,7 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
                             color: Constants.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
+                            height: 1,
                           ),
                         ),
                       ],

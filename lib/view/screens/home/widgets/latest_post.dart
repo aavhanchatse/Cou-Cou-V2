@@ -33,7 +33,7 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
           : Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -41,6 +41,7 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                         "latest_post".tr,
                         style: TextStyle(
                           color: Constants.black,
+                          height: 1,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -67,7 +68,8 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                                   InkWell(
                                     onTap: () async {
                                       await analytics.logEvent(
-                                          name: "latest_post_clicked");
+                                        name: "latest_post_clicked",
+                                      );
 
                                       Navigator.push(
                                         context,

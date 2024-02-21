@@ -315,7 +315,7 @@ class PostRepo {
     }
   }
 
-  Future<SuperResponse> addComment(Map payload) async {
+  Future<SuperResponse<PostData>> addComment(Map payload) async {
     final token = StorageManager().getToken();
     debugPrint('token: $token');
 
@@ -326,10 +326,12 @@ class PostRepo {
 
     Map<String, dynamic> map = jsonDecode(response.body);
 
-    return SuperResponse.fromJson(map);
+    final data = map["data"][0];
+
+    return SuperResponse.fromJson(map, PostData.fromJson(data));
   }
 
-  Future<SuperResponse> deleteComment(String id) async {
+  Future<SuperResponse<PostData>> deleteComment(String id) async {
     final token = StorageManager().getToken();
     debugPrint('token: $token');
 
@@ -343,7 +345,7 @@ class PostRepo {
     return SuperResponse.fromJson(map);
   }
 
-  Future<SuperResponse> deleteSubComment(String id) async {
+  Future<SuperResponse<PostData>> deleteSubComment(String id) async {
     final token = StorageManager().getToken();
     debugPrint('token: $token');
 
@@ -357,7 +359,7 @@ class PostRepo {
     return SuperResponse.fromJson(map);
   }
 
-  Future<SuperResponse> addSubComment(Map payload) async {
+  Future<SuperResponse<PostData>> addSubComment(Map payload) async {
     final token = StorageManager().getToken();
     debugPrint('token: $token');
 
@@ -368,7 +370,9 @@ class PostRepo {
 
     Map<String, dynamic> map = jsonDecode(response.body);
 
-    return SuperResponse.fromJson(map);
+    final data = map["data"][0];
+
+    return SuperResponse.fromJson(map, PostData.fromJson(data));
   }
 
   Future<SuperResponse> deletePost(Map payLoad) async {

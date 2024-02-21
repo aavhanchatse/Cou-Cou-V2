@@ -215,16 +215,18 @@ void handleDeepLink(BuildContext context) {
       UserData? userData = box.getUserData();
 
       if (userData != null) {
-        Get.offAll(
-          () => const NavBar(),
-          // transition: Transition.fade,
-          duration: const Duration(milliseconds: 300),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NavBar(),
+          ),
         );
       } else {
-        Get.offAll(
-          () => const LoginScreen(),
-          // transition: Transition.fade,
-          duration: const Duration(milliseconds: 300),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
         );
       }
     }

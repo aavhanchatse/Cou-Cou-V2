@@ -36,6 +36,7 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Constants.white,
+        centerTitle: true,
         title: Text(
           "all_challenges".tr,
           style: TextStyle(

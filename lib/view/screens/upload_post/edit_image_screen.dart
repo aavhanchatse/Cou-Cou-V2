@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/post_controller.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/utils/style_utils.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
 import 'package:coucou_v2/view/widgets/edit_image_video_player.dart';
 import 'package:flutter/material.dart';
@@ -142,8 +143,11 @@ class _EditImageScreenState extends State<EditImageScreen> {
           // ),
 
           _pickAudioButton(),
+          SizedBox(height: 3.w),
           _recordAudioButton(),
+          SizedBox(height: 3.w),
           _cropImageButton(),
+          SizedBox(height: 3.w),
           _filterButton(),
         ],
       ),
@@ -151,47 +155,83 @@ class _EditImageScreenState extends State<EditImageScreen> {
   }
 
   Widget _filterButton() {
-    return IconButton(
-      onPressed: () async {
+    return InkWell(
+      onTap: () async {
         await controller.filterFunction(context);
         setState(() {});
       },
-      icon: const ImageIcon(
-        AssetImage("assets/icons/filters.png"),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Constants.white,
+          boxShadow: StyleUtil.buttonshadow(),
+        ),
+        child: const ImageIcon(
+          AssetImage("assets/icons/filters.png"),
+          size: 20,
+        ),
       ),
     );
   }
 
   Widget _cropImageButton() {
-    return IconButton(
-      onPressed: () async {
+    return InkWell(
+      onTap: () async {
         await controller.cropImageFunction(context);
         setState(() {});
       },
-      icon: const ImageIcon(
-        AssetImage("assets/icons/crop.png"),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Constants.white,
+          boxShadow: StyleUtil.buttonshadow(),
+        ),
+        child: const ImageIcon(
+          AssetImage("assets/icons/crop.png"),
+          size: 20,
+        ),
       ),
     );
   }
 
   Widget _recordAudioButton() {
-    return IconButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         controller.recordAudio(context);
       },
-      icon: const ImageIcon(
-        AssetImage("assets/icons/mic.png"),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Constants.white,
+          boxShadow: StyleUtil.buttonshadow(),
+        ),
+        child: const ImageIcon(
+          AssetImage("assets/icons/mic.png"),
+          size: 20,
+        ),
       ),
     );
   }
 
   Widget _pickAudioButton() {
-    return IconButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         controller.selectAudioFromDevice(context);
       },
-      icon: const ImageIcon(
-        AssetImage("assets/icons/music.png"),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Constants.white,
+          boxShadow: StyleUtil.buttonshadow(),
+        ),
+        child: const ImageIcon(
+          AssetImage("assets/icons/music.png"),
+          size: 20,
+        ),
       ),
     );
   }

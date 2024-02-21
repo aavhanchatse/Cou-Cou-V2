@@ -16,11 +16,15 @@ class DefaultTextField extends StatelessWidget {
   final int? maxLines;
   final TextInputType? keyboardType;
   final int? maxLength;
+  final int? minLines;
   final TextCapitalization? textCapitalization;
   final Function? validator;
   final Function? onTap;
   final TextEditingController? textEditingController;
   final List<TextInputFormatter>? textInputFormatter;
+  final bool? autofocus;
+  final TextInputAction? textInputAction;
+  final Color? cursorColor;
 
   const DefaultTextField({
     Key? key,
@@ -40,6 +44,10 @@ class DefaultTextField extends StatelessWidget {
     this.validator,
     this.onTap,
     this.textInputFormatter,
+    this.autofocus = false,
+    this.textInputAction,
+    this.cursorColor,
+    this.minLines,
   }) : super(key: key);
 
   @override
@@ -48,6 +56,9 @@ class DefaultTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          minLines: minLines,
+          textInputAction: textInputAction,
+          autofocus: autofocus ?? false,
           controller: textEditingController,
           textCapitalization: textCapitalization ?? TextCapitalization.none,
           inputFormatters: textInputFormatter,
@@ -74,7 +85,7 @@ class DefaultTextField extends StatelessWidget {
               : () {
                   onTap!();
                 },
-          cursorColor: Constants.black,
+          cursorColor: cursorColor ?? Constants.black,
           // textInputAction: TextInputAction.,
           obscureText: obscureText,
           enabled: enabled,

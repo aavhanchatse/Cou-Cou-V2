@@ -47,7 +47,8 @@ class Constants {
   static const String splashGif = "assets/lottie/splash.json";
 
   //devo
-  static const baseURL = "http://13.127.182.122:9955/";
+  static const baseURL = "http://13.127.182.122:9956/";
+  // static const baseURL = "http://13.127.182.122:9955/";
   // static const baseURL = "https://6efc-103-68-187-186.in.ngrok.io/";
   static const ENVIRONMENT = 'devo';
 

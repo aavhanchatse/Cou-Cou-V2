@@ -3,7 +3,6 @@ import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class PrizeImageViewDialog extends StatelessWidget {
   final RewardsPrize prize;
@@ -19,14 +18,16 @@ class PrizeImageViewDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Stack(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 60),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               // color: Constants.green1,
             ),
-            height: 20.h,
+            height: 30.h,
             // width: 20.h,
             child: Center(
               child: ClipRRect(
@@ -47,42 +48,53 @@ class PrizeImageViewDialog extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: IconButton(
-              onPressed: () {
-                context.pop();
-              },
-              icon: Icon(
-                Icons.cancel,
-                color: Constants.white,
+          // Positioned(
+          //   right: 0,
+          //   top: 0,
+          //   child: IconButton(
+          //     onPressed: () {
+          //       context.pop();
+          //     },
+          //     icon: Icon(
+          //       Icons.cancel,
+          //       color: Constants.white,
+          //     ),
+          //   ),
+          // ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Constants.primaryGrey2,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 6,
-            left: 6,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  challengeData.challengeName ?? "",
-                  style: TextStyle(
-                    color: Constants.white,
-                  ),
-                ),
-                Text(
-                  "Prize: ${prize.price ?? ""}",
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Constants.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      challengeData.challengeName ?? "",
+                      style: TextStyle(
+                        color: Constants.black,
+                      ),
+                    ),
+                    Text(
+                      "Prize: ${prize.price ?? ""}",
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: Constants.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
