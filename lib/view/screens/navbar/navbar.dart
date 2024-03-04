@@ -47,7 +47,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
 
   DateTime? currentBackPressTime;
 
-  Future<bool> _onWillPop() {
+  bool _onWillPop() {
     debugPrint('inside will pop');
     DateTime now = DateTime.now();
     navbarController.currentIndex.value = 1;
@@ -56,10 +56,10 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       Fluttertoast.showToast(msg: 'Press again to exit');
-      return Future.value(false);
+      return (false);
     }
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-    return Future.value(true);
+    return (true);
   }
 
   @override
@@ -138,13 +138,25 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: Obx(
         () {
-          return WillPopScope(
-            onWillPop: () {
-              if (navbarController.currentIndex == 1) {
-                return _onWillPop();
+          return PopScope(
+            // onWillPop: () {
+            //   if (navbarController.currentIndex == 1) {
+            //     return _onWillPop();
+            //   } else {
+            //     navbarController.currentIndex.value = 1;
+            //     return Future.value(false);
+            //   }
+            // },
+            canPop: false,
+            onPopInvoked: (didPop) {
+              if (navbarController.currentIndex.value == 1) {
+                final backNavigationAllowed = _onWillPop();
+
+                if (backNavigationAllowed) {
+                  if (mounted) Navigator.of(context).pop();
+                }
               } else {
                 navbarController.currentIndex.value = 1;
-                return Future.value(false);
               }
             },
             child: Stack(
@@ -210,55 +222,56 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     return Positioned.fill(
       child: Column(
         children: [
-          Showcase(
-            key: firstShowCaseKey,
-            description: "Start adding posts from here",
-            disableDefaultTargetGestures: false,
-            onBarrierClick: () => debugPrint('Barrier clicked'),
-            child: InkWell(
-              onTap: () async {
-                if (userController.userData.value.username != null &&
-                    userController.userData.value.username!.isNotEmpty) {
-                  await analytics.logEvent(name: "post_upload");
+          // Showcase(
+          //   key: firstShowCaseKey,
+          //   description: "Start adding posts from here",
+          //   disableDefaultTargetGestures: false,
+          //   onBarrierClick: () => debugPrint('Barrier clicked'),
+          //   child:
+          InkWell(
+            onTap: () async {
+              if (userController.userData.value.username != null &&
+                  userController.userData.value.username!.isNotEmpty) {
+                await analytics.logEvent(name: "post_upload");
 
-                  final ps = await PhotoManager.requestPermissionExtend();
-                  if (ps.isAuth || ps.hasAccess) {
-                    final PostController postController =
-                        Get.find<PostController>();
+                final ps = await PhotoManager.requestPermissionExtend();
+                if (ps.isAuth || ps.hasAccess) {
+                  final PostController postController =
+                      Get.find<PostController>();
 
-                    postController.unselectImages();
-                    postController.unselectMusic();
-                    postController.unselectVideo();
+                  postController.unselectImages();
+                  postController.unselectMusic();
+                  postController.unselectVideo();
 
-                    context.push(SelectImageScreen2.routeName);
-                  } else {
-                    return;
-                  }
+                  context.push(SelectImageScreen2.routeName);
                 } else {
-                  context.push(CompleteDetailsScreen.routeName);
+                  return;
                 }
-              },
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: StyleUtil.uploadButtonShadow(),
-                  gradient: LinearGradient(
-                    colors: [
-                      Constants.yellowGradient1,
-                      Constants.yellowGradient2,
-                    ],
-                  ),
+              } else {
+                context.push(CompleteDetailsScreen.routeName);
+              }
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: StyleUtil.uploadButtonShadow(),
+                gradient: LinearGradient(
+                  colors: [
+                    Constants.yellowGradient1,
+                    Constants.yellowGradient2,
+                  ],
                 ),
-                child: Icon(
-                  Icons.add,
-                  color: Constants.black,
-                  size: 40,
-                ),
+              ),
+              child: Icon(
+                Icons.add,
+                color: Constants.black,
+                size: 40,
               ),
             ),
           ),
+          // ),
           Text(
             "participate_now".tr,
             style: TextStyle(
@@ -273,93 +286,97 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   }
 
   Widget _notificationButton() {
-    return Showcase(
-      key: thirdShowCaseKey,
-      description: "Tap to see the latest activity",
-      onBarrierClick: () => debugPrint('Barrier clicked'),
-      child: InkWell(
-        onTap: () async {
-          await analytics.logEvent(name: "notifications");
+    return
+        // Showcase(
+        //   key: thirdShowCaseKey,
+        //   description: "Tap to see the latest activity",
+        //   onBarrierClick: () => debugPrint('Barrier clicked'),
+        //   child:
+        InkWell(
+      onTap: () async {
+        await analytics.logEvent(name: "notifications");
 
-          navbarController.currentIndex.value = 2;
-          setState(() {});
-        },
-        child: Column(
-          children: [
-            Container(
-              decoration: navbarController.currentIndex.value == 2
-                  ? BoxDecoration(
-                      color: Constants.primaryGrey2,
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: StyleUtil.uploadButtonShadow(),
-                    )
-                  : null,
-              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
-              child: const Center(
-                  child: Icon(
-                Icons.notifications_none_outlined,
-                size: 30,
-              )),
+        navbarController.currentIndex.value = 2;
+        setState(() {});
+      },
+      child: Column(
+        children: [
+          Container(
+            decoration: navbarController.currentIndex.value == 2
+                ? BoxDecoration(
+                    color: Constants.primaryGrey2,
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: StyleUtil.uploadButtonShadow(),
+                  )
+                : null,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+            child: const Center(
+                child: Icon(
+              Icons.notifications_none_outlined,
+              size: 30,
+            )),
+          ),
+          Text(
+            "notifications".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
-            Text(
-              "notifications".tr,
-              style: TextStyle(
-                color: Constants.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+    // );
   }
 
   Widget _profileButton() {
-    return Showcase(
-      key: secondShowCaseKey,
-      description: "Tap to see the profile",
-      onBarrierClick: () => debugPrint('Barrier clicked'),
-      child: InkWell(
-        onTap: () async {
-          await analytics.logEvent(name: "self_profile_tab");
+    return
+        // Showcase(
+        //   key: secondShowCaseKey,
+        //   description: "Tap to see the profile",
+        //   onBarrierClick: () => debugPrint('Barrier clicked'),
+        //   child:
+        InkWell(
+      onTap: () async {
+        await analytics.logEvent(name: "self_profile_tab");
 
-          navbarController.currentIndex.value = 0;
-          setState(() {});
-        },
-        child: Column(
-          children: [
-            Container(
-              decoration: navbarController.currentIndex.value == 0
-                  ? BoxDecoration(
-                      color: Constants.primaryGrey2,
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: StyleUtil.uploadButtonShadow(),
-                    )
-                  : null,
-              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
-              child: SizedBox(
-                height: 30,
-                width: 30,
-                child: DefaultPicProvider.getCircularUserProfilePic(
-                  profilePic: userController.userData.value.imageUrl,
-                  userName:
-                      "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
-                  size: 25,
-                ),
+        navbarController.currentIndex.value = 0;
+        setState(() {});
+      },
+      child: Column(
+        children: [
+          Container(
+            decoration: navbarController.currentIndex.value == 0
+                ? BoxDecoration(
+                    color: Constants.primaryGrey2,
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: StyleUtil.uploadButtonShadow(),
+                  )
+                : null,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.7.w),
+            child: SizedBox(
+              height: 30,
+              width: 30,
+              child: DefaultPicProvider.getCircularUserProfilePic(
+                profilePic: userController.userData.value.imageUrl,
+                userName:
+                    "${userController.userData.value.firstname} ${userController.userData.value.lastname}",
+                size: 25,
               ),
             ),
-            Text(
-              "profile".tr,
-              style: TextStyle(
-                color: Constants.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
+          ),
+          Text(
+            "profile".tr,
+            style: TextStyle(
+              color: Constants.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      // ),
     );
   }
 

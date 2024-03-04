@@ -1,3 +1,4 @@
+import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -38,8 +39,13 @@ class DeviceInfoUtil {
     late String deviceId;
 
     if (GetPlatform.isAndroid) {
-      final data = await DeviceInfoUtil.getAndroidDeviceInfo();
-      deviceId = data!.androidId!;
+      // final data = await DeviceInfoUtil.getAndroidDeviceInfo();
+      // deviceId = data!.!;
+      // deviceId = data!.androidId!;
+      const androidIdPlugin = AndroidId();
+
+      final String? androidId = await androidIdPlugin.getId();
+      deviceId = androidId ?? "";
     }
     if (GetPlatform.isIOS) {
       final data = await DeviceInfoUtil.getIosDeviceInfo();

@@ -261,29 +261,35 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> selectVideo(BuildContext context, AssetEntity asset) async {
+  Future<void> selectVideo1(BuildContext context, AssetEntity asset) async {
     final File? image = await asset.originFile;
     final bytes = await image?.readAsBytes();
 
     if (image != null && bytes != null) {
-      final controller = Get.find<PostController>();
-      final userController = Get.find<UserController>();
+      await selectVideo2(context, image);
+    }
+  }
 
-      final currentTimeMillisecond =
-          DateTime.now().millisecondsSinceEpoch.toString();
+  Future<void> selectVideo2(BuildContext context, File image,
+      [String? thumbnailPath]) async {
+    final userController = Get.find<UserController>();
 
-      final userId = userController.userData.value.id!;
+    final currentTimeMillisecond =
+        DateTime.now().millisecondsSinceEpoch.toString();
 
-      var filePath =
-          'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
+    final userId = userController.userData.value.id!;
 
-      ProgressDialog.showProgressDialog(context);
+    var filePath =
+        'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
 
-      final output = await S3Util.uploadFileToAws(image, filePath);
+    ProgressDialog.showProgressDialog(context);
 
-      if (output != null) {
-        context.pop();
+    final output = await S3Util.uploadFileToAws(image, filePath);
 
+    if (output != null) {
+      context.pop();
+
+      if (thumbnailPath == null) {
         final Uint8List? uint8list = await VideoThumbnail.thumbnailData(
           video: image.path,
           imageFormat: ImageFormat.JPEG,
@@ -306,6 +312,23 @@ class PostController extends GetxController {
 
           context.push(EditImageScreen.routeName, extra: true);
         }
+      } else {
+        File thFile = File(thumbnailPath);
+
+        final uint8list = await thFile.readAsBytes();
+
+        final File thumbnailFile =
+            await ImageUtil.saveImageToTempStorage(uint8list);
+
+        videoFilePath.value = output;
+        isVideo.value = true;
+        setImageThumbnail(thumbnailFile.path);
+        unselectImages();
+        unselectMusic();
+
+        await analytics.logEvent(name: "select_gallery_video");
+
+        context.push(EditImageScreen.routeName, extra: true);
       }
     }
   }

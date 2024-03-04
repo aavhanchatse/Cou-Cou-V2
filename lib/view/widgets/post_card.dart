@@ -148,7 +148,7 @@ class _PostCardState extends State<PostCard> {
 
   Widget _card() {
     return Container(
-      color: Constants.postCardBackground,
+      color: Constants.postCardBackground.withOpacity(0.3),
       padding: EdgeInsets.symmetric(vertical: 1.h),
       child: Column(
         // key: _key,

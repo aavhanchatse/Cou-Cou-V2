@@ -3,34 +3,45 @@ import 'package:flutter/material.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
-    scaffoldBackgroundColor: Constants.pageBackgroundLight,
-    primaryColor: Constants.primaryColor,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Constants.primaryColor,
-    ),
-    // iconTheme: IconThemeData(color: Constant.generalBlack),
-    textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Playfair Display',
-        ),
-    primaryTextTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Playfair Display',
-        ),
+      scaffoldBackgroundColor: Constants.pageBackgroundLight,
+      primaryColor: Constants.primaryColor,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: Constants.primaryColor,
+      ),
+      // iconTheme: IconThemeData(color: Constant.generalBlack),
+      textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Playfair Display',
+          ),
+      primaryTextTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'Playfair Display',
+          ),
+      dividerTheme: const DividerThemeData(
+        thickness: 0,
+      ),
+      dialogTheme: DialogTheme(
+        backgroundColor: Constants.white,
+        surfaceTintColor: Colors.transparent,
+      ),
+      dialogBackgroundColor: Constants.white,
+      appBarTheme: const AppBarTheme(
+        surfaceTintColor: Colors.transparent,
+      )
 
-    // textTheme: TextTheme(
-    //   bodyText1: TextStyle(color: Constant.textColor),
-    //   bodyText2: TextStyle(color: Constant.textColor),
-    // ),
-    // cardTheme: CardTheme(color: Constant.lightPrimaryColor),
-    // cardColor: Constant.generalBlack.withOpacity(0.7),
-    // backgroundColor: Constant.drawerRectangleCard,
-    // buttonColor: Constant.colorPrimary,
-    // canvasColor: Constant.generalWhite,
-    // secondaryHeaderColor: Constant.lightPrimaryColor,
-    // bannerTheme:
-    //     MaterialBannerThemeData(backgroundColor: Constant.drawerRectangleCard),
-    // dialogBackgroundColor: Constant.otpBoxFillLightColor,
-    // colorScheme: const ColorScheme.light(),
-  );
+      // textTheme: TextTheme(
+      //   bodyText1: TextStyle(color: Constant.textColor),
+      //   bodyText2: TextStyle(color: Constant.textColor),
+      // ),
+      // cardTheme: CardTheme(color: Constant.lightPrimaryColor),
+      // cardColor: Constant.generalBlack.withOpacity(0.7),
+      // backgroundColor: Constant.drawerRectangleCard,
+      // buttonColor: Constant.colorPrimary,
+      // canvasColor: Constant.generalWhite,
+      // secondaryHeaderColor: Constant.lightPrimaryColor,
+      // bannerTheme:
+      //     MaterialBannerThemeData(backgroundColor: Constant.drawerRectangleCard),
+      // dialogBackgroundColor: Constant.otpBoxFillLightColor,
+      // colorScheme: const ColorScheme.light(),
+      );
   static final dark = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: Constants.pageBackgroundLight,
     primaryColor: Constants.primaryColor,

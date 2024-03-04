@@ -65,6 +65,9 @@ void main() async {
 
   analytics.setAnalyticsCollectionEnabled(true);
 
+  await FlutterBranchSdk.init(
+      useTestKey: true, enableLogging: true, disableTracking: false);
+
   runApp(const MyApp());
 
   // handleDeepLink();
@@ -234,7 +237,7 @@ void handleDeepLink(BuildContext context) {
 }
 
 StreamSubscription<Map> streamSubscription =
-    FlutterBranchSdk.initSession().listen((data) {
+    FlutterBranchSdk.listSession().listen((data) {
   if (data.containsKey("+clicked_branch_link") &&
       data["+clicked_branch_link"] == true) {
     //Link clicked. Add logic to get link data and route user to correct screen

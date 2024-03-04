@@ -23,6 +23,7 @@ import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen.dart';
 import 'package:coucou_v2/view/screens/upload_post/select_image_screen_2.dart';
 import 'package:coucou_v2/view/screens/upload_post/upload_post_details_screen.dart';
+import 'package:coucou_v2/view/screens/upload_post/video_list_screen.dart';
 import 'package:coucou_v2/view/widgets/dismissible_page.dart';
 import 'package:coucou_v2/view/widgets/image_cropper_screen.dart';
 import 'package:flutter/material.dart';
@@ -217,6 +218,12 @@ class AppRouter {
         path: CompleteDetailsScreen.routeName,
         builder: (BuildContext context, GoRouterState state) {
           return const CompleteDetailsScreen();
+        },
+      ),
+      GoRoute(
+        path: VideoListScreen.routeName,
+        builder: (BuildContext context, GoRouterState state) {
+          return const VideoListScreen();
         },
       ),
     ],

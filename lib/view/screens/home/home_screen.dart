@@ -6,7 +6,6 @@ import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/screens/home/widgets/banner_widget.dart';
 import 'package:coucou_v2/view/screens/home/widgets/latest_post.dart';
 import 'package:coucou_v2/view/screens/home/widgets/timeline_widget.dart';
-import 'package:coucou_v2/view/screens/navbar/navbar.dart';
 import 'package:coucou_v2/view/screens/search/search_screen.dart';
 import 'package:coucou_v2/view/widgets/post_card.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:go_router/go_router.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -178,6 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0,
       backgroundColor: Constants.white,
       toolbarHeight: kToolbarHeight - 15,
+      // leading: const SizedBox(),
+      automaticallyImplyLeading: false,
       title: InkWell(
         onTap: () {
           _scrollController.jumpTo(10);
@@ -210,80 +210,81 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       actions: [
-        Showcase(
-          key: fourthShowCaseKey,
-          description: "Tap to search a profile or a post",
-          onBarrierClick: () => debugPrint('Barrier clicked'),
-          child: IconButton(
-            onPressed: () async {
-              await analytics.logEvent(name: "home_search_clicked");
+        // Showcase(
+        //   key: fourthShowCaseKey,
+        //   description: "Tap to search a profile or a post",
+        //   onBarrierClick: () => debugPrint('Barrier clicked'),
+        //   child:
+        IconButton(
+          onPressed: () async {
+            await analytics.logEvent(name: "home_search_clicked");
 
-              context.push(SearchScreen.routeName);
-            },
-            icon: Icon(
-              Icons.search,
-              color: Constants.black,
-              size: 32,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _customAppBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        InkWell(
-          onTap: () {
-            _scrollController.jumpTo(10);
+            context.push(SearchScreen.routeName);
           },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                "Cou Cou!",
-                style: TextStyle(
-                  color: Constants.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  fontFamily: "Inika",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Text(
-                  "participate_and_win".tr.toUpperCase(),
-                  style: TextStyle(
-                    color: Constants.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10,
-                    fontFamily: "Umba Soft",
-                  ),
-                ),
-              ),
-            ],
+          icon: Icon(
+            Icons.search,
+            color: Constants.black,
+            size: 32,
           ),
         ),
-        Showcase(
-          key: fourthShowCaseKey,
-          description: "Tap to search a profile or a post",
-          onBarrierClick: () => debugPrint('Barrier clicked'),
-          child: IconButton(
-            onPressed: () async {
-              await analytics.logEvent(name: "home_search_clicked");
-
-              context.push(SearchScreen.routeName);
-            },
-            icon: Icon(
-              Icons.search,
-              color: Constants.black,
-              size: 32,
-            ),
-          ),
-        ),
+        // ),
       ],
     );
   }
+
+  // Widget _customAppBar() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       InkWell(
+  //         onTap: () {
+  //           _scrollController.jumpTo(10);
+  //         },
+  //         child: Row(
+  //           crossAxisAlignment: CrossAxisAlignment.end,
+  //           children: [
+  //             Text(
+  //               "Cou Cou!",
+  //               style: TextStyle(
+  //                 color: Constants.black,
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 24,
+  //                 fontFamily: "Inika",
+  //               ),
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(bottom: 5),
+  //               child: Text(
+  //                 "participate_and_win".tr.toUpperCase(),
+  //                 style: TextStyle(
+  //                   color: Constants.black,
+  //                   fontWeight: FontWeight.w500,
+  //                   fontSize: 10,
+  //                   fontFamily: "Umba Soft",
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       Showcase(
+  //         key: fourthShowCaseKey,
+  //         description: "Tap to search a profile or a post",
+  //         onBarrierClick: () => debugPrint('Barrier clicked'),
+  //         child: IconButton(
+  //           onPressed: () async {
+  //             await analytics.logEvent(name: "home_search_clicked");
+
+  //             context.push(SearchScreen.routeName);
+  //           },
+  //           icon: Icon(
+  //             Icons.search,
+  //             color: Constants.black,
+  //             size: 32,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

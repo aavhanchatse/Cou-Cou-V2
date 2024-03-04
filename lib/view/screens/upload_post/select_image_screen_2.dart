@@ -8,6 +8,7 @@ import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
 import 'package:coucou_v2/view/bottomsheets/pick_image_or_video_bottomsheet.dart';
 import 'package:coucou_v2/view/screens/upload_post/edit_image_screen.dart';
+import 'package:coucou_v2/view/screens/upload_post/video_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -118,11 +119,39 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
                     mainAxisSpacing: 3.w,
                     crossAxisSpacing: 3.w,
                   ),
-                  itemCount: assets.length,
+                  itemCount: assets.length + 1,
                   shrinkWrap: true,
                   padding: EdgeInsets.all(4.w),
                   itemBuilder: (BuildContext context, int index) {
-                    return AssetThumbnail(asset: assets[index]);
+                    // return AssetEntityImage(
+                    //   assets[index],
+                    //   isOriginal: false, // Defaults to `true`.
+                    //   thumbnailSize:
+                    //       const ThumbnailSize.square(200), // Preferred value.
+                    //   thumbnailFormat:
+                    //       ThumbnailFormat.jpeg, // Defaults to `jpeg`.
+                    // );
+
+                    if (index == 0) {
+                      return InkWell(
+                        onTap: () {
+                          context.push(VideoListScreen.routeName);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Constants.primaryColor,
+                          ),
+                          child: Icon(
+                            Icons.video_camera_back_rounded,
+                            color: Constants.black,
+                            size: 40,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return AssetThumbnail(asset: assets[index - 1]);
 
                     // return InkWell(
                     //   onTap: () {
@@ -146,79 +175,6 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
                 ),
     );
   }
-
-  // void _getImageFromCamera() async {
-  //   final XFile? image = await ImagePicker().pickImage(
-  //     source: ImageSource.camera,
-  //     maxHeight: 1500,
-  //     maxWidth: 1500,
-  //   );
-
-  //   if (image != null) {
-  //     final bytes = await image.readAsBytes();
-
-  //     final controller = Get.find<PostController>();
-  //     controller.filePath.value = image.path;
-  //     controller.fileBytes.value = bytes;
-  //     controller.videoFilePath.value = "";
-  //     controller.musicName.value = "";
-
-  //     await analytics.logEvent(name: "upload_image_camera");
-
-  //     context.push(EditImageScreen.routeName, extra: false);
-  //   }
-  // }
-
-  // void _getVideoFromCamera() async {
-  //   final XFile? image = await ImagePicker().pickVideo(
-  //     source: ImageSource.camera,
-  //   );
-
-  //   if (image != null) {
-  //     final controller = Get.find<PostController>();
-  //     final userController = Get.find<UserController>();
-
-  //     final currentTimeMillisecond =
-  //         DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     final userId = userController.userData.value.id!;
-
-  //     var filePath =
-  //         'Video_${Constants.ENVIRONMENT}/$userId/$currentTimeMillisecond${".mp4"}';
-
-  //     ProgressDialog.showProgressDialog(context);
-
-  //     final output = await S3Util.uploadFileToAws(File(image.path), filePath);
-
-  //     if (output != null) {
-  //       context.pop();
-
-  //       final Uint8List? uint8list = await VideoThumbnail.thumbnailData(
-  //         video: image.path,
-  //         imageFormat: ImageFormat.JPEG,
-  //         maxWidth:
-  //             128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-  //         quality: 25,
-  //       );
-
-  //       if (uint8list != null) {
-  //         final File thumbnailFile =
-  //             await ImageUtil.saveImageToTempStorage(uint8list);
-
-  //         final thumbnailBytes = await thumbnailFile.readAsBytes();
-
-  //         controller.filePath.value = thumbnailFile.path;
-  //         controller.fileBytes.value = thumbnailBytes;
-  //         controller.videoFilePath.value = output;
-  //         controller.musicName.value = "";
-
-  //         await analytics.logEvent(name: "select_gallery_video");
-
-  //         context.push(EditImageScreen.routeName, extra: true);
-  //       }
-  //     }
-  //   }
-  // }
 
   void openImagePickerDialog() async {
     final bool? filePath = await showModalBottomSheet(
@@ -244,7 +200,11 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
   _fetchAssets() async {
     // Set onlyAll to true, to fetch only the 'Recent' album
     // which contains all the photos/videos in the storage
-    final albums = await PhotoManager.getAssetPathList(onlyAll: true);
+    final albums = await PhotoManager.getAssetPathList(
+      onlyAll: true,
+      hasAll: true,
+      type: RequestType.all,
+    );
     debugPrint('albums: $albums');
 
     final recentAlbum = albums.first;
@@ -255,9 +215,9 @@ class _SelectImageScreen2State extends State<SelectImageScreen2> {
       end: 1000000, // end at a very big index (to get all the assets)
     );
 
-    // recentAssets = recentAssets
-    //     .where((element) => element.type == AssetType.image)
-    //     .toList();
+    recentAssets = recentAssets
+        .where((element) => element.type == AssetType.image)
+        .toList();
 
     // Update the state and notify UI
     setState(() {
@@ -305,52 +265,55 @@ class _AssetThumbnailState extends State<AssetThumbnail> {
           );
         }
         // If there's data, display it as an image
-        return Obx(
-          () => InkWell(
-            onTap: () {
-              if (widget.asset.type == AssetType.video) {
-                postController.selectVideo(context, widget.asset);
-              } else {
-                postController.selectImage(context, widget.asset);
-              }
-            },
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.memory(
-                    bytes,
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
+        return InkWell(
+          onTap: () {
+            if (widget.asset.type == AssetType.video) {
+              postController.selectVideo1(context, widget.asset);
+            } else {
+              postController.selectImage(context, widget.asset);
+            }
+          },
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
+                ),
+              ),
+              if (widget.asset.type == AssetType.video)
+                Container(
+                  color: Colors.white.withOpacity(0.5),
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: const Center(
+                    child: Icon(
+                      Icons.play_arrow,
+                    ),
                   ),
                 ),
-                if (widget.asset.type == AssetType.video)
-                  Container(
-                    color: Colors.white.withOpacity(0.5),
-                    height: double.infinity,
-                    width: double.infinity,
-                    child: const Center(
-                      child: Icon(
-                        Icons.play_arrow,
-                      ),
-                    ),
-                  ),
-                if (widget.asset.type != AssetType.video &&
-                    postController.filesSelected
-                        .any((element) => element.filePath == assetFile.path))
-                  Container(
-                    color: Colors.white.withOpacity(0.5),
-                    height: double.infinity,
-                    width: double.infinity,
-                    child: const Center(
-                      child: Icon(
-                        Icons.check,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+              Obx(
+                () {
+                  return (widget.asset.type != AssetType.video &&
+                          postController.filesSelected.any(
+                              (element) => element.filePath == assetFile.path))
+                      ? Container(
+                          color: Colors.white.withOpacity(0.5),
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: const Center(
+                            child: Icon(
+                              Icons.check,
+                            ),
+                          ),
+                        )
+                      : const SizedBox();
+                },
+              )
+            ],
           ),
         );
       },

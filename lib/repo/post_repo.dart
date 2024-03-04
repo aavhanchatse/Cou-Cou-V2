@@ -342,7 +342,9 @@ class PostRepo {
 
     Map<String, dynamic> map = jsonDecode(response.body);
 
-    return SuperResponse.fromJson(map);
+    final data = map['data'][0];
+
+    return SuperResponse.fromJson(map, PostData.fromJson(data));
   }
 
   Future<SuperResponse<PostData>> deleteSubComment(String id) async {

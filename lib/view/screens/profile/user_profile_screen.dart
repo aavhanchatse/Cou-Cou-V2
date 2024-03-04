@@ -30,8 +30,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
 class UserProfileScreen extends StatefulWidget {
   static const routeName = '/userProfile';
 
@@ -44,13 +42,14 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   UserProfile? userProfile;
   bool loading = true;
   final userController = Get.find<UserController>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getProfile();
     setAnalytics();

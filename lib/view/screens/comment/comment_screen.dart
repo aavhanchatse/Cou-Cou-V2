@@ -259,6 +259,8 @@ class CommentScreenState extends State<CommentScreen> {
           postData = result.data;
           setState(() {});
 
+          debugPrint("comment deleted");
+
           _getCommentData();
         } else {
           SnackBarUtil.showSnackBar(result.message!, context: context);
@@ -298,6 +300,8 @@ class CommentScreenState extends State<CommentScreen> {
   }
 
   void _getCommentData() async {
+    debugPrint("inside get comment");
+
     loading = true;
     setState(() {});
 
@@ -310,6 +314,8 @@ class CommentScreenState extends State<CommentScreen> {
         final result = await PostRepo().getPostComments(payload);
 
         if (result.status == true) {
+          debugPrint("inside get comment success");
+
           commentDataList = result.data!;
           setState(() {});
         } else {
