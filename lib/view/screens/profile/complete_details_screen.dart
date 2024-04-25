@@ -617,13 +617,99 @@ class _CompleteDetailsScreenState extends State<CompleteDetailsScreen> {
         context.pop();
 
         if (result.status == true) {
+          await analytics.logEvent(
+            name: "login_click_event",
+            parameters: {
+              "login_clicks": "sign up tapped",
+              "login_values": "Success",
+              // "content_details": item.challengeData?.challengeName,
+              // "content_posted_by": item.userSingleData!.id!,
+              // "content_posted_date": item.createdAt,
+              // "username": item.userSingleData!.username,
+              // "mobile_num": item.userSingleData!.number,
+              // "gender": item.userSingleData!.gender,
+              // "dob": item.userSingleData!.dob,
+            },
+          );
+
+          await analytics.logEvent(
+            name: "myaccount_event",
+            parameters: {
+              "login_clicks": "sign up tapped",
+              "login_values": "Success",
+              // "content_details": item.challengeData?.challengeName,
+              // "content_posted_by": item.userSingleData!.id!,
+              // "content_posted_date": item.createdAt,
+              // "username": item.userSingleData!.username,
+              // "mobile_num": item.userSingleData!.number,
+              // "gender": item.userSingleData!.gender,
+              // "dob": item.userSingleData!.dob,
+            },
+          );
+
           context.pop(true);
           await userController.getUserDataById();
           SnackBarUtil.showSnackBar(result.message!, context: context);
         } else {
+          await analytics.logEvent(
+            name: "login_click_event",
+            parameters: {
+              "login_clicks": "sign up tapped",
+              "login_values": "Failure",
+              // "content_details": item.challengeData?.challengeName,
+              // "content_posted_by": item.userSingleData!.id!,
+              // "content_posted_date": item.createdAt,
+              // "username": item.userSingleData!.username,
+              // "mobile_num": item.userSingleData!.number,
+              // "gender": item.userSingleData!.gender,
+              // "dob": item.userSingleData!.dob,
+            },
+          );
+          await analytics.logEvent(
+            name: "myaccount_event",
+            parameters: {
+              "login_clicks": "sign up tapped",
+              "login_values": "Failure",
+              // "content_details": item.challengeData?.challengeName,
+              // "content_posted_by": item.userSingleData!.id!,
+              // "content_posted_date": item.createdAt,
+              // "username": item.userSingleData!.username,
+              // "mobile_num": item.userSingleData!.number,
+              // "gender": item.userSingleData!.gender,
+              // "dob": item.userSingleData!.dob,
+            },
+          );
           SnackBarUtil.showSnackBar(result.message!, context: context);
         }
       } catch (error) {
+        await analytics.logEvent(
+          name: "login_click_event",
+          parameters: {
+            "login_clicks": "sign up tapped",
+            "login_values": "Failure",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+        await analytics.logEvent(
+          name: "myaccount_event",
+          parameters: {
+            "login_clicks": "sign up tapped",
+            "login_values": "Failure",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
         context.pop();
         SnackBarUtil.showSnackBar('Something went wrong', context: context);
         debugPrint('error: $error');

@@ -64,24 +64,58 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        GestureDetectorUtil.onScreenTap(context);
+    return PopScope(
+      onPopInvoked: (bool? value) async {
+        await analytics.logEvent(
+          name: "login_click_event",
+          parameters: {
+            "login_clicks":
+                "hardware back button tapped on mobile verification",
+            // "login_values": "Failure",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
+        await analytics.logEvent(
+          name: "myaccount_event",
+          parameters: {
+            "login_clicks": "back button tapped",
+            // "login_values": "Failure",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
       },
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 7.w),
-            child: Column(
-              children: [
-                SizedBox(height: 10.h),
-                _logo(),
-                SizedBox(height: 1.h),
-                _mainBody(),
-                SizedBox(height: 35.h),
-                // const Spacer(),
-                _bottomLine(),
-              ],
+      child: GestureDetector(
+        onTap: () {
+          GestureDetectorUtil.onScreenTap(context);
+        },
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 7.w),
+              child: Column(
+                children: [
+                  SizedBox(height: 10.h),
+                  _logo(),
+                  SizedBox(height: 1.h),
+                  _mainBody(),
+                  SizedBox(height: 35.h),
+                  // const Spacer(),
+                  _bottomLine(),
+                ],
+              ),
             ),
           ),
         ),
@@ -214,6 +248,44 @@ class _LoginScreenState extends State<LoginScreen> {
         _storeData(result.data!, result.token!);
         await analytics.logEvent(name: "user_logged_in");
 
+        await analytics.logEvent(
+          name: "login_click_event",
+          parameters: {
+            "login_clicks": "user login tapped",
+            "login_values": "Success",
+            "username": result.data!.username,
+            "mobile_num": result.data!.number,
+            "gender": result.data!.gender,
+            "dob": result.data!.dob.toString(),
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
+        await analytics.logEvent(
+          name: "myaccount_event",
+          parameters: {
+            "login_clicks": "user login tapped",
+            "login_values": "Success",
+            "username": result.data!.username,
+            "mobile_num": result.data!.number,
+            "gender": result.data!.gender,
+            "dob": result.data!.dob.toString(),
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
         debugPrint("navigating user to navbar");
 
         final UserController userController = Get.find<UserController>();
@@ -221,6 +293,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
         context.go(NavBar.routeName, extra: true);
       } else {
+        await analytics.logEvent(
+          name: "login_click_event",
+          parameters: {
+            "login_clicks": "user login tapped",
+            "login_values": "Failure",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
+        await analytics.logEvent(
+          name: "myaccount_event",
+          parameters: {
+            "login_clicks": "user login tapped",
+            "login_values": "Success",
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
         SnackBarUtil.showSnackBar(result.message!, context: context);
       }
       // } catch (error) {
@@ -270,6 +372,21 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!formKey.currentState!.validate()) {
       return;
     }
+
+    await analytics.logEvent(
+      name: "login_click_event",
+      parameters: {
+        "login_clicks": "send otp tapped",
+        // "login_values": "Failure",
+        // "content_details": item.challengeData?.challengeName,
+        // "content_posted_by": item.userSingleData!.id!,
+        // "content_posted_date": item.createdAt,
+        // "username": item.userSingleData!.username,
+        // "mobile_num": item.userSingleData!.number,
+        // "gender": item.userSingleData!.gender,
+        // "dob": item.userSingleData!.dob,
+      },
+    );
 
     codeSent(String verificationId, [int? forceResendingToken]) async {
       actualCode = verificationId;

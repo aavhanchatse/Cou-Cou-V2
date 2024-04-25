@@ -382,6 +382,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 onTap: () async {
                   if (userController.userData.value.username != null &&
                       userController.userData.value.username!.isNotEmpty) {
+                    await analytics.logEvent(
+                      name: "login_click_event",
+                      parameters: {
+                        "login_clicks": "Edit Profile tapped",
+                        "username": userController.userData.value.username,
+                        "mobile_num": userController.userData.value.number,
+                        "gender": userController.userData.value.gender,
+                        "dob": userController.userData.value.dob.toString(),
+                        // "login_values": "Failure",
+                        // "content_details": item.challengeData?.challengeName,
+                        // "content_posted_by": item.userSingleData!.id!,
+                        // "content_posted_date": item.createdAt,
+                        // "username": item.userSingleData!.username,
+                        // "mobile_num": item.userSingleData!.number,
+                        // "gender": item.userSingleData!.gender,
+                        // "dob": item.userSingleData!.dob,
+                      },
+                    );
                     await context.push(UpdateProfileScreen.routeName);
                     getProfile();
                   } else {

@@ -1,3 +1,5 @@
+import 'package:coucou_v2/controllers/user_controller.dart';
+import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/models/challenge_name_data.dart';
 import 'package:coucou_v2/models/post_data.dart';
@@ -82,6 +84,17 @@ class HomescreenController extends GetxController {
         if (result.status == true &&
             result.data != null &&
             result.data!.isNotEmpty) {
+          final userController = Get.find<UserController>();
+
+          await analytics.logEvent(name: "home_click_event", parameters: {
+            "home_clicks": "Scroll Depth",
+            "home_values": mainPostListPage.value,
+            "username": userController.userData.value.username,
+            "mobile_num": userController.userData.value.number,
+            "gender": userController.userData.value.gender,
+            "dob": userController.userData.value.dob.toString(),
+          });
+
           if (mainPostListPage.value == 1) {
             mainPostList.clear();
           }

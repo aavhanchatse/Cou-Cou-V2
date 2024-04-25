@@ -276,6 +276,21 @@ class _PostCardState extends State<PostCard> {
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "comment_button_clicked");
 
+                await analytics.logEvent(
+                  name: "home_click_event",
+                  parameters: {
+                    "home_clicks": "post_tapped",
+                    "home_values": "comments",
+                    "content_details": item?.challengeData?.challengeName,
+                    "content_posted_by": item?.userSingleData!.id!,
+                    "content_posted_date": item?.createdAt.toString(),
+                    "username": item?.userSingleData!.username,
+                    "mobile_num": item?.userSingleData!.number,
+                    "gender": item?.userSingleData!.gender,
+                    "dob": item?.userSingleData!.dob.toString(),
+                  },
+                );
+
                 // context.push(CommentScreen.routeName, extra: item);
                 final PostData? data =
                     await context.push(CommentScreen.routeName, extra: item);
@@ -312,6 +327,21 @@ class _PostCardState extends State<PostCard> {
               if (userController.userData.value.username != null &&
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "share_post");
+
+                await analytics.logEvent(
+                  name: "home_click_event",
+                  parameters: {
+                    "home_clicks": "post_tapped",
+                    "home_values": "share",
+                    "content_details": item?.challengeData?.challengeName,
+                    "content_posted_by": item?.userSingleData!.id!,
+                    "content_posted_date": item?.createdAt.toString(),
+                    "username": item?.userSingleData!.username,
+                    "mobile_num": item?.userSingleData!.number,
+                    "gender": item?.userSingleData!.gender,
+                    "dob": item?.userSingleData!.dob.toString(),
+                  },
+                );
 
                 String imageUrl = item!.imagesMultiple != null &&
                         item!.imagesMultiple!.isNotEmpty
@@ -366,6 +396,21 @@ class _PostCardState extends State<PostCard> {
 
     PostRepo().addPostLike(payLoad).then((value) async {
       await analytics.logEvent(name: "like_clicked");
+
+      await analytics.logEvent(
+        name: "home_click_event",
+        parameters: {
+          "home_clicks": "post_tapped",
+          "home_values": "likes",
+          "content_details": item?.challengeData?.challengeName,
+          "content_posted_by": item?.userSingleData!.id!,
+          "content_posted_date": item?.createdAt.toString(),
+          "username": item?.userSingleData!.username,
+          "mobile_num": item?.userSingleData!.number,
+          "gender": item?.userSingleData!.gender,
+          "dob": item?.userSingleData!.dob.toString(),
+        },
+      );
 
       item = value.data;
       setState(() {});

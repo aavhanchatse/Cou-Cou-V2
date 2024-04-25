@@ -180,6 +180,12 @@ class PostController extends GetxController {
     );
 
     if (image != null) {
+      var fileSize = await image.length();
+      if (fileSize > 30000000) {
+        showSnackBar("Kindly upload Video less than 50 Mb");
+        return;
+      }
+
       final userController = Get.find<UserController>();
 
       final currentTimeMillisecond =
@@ -266,6 +272,12 @@ class PostController extends GetxController {
     final bytes = await image?.readAsBytes();
 
     if (image != null && bytes != null) {
+      var fileSize = await image.length();
+      if (fileSize > 30000000) {
+        showSnackBar("Kindly upload Video less than 50 Mb");
+        return;
+      }
+
       await selectVideo2(context, image);
     }
   }
@@ -519,8 +531,10 @@ class PostController extends GetxController {
           }
         }
       } else {
-        SnackBarUtil.showSnackBar('select_audio_file_less_than_5'.tr,
-            context: context);
+        SnackBarUtil.showSnackBar(
+          'select_audio_file_less_than_5'.tr,
+          context: context,
+        );
       }
     }
   }

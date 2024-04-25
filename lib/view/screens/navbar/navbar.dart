@@ -234,6 +234,18 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "post_upload");
 
+                await analytics.logEvent(
+                  name: "home_click_event",
+                  parameters: {
+                    "home_clicks": "bottom_nav",
+                    "home_values": "Posting(upload)",
+                    "username": userController.userData.value.username,
+                    "mobile_num": userController.userData.value.number,
+                    "gender": userController.userData.value.gender,
+                    "dob": userController.userData.value.dob.toString(),
+                  },
+                );
+
                 final ps = await PhotoManager.requestPermissionExtend();
                 if (ps.isAuth || ps.hasAccess) {
                   final PostController postController =
@@ -296,6 +308,18 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       onTap: () async {
         await analytics.logEvent(name: "notifications");
 
+        await analytics.logEvent(
+          name: "home_click_event",
+          parameters: {
+            "home_clicks": "bottom_nav",
+            "home_values": "Notifications",
+            "username": userController.userData.value.username,
+            "mobile_num": userController.userData.value.number,
+            "gender": userController.userData.value.gender,
+            "dob": userController.userData.value.dob.toString(),
+          },
+        );
+
         navbarController.currentIndex.value = 2;
         setState(() {});
       },
@@ -340,6 +364,18 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
         InkWell(
       onTap: () async {
         await analytics.logEvent(name: "self_profile_tab");
+
+        await analytics.logEvent(
+          name: "home_click_event",
+          parameters: {
+            "home_clicks": "bottom_nav",
+            "home_values": "profile",
+            "username": userController.userData.value.username,
+            "mobile_num": userController.userData.value.number,
+            "gender": userController.userData.value.gender,
+            "dob": userController.userData.value.dob.toString(),
+          },
+        );
 
         navbarController.currentIndex.value = 0;
         setState(() {});

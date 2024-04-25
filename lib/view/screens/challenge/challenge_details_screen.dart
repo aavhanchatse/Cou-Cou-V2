@@ -228,6 +228,27 @@ class _ChallengeDetailsScreenState extends State<ChallengeDetailsScreen> {
         onPressed: () async {
           await analytics.logEvent(name: "challenge_details_back_button");
 
+          final userController = Get.find<UserController>();
+
+          await analytics.logEvent(
+            name: "home_click_event",
+            parameters: {
+              "home_clicks": "back button tapped",
+              "username": userController.userData.value.username,
+              "mobile_num": userController.userData.value.number,
+              "gender": userController.userData.value.gender,
+              "dob": userController.userData.value.dob.toString(),
+              // "home_values": rating.toString(),
+              // "content_details": item.challengeData?.challengeName,
+              // "content_posted_by": item.userSingleData!.id!,
+              // "content_posted_date": item.createdAt,
+              // "username": item.userSingleData!.username,
+              // "mobile_num": item.userSingleData!.number,
+              // "gender": item.userSingleData!.gender,
+              // "dob": item.userSingleData!.dob,
+            },
+          );
+
           final navbarController = Get.find<NavbarController>();
           navbarController.currentIndex.value = 1;
           context.go(NavBar.routeName);

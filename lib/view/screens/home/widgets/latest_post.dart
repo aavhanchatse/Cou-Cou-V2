@@ -1,5 +1,6 @@
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/utils/date_util.dart';
 import 'package:coucou_v2/utils/image_utility.dart';
@@ -69,6 +70,26 @@ class _LatestPostWidgetState extends State<LatestPostWidget> {
                                     onTap: () async {
                                       await analytics.logEvent(
                                         name: "latest_post_clicked",
+                                      );
+
+                                      final userController =
+                                          Get.find<UserController>();
+
+                                      await analytics.logEvent(
+                                        name: "home_click_event",
+                                        parameters: {
+                                          "home_clicks": "latest posts",
+                                          "home_values": "view all",
+                                          "username": userController
+                                              .userData.value.username,
+                                          "mobile_num": userController
+                                              .userData.value.number,
+                                          "gender": userController
+                                              .userData.value.gender,
+                                          "dob": userController
+                                              .userData.value.dob
+                                              .toString(),
+                                        },
                                       );
 
                                       Navigator.push(

@@ -1,4 +1,5 @@
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/post_data.dart';
 import 'package:coucou_v2/models/user_search_history_model.dart';
@@ -378,7 +379,21 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _getTagUser(String text, int page) {
-    PostRepo().getSearchData(text).then((value) {
+    PostRepo().getSearchData(text).then((value) async {
+      final userController = Get.find<UserController>();
+
+      await analytics.logEvent(
+        name: "home_click_event",
+        parameters: {
+          "home_clicks": "Search bar",
+          "home_values": text,
+          "username": userController.userData.value.username,
+          "mobile_num": userController.userData.value.number,
+          "gender": userController.userData.value.gender,
+          "dob": userController.userData.value.dob.toString(),
+        },
+      );
+
       if (value.status ?? false) {
         if (userDataList == null) {
           setState(() {

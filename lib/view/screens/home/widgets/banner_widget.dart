@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coucou_v2/app_constants/constants.dart';
 import 'package:coucou_v2/controllers/homescreen_controller.dart';
+import 'package:coucou_v2/controllers/user_controller.dart';
 import 'package:coucou_v2/main.dart';
 import 'package:coucou_v2/models/challenge_data.dart';
 import 'package:coucou_v2/utils/size_config.dart';
@@ -129,7 +130,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             InkWell(
-              onTap: () {
+              onTap: () async {
                 // context.push(
                 //   DismissPage.routeName,
                 //   extra: {
@@ -140,6 +141,20 @@ class _BannerWidgetState extends State<BannerWidget> {
                 // );
 
                 successDialog(context, prize, item);
+
+                final userController = Get.find<UserController>();
+
+                await analytics.logEvent(
+                  name: "home_click_event",
+                  parameters: {
+                    "home_clicks": "prize buttons/poster tapped",
+                    "home_values": text,
+                    "username": userController.userData.value.username,
+                    "mobile_num": userController.userData.value.number,
+                    "gender": userController.userData.value.gender,
+                    "dob": userController.userData.value.dob.toString(),
+                  },
+                );
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
@@ -193,6 +208,27 @@ class _BannerWidgetState extends State<BannerWidget> {
                   InkWell(
                     onTap: () async {
                       await analytics.logEvent(name: "challenge_poster_click");
+
+                      final userController = Get.find<UserController>();
+
+                      await analytics.logEvent(
+                        name: "home_click_event",
+                        parameters: {
+                          "home_clicks": "tap on banner ad",
+                          "home_values": "${item.challengeName}",
+                          "username": userController.userData.value.username,
+                          "mobile_num": userController.userData.value.number,
+                          "gender": userController.userData.value.gender,
+                          "dob": userController.userData.value.dob.toString(),
+                          // "content_details": item.challengeData?.challengeName,
+                          // "content_posted_by": item.userSingleData!.id!,
+                          // "content_posted_date": item.createdAt,
+                          // "username": item.userSingleData!.username,
+                          // "mobile_num": item.userSingleData!.number,
+                          // "gender": item.userSingleData!.gender,
+                          // "dob": item.userSingleData!.dob,
+                        },
+                      );
 
                       context.push(
                         ChallengeDetailsScreen.routeName,

@@ -193,9 +193,13 @@ void handleDeepLink(BuildContext context) {
   debugPrint("inside deeplink");
 
   streamSubscription.onData((data) async {
-    debugPrint("branch_key : ${jsonEncode(data)}");
+    debugPrint("data : ${jsonEncode(data)}");
+    debugPrint("data['data'] : ${data['data']}");
+
     debugPrint("data['+clicked_branch_link'] ${data['+clicked_branch_link']}");
     debugPrint("data['~channel'] ${data['~channel']}");
+    debugPrint("data['~post_id'] ${data['post_id']}");
+    debugPrint("data['~id'] ${data['id']}");
 
     if (data['+clicked_branch_link']) {
       if (data['~channel'] == "challengePost") {

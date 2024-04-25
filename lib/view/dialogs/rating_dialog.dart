@@ -86,6 +86,25 @@ class RatingDialog extends StatelessWidget {
         userController.getUserDataById();
         await analytics.logEvent(name: "rating_star_clicked");
 
+        await analytics.logEvent(
+          name: "home_click_event",
+          parameters: {
+            "home_clicks": "Click on rating star",
+            "home_values": rating.toString(),
+            "username": userController.userData.value.username,
+            "mobile_num": userController.userData.value.number,
+            "gender": userController.userData.value.gender,
+            "dob": userController.userData.value.dob.toString(),
+            // "content_details": item.challengeData?.challengeName,
+            // "content_posted_by": item.userSingleData!.id!,
+            // "content_posted_date": item.createdAt,
+            // "username": item.userSingleData!.username,
+            // "mobile_num": item.userSingleData!.number,
+            // "gender": item.userSingleData!.gender,
+            // "dob": item.userSingleData!.dob,
+          },
+        );
+
         context.pop();
       } else {
         SnackBarUtil.showSnackBar(result.message!, context: context);

@@ -59,7 +59,8 @@
             </intent-filter>
         </activity>
         <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_jg11Of9HErVCY7ynzDe6VhdfDDiKRu2h" />
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_en37NdWGuAJt54EdABbZJledCxiSQv4d" />
+        <!-- <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_jg11Of9HErVCY7ynzDe6VhdfDDiKRu2h" /> -->
         <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_kh36Ub5NADPB8ZCeqvpXHbmgBybJTB7y" />
         <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
 
