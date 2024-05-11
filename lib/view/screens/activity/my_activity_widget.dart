@@ -272,9 +272,10 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
             Row(
               children: [
                 DefaultPicProvider.getCircularUserProfilePic(
-                  profilePic: e.postOwnerData?.imageUrl ?? "",
+                  profilePic: e.userData?.imageUrl ?? "",
                   userName:
-                      "${e.postOwnerData?.firstname ?? ""} ${e.postOwnerData?.lastname ?? ""}",
+                      "${e.userData?.firstname ?? ""} ${e.userData?.lastname ?? ""}",
+                  // "${e.postOwnerData?.firstname ?? ""} ${e.postOwnerData?.lastname ?? ""}",
                   size: 40,
                 ),
                 SizedBox(
@@ -293,7 +294,8 @@ class _MyActivityWidgetState extends State<MyActivityWidget> {
                       ),
                       Text(
                         isMyActivityClicked
-                            ? "${e.userData!.firstname} Post"
+                            ? "${e.postOwnerData?.firstname} Post"
+                            // ? "${e.userData!.firstname} Post"
                             : " ${"comment_on_your_post".tr}",
                         style: const TextStyle(
                             fontStyle: FontStyle.normal,

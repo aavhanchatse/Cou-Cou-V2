@@ -345,16 +345,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           return const SelectImageSourceBottomsheet();
         });
 
+    debugPrint("filePath: $filePath");
+
     if (filePath != null) {
       final Uint8List bytes = await filePath.readAsBytes();
-      final croppedImage = await Get.to(() => CropImagePage(imageBytes: bytes));
+      final croppedImage = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CropImagePage(imageBytes: bytes),
+        ),
+      );
+      // await context.push(CropImagePage.routeName);
+      // await Get.to(() => CropImagePage(imageBytes: bytes));
 
-      if (croppedImage != null) {
-        final File finalImage =
-            await ImageUtil.saveImageToTempStorage(croppedImage);
-        _profileImage = finalImage;
-        setState(() {});
-      }
+      final File finalImage =
+          await ImageUtil.saveImageToTempStorage(croppedImage);
+      _profileImage = finalImage;
+      setState(() {});
     }
   }
 

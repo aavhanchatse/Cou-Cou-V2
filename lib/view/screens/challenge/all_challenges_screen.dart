@@ -55,9 +55,12 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
               name: "home_click_event",
               parameters: {
                 "home_clicks": "back button tapped",
-                "username": userController.userData.value.username,
-                "mobile_num": userController.userData.value.number,
-                "gender": userController.userData.value.gender,
+                "username": userController.userData.value.username ??
+                    "not logged in user",
+                "mobile_num": userController.userData.value.number ??
+                    "not logged in user",
+                "gender": userController.userData.value.gender ??
+                    "not logged in user",
                 "dob": userController.userData.value.dob.toString(),
                 // "home_values": rating.toString(),
                 // "content_details": item.challengeData?.challengeName,
@@ -101,7 +104,35 @@ class _AllChallengesScreenState extends State<AllChallengesScreen> {
                     final item = challengeList[index];
 
                     return InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        final userController = Get.find<UserController>();
+
+                        await analytics.logEvent(
+                          name: "challenge_clicks",
+                          parameters: {
+                            "challenge_events":
+                                "tap on challenge :${item.challengeName}",
+                            // "challenge_events":
+                            //     "tap on challenge :${item.challengeName}",
+                            "username":
+                                userController.userData.value.username ??
+                                    "not logged in user",
+                            "mobile_num":
+                                userController.userData.value.number ??
+                                    "not logged in user",
+                            "gender": userController.userData.value.gender ??
+                                "not logged in user",
+                            "dob": userController.userData.value.dob.toString(),
+                            // "content_details": item.challengeData?.challengeName,
+                            // "content_posted_by": item.userSingleData!.id!,
+                            // "content_posted_date": item.createdAt,
+                            // "username": item.userSingleData!.username,
+                            // "mobile_num": item.userSingleData!.number,
+                            // "gender": item.userSingleData!.gender,
+                            // "dob": item.userSingleData!.dob,
+                          },
+                        );
+
                         context.push(
                           ChallengeDetailsScreen.routeName,
                           extra: {"id": item.id},

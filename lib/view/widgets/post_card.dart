@@ -324,6 +324,7 @@ class _PostCardState extends State<PostCard> {
         Expanded(
           child: InkWell(
             onTap: () async {
+              debugPrint("post Id: ${item?.id}");
               if (userController.userData.value.username != null &&
                   userController.userData.value.username!.isNotEmpty) {
                 await analytics.logEvent(name: "share_post");
@@ -346,9 +347,15 @@ class _PostCardState extends State<PostCard> {
                 String imageUrl = item!.imagesMultiple != null &&
                         item!.imagesMultiple!.isNotEmpty
                     ? item!.imagesMultiple![currentIndex]
-                    : item!.challengeVideo ?? "";
+                    : item!.challengeVideo ?? item!.videoUrl ?? "";
 
-                shareImageWithText(imageUrl ?? "", item?.deepLinkUrl ?? "");
+                bool video = item!.imagesMultiple != null &&
+                        item!.imagesMultiple!.isNotEmpty
+                    ? false
+                    : true;
+
+                await shareImageWithText(
+                    imageUrl ?? "", item?.deepLinkUrl ?? "", context, video);
               } else {
                 context.push(CompleteDetailsScreen.routeName);
               }

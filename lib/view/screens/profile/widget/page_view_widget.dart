@@ -245,14 +245,22 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           SizedBox(width: 2.w),
           InkWell(
             onTap: () async {
+              debugPrint("post Id: ${post?.id}");
+
               await analytics.logEvent(name: "share_post");
 
               String imageUrl = post!.imagesMultiple != null &&
                       post!.imagesMultiple!.isNotEmpty
                   ? post!.imagesMultiple![currentIndex]
-                  : post!.challengeVideo ?? "";
+                  : post!.challengeVideo ?? post!.videoUrl ?? "";
 
-              shareImageWithText(imageUrl ?? "", post?.deepLinkUrl ?? "");
+              bool video = post!.imagesMultiple != null &&
+                      post!.imagesMultiple!.isNotEmpty
+                  ? false
+                  : true;
+
+              await shareImageWithText(
+                  imageUrl ?? "", post?.deepLinkUrl ?? "", context, video);
             },
             child: Image.asset(
               "assets/icons/share.png",

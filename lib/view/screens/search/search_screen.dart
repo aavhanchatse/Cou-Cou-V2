@@ -387,9 +387,12 @@ class _SearchScreenState extends State<SearchScreen> {
         parameters: {
           "home_clicks": "Search bar",
           "home_values": text,
-          "username": userController.userData.value.username,
-          "mobile_num": userController.userData.value.number,
-          "gender": userController.userData.value.gender,
+          "username":
+              userController.userData.value.username ?? "not logged in user",
+          "mobile_num":
+              userController.userData.value.number ?? "not logged in user",
+          "gender":
+              userController.userData.value.gender ?? "not logged in user",
           "dob": userController.userData.value.dob.toString(),
         },
       );

@@ -342,9 +342,15 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
               String imageUrl = post!.imagesMultiple != null &&
                       post!.imagesMultiple!.isNotEmpty
                   ? post!.imagesMultiple![currentIndex]
-                  : post!.challengeVideo ?? "";
+                  : post!.challengeVideo ?? post!.videoUrl ?? "";
 
-              shareImageWithText(imageUrl ?? "", post?.deepLinkUrl ?? "");
+              bool video = post!.imagesMultiple != null &&
+                      post!.imagesMultiple!.isNotEmpty
+                  ? false
+                  : true;
+
+              await shareImageWithText(
+                  imageUrl ?? "", post?.deepLinkUrl ?? "", context, video);
             },
             child: Container(
               padding: const EdgeInsets.all(6),

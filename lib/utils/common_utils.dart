@@ -2,10 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:coucou_v2/app_constants/constants.dart';
+import 'package:coucou_v2/utils/default_snackbar_util.dart';
 import 'package:coucou_v2/utils/size_config.dart';
+import 'package:coucou_v2/view/widgets/progress_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -164,16 +167,33 @@ String getDifferenceOfPeriodForNews(String postedDate) {
   }
 }
 
-Future<void> shareImageWithText(String url, String textToShare) async {
-  final response = await get(Uri.parse(url));
-  // final bytes = response.bodyBytes;
-  final Directory temp = await getTemporaryDirectory();
-  final File imageFile = File('${temp.path}/tempImage.jpg');
-  imageFile.writeAsBytesSync(response.bodyBytes);
-  Share.shareXFiles(
-    [XFile('${temp.path}/tempImage.jpg')],
-    text: textToShare,
-  );
+Future<void> shareImageWithText(
+  String url,
+  String textToShare,
+  BuildContext context,
+  bool isVideo,
+) async {
+  try {
+    ProgressDialog.showProgressDialog(context);
+
+    final response = await get(Uri.parse(url));
+    final String ext = isVideo == true ? ".mp4" : ".jpg";
+    // final bytes = response.bodyBytes;
+    final Directory temp = await getTemporaryDirectory();
+    final File imageFile = File('${temp.path}/tempImage$ext');
+    imageFile.writeAsBytesSync(response.bodyBytes);
+
+    context.pop();
+
+    Share.shareXFiles(
+      [XFile('${temp.path}/tempImage$ext')],
+      text: textToShare,
+    );
+  } catch (e) {
+    debugPrint("error: $e");
+    SnackBarUtil.showSnackBar("Something went wrong", context: context);
+    context.pop();
+  }
 }
 
 launchUrlType(String type,
