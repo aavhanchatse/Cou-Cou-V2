@@ -177,7 +177,8 @@ Future<void> shareImageWithText(
     ProgressDialog.showProgressDialog(context);
 
     final response = await get(Uri.parse(url));
-    final String ext = isVideo == true ? ".mp4" : ".jpg";
+    const String ext = ".jpg";
+    // final String ext = isVideo == true ? ".mp4" : ".jpg";
     // final bytes = response.bodyBytes;
     final Directory temp = await getTemporaryDirectory();
     final File imageFile = File('${temp.path}/tempImage$ext');

@@ -339,10 +339,12 @@ class _ReelsPageViewWidgetState extends State<ReelsPageViewWidget> {
             onTap: () async {
               await analytics.logEvent(name: "share_post");
 
-              String imageUrl = post!.imagesMultiple != null &&
-                      post!.imagesMultiple!.isNotEmpty
-                  ? post!.imagesMultiple![currentIndex]
-                  : post!.challengeVideo ?? post!.videoUrl ?? "";
+              // String imageUrl = post!.imagesMultiple != null &&
+              //         post!.imagesMultiple!.isNotEmpty
+              //     ? post!.imagesMultiple![currentIndex]
+              //     : post!.challengeVideo ?? post!.videoUrl ?? "";
+
+              String imageUrl = post!.thumbnail ?? "";
 
               bool video = post!.imagesMultiple != null &&
                       post!.imagesMultiple!.isNotEmpty

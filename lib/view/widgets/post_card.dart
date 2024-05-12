@@ -344,10 +344,12 @@ class _PostCardState extends State<PostCard> {
                   },
                 );
 
-                String imageUrl = item!.imagesMultiple != null &&
-                        item!.imagesMultiple!.isNotEmpty
-                    ? item!.imagesMultiple![currentIndex]
-                    : item!.challengeVideo ?? item!.videoUrl ?? "";
+                // String imageUrl = item!.imagesMultiple != null &&
+                //         item!.imagesMultiple!.isNotEmpty
+                //     ? item!.imagesMultiple![currentIndex]
+                //     : item!.challengeVideo ?? item!.videoUrl ?? "";
+
+                String imageUrl = item!.thumbnail ?? "";
 
                 bool video = item!.imagesMultiple != null &&
                         item!.imagesMultiple!.isNotEmpty
